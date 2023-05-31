@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "Shera Ai",
+    "slug": "SheraAi",
+    "version": "1.0.1",
+    "orientation": "default",
+    "icon": "./assets/new_logo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/SHERA_AI.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#0b1023"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/new_logo.png",
+        "backgroundColor": "#0b1023"
+      },
+      "package": "com.theharism.SheraAi",
+      "versionCode": 2
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d3940d7d-c198-4015-a443-cbf65bc31c92"
+      }
+    }
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-7133387510338737~4677436322"
+  }
+}
