@@ -30,6 +30,7 @@ function OnBoarding() {
   );
 }
 
+
 function Home() {
   return (
     <Tab.Navigator

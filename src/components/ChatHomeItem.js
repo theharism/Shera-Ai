@@ -21,7 +21,7 @@ const ChatHomeItem = ({title,title1,title2}) => {
         titleStyle={styles.Title}
         left={() => <MaterialCommunityIcons name="email-outline" size={24} color="#7f7f7f" />}
         leftStyle={styles.leftStyle} />
-      <Card.Content>
+      <Card.Content style={styles.content}>
         {button(title1)}
         {button(title2)}
       </Card.Content>
@@ -35,13 +35,15 @@ const styles = StyleSheet.create({
   card: {
     borderColor: '#1c1c1e',
     backgroundColor: '#000000',
-    margin: 5
+    marginHorizontal: 8,
+    marginVertical:10,
+    height:180
   },
   Title: {
     alignSelf: 'center',
     fontWeight: 'bold',
     fontSize: 16,
-    color: '#7f7f7f'
+    color: '#7f7f7f',
   },
   textStyle:{
     color:'#FFFFFF',
@@ -50,16 +52,17 @@ const styles = StyleSheet.create({
   },
   item:{
     backgroundColor:'#1c1c1e',
-    height:60,
+    height:50,
     borderRadius:10,
-    marginTop:0,
-    marginHorizontal:5,
-    marginBottom:5,
+    marginVertical:5,
     justifyContent:'center'
   },
   leftStyle:{
     position:'absolute',
     left:100,
-    bottom:19    
+    bottom:18 
+  },
+  content:{
+    bottom:17
   }
 });
