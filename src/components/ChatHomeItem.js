@@ -3,10 +3,10 @@ import { Avatar, Button, Card, Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import React from 'react';
 
-const ChatHomeItem = ({title,title1,title2}) => {
+const ChatHomeItem = ({title,title1,title2,setMessage}) => {
   const button = (title) => {
     return (
-      <TouchableOpacity style={styles.item}>
+      <TouchableOpacity style={styles.item} onPress={()=>setMessage(title)}>
         <Text style={styles.textStyle}>
           {title}
         </Text>
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
   },
   leftStyle:{
     position:'absolute',
-    left:100,
-    bottom:18 
+    left:95,
+    bottom:19 
   },
   content:{
     bottom:17
