@@ -14,14 +14,15 @@ import { Platform } from "react-native";
 import MyComponent from "../../components/button";
 import { useNavigation } from "@react-navigation/native";
 
-export default function YourAiAssistant() {
-  const navigation = useNavigation();
+export default YourAiAssistant = ({setFlag}) =>{
+  //const navigation = useNavigation();
 
   const nextscreen = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Chat" }],
-    });
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: "Chat" }],
+    // });
+   setFlag(true)
   };
   return (
     <SafeAreaView style={styles.main}>

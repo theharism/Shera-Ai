@@ -17,22 +17,32 @@ import RecentsHome from "./src/screens/recents/RecentsHome";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
-import React from "react";
+import React,{useState} from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ChatScreen from "./src/screens/chat/ChatScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function OnBoarding() {
+function OnBoarding({ setFlag }) {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name="YourAiAssistant" component={YourAiAssistant} />
+    <Stack.Navigator
+      initialRouteName="YourAiAssistant"
+      screenOptions={{
+        headerTitle: "Shera Ai",
+        headerTintColor: "#FFFFFF",
+        headerStyle: styles.headerStyle,
+        headerTitleStyle: styles.headerTitleStyle,
+        headerLeft: customHeaderLeft,
+      }}
+    >
+      <Stack.Screen name="YourAiAssistant">
+        {(props) => <YourAiAssistant {...props} />}
+      </Stack.Screen>
       <Stack.Screen name="HelpUsGrow" component={HelpUsGrow} />
-      <Stack.Screen
-        name="EnableNotifications"
-        component={EnableNotifications}
-      />
+      <Stack.Screen name="EnableNotifications">
+        {(props) => <EnableNotifications setFlag={setFlag} {...props} />}
+      </Stack.Screen>
     </Stack.Navigator>
   );
 }
@@ -120,47 +130,56 @@ function Home() {
 }
 
 export default function App() {
-
   const [visible, setVisible] = React.useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
+  const [flag, setFlag] = useState(false);
+
   return (
     <PaperProvider style={{ flex: 1 }}>
       <NavigationContainer>
-        <Portal>
-          <Modal
-            visible={visible}
-            onDismiss={hideModal}
-            contentContainerStyle={containerStyle}
-          >
-            <Text>You have 10 points Left</Text>
-          </Modal>
-        </Portal>
+        {flag ? (
+          <>
+            <Portal>
+              <Modal
+                visible={visible}
+                onDismiss={hideModal}
+                contentContainerStyle={containerStyle}
+              >
+                <Text>You have 10 points Left</Text>
+              </Modal>
+            </Portal>
 
-        <Stack.Navigator
-          initialRouteName="Home"
-          screenOptions={{
-            tabBarStyle: {
-              backgroundColor: "#171717",
-              borderTopWidth: 1,
-              height: 53,
-              borderTopColor: "#282828",
-            },
-            tabBarActiveTintColor: "#40e6b5",
-            headerTitle: "Shera Ai",
-            headerTintColor: "#FFFFFF",
-            headerStyle: styles.headerStyle,
-            headerTitleStyle: styles.headerTitleStyle,
-            headerLeft: customHeaderLeft,
-            headerRight: () => customHeaderRight({ showModal }),
-          }}
-        >
-          <Stack.Screen name="Home" component={Home} />
-          <Stack.Screen name="ChatScreen" component={ChatScreen} />
-        </Stack.Navigator>
+            <Stack.Navigator
+              initialRouteName="Home"
+              screenOptions={{
+                tabBarStyle: {
+                  backgroundColor: "#171717",
+                  borderTopWidth: 1,
+                  height: 53,
+                  borderTopColor: "#282828",
+                },
+                tabBarActiveTintColor: "#40e6b5",
+                headerTitle: "Shera Ai",
+                headerTintColor: "#FFFFFF",
+                headerStyle: styles.headerStyle,
+                headerTitleStyle: styles.headerTitleStyle,
+                headerLeft: customHeaderLeft,
+                headerRight: () => customHeaderRight({ showModal }),
+              }}
+            >
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="ChatScreen" component={ChatScreen} />
+            </Stack.Navigator>
+          </>
+        ) : (
+          <>
+            <OnBoarding setFlag={setFlag} />
+          </>
+        )}
       </NavigationContainer>
     </PaperProvider>
   );

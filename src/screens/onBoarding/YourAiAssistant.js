@@ -14,14 +14,15 @@ import { Platform } from "react-native";
 import MyComponent from "../../components/button";
 import { useNavigation } from "@react-navigation/native";
 
-export default function YourAiAssistant() {
-  const navigation = useNavigation();
+const YourAiAssistant = ({navigation}) => {
+  // const navigation = useNavigation();
 
   const nextscreen = () => {
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "Help Us Grow" }],
-    });
+    // navigation.reset({
+    //   index: 0,
+    //   routes: [{ name: "Help Us Grow" }],
+    // });
+    navigation.navigate('HelpUsGrow')
   };
   return (
     <SafeAreaView style={styles.main}>
@@ -74,3 +75,5 @@ const styles = StyleSheet.create({
     paddingBottom: "10%",
   },
 });
+
+export default YourAiAssistant
