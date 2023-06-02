@@ -60,7 +60,8 @@ const ChatHome = ({ navigation }) => {
         <CustomTextInput
           message={message}
           setMessage={setMessage}
-          newChat={() => navigation.navigate("ChatScreen")}
+          onPress={() => navigation.navigate("ChatScreen")}
+          addShow={true}
         />
       </View>
     </SafeAreaView>
