@@ -1,12 +1,16 @@
 import "react-native-gesture-handler";
+
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
 import HelpUsGrow from "./src/screens/onBoarding/HelpUsGrow";
 import EnableNotifications from "./src/screens/onBoarding/EnableNotifications";
+
 import ChatHome from "./src/screens/chat/ChatHome";
 import ExploreHome from "./src/screens/explore/ExploreHome";
 import RecentsHome from "./src/screens/recents/RecentsHome";
@@ -116,6 +120,7 @@ function Home() {
 }
 
 export default function App() {
+
   const [visible, setVisible] = React.useState(false);
 
   const showModal = () => setVisible(true);
@@ -183,5 +188,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    backgroundColor: "black",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
