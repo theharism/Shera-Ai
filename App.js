@@ -1,10 +1,9 @@
 import "react-native-gesture-handler";
-
 import { StyleSheet, Text, View, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-
+import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
@@ -17,9 +16,12 @@ import RecentsHome from "./src/screens/recents/RecentsHome";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
-import React,{useState} from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ChatScreen from "./src/screens/chat/ChatScreen";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+
+SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -83,11 +85,13 @@ function Home() {
           tabBarStyle: {
             backgroundColor: "#171717",
             borderTopWidth: 1,
-            height: 53,
+            height: 75,
             borderTopColor: "#282828",
           },
+          tabBarLabelStyle:{bottom:15,fontFamily:'JosefinSans-Medium',fontSize:14},
           tabBarActiveTintColor: "#40e6b5",
           headerShown: false,
+          tabBarHideOnKeyboard:true
         }}
       >
         <Tab.Screen
@@ -98,7 +102,7 @@ function Home() {
             tabBarIcon: ({ color, size }) => (
               <Ionicons
                 name="ios-chatbubbles-outline"
-                size={24}
+                size={27}
                 color={color}
               />
             ),
@@ -110,7 +114,7 @@ function Home() {
           options={{
             tabBarLabel: "Explore",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="ios-compass-outline" size={24} color={color} />
+              <Ionicons name="ios-compass-outline" size={27} color={color} />
             ),
           }}
         />
@@ -120,7 +124,7 @@ function Home() {
           options={{
             tabBarLabel: "Recents",
             tabBarIcon: ({ color, size }) => (
-              <Ionicons name="ios-timer-outline" size={24} color={color} />
+              <Ionicons name="ios-timer-outline" size={27} color={color} />
             ),
           }}
         />
@@ -137,6 +141,34 @@ export default function App() {
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
   const [flag, setFlag] = useState(false);
+
+  const [fontsLoaded] = useFonts({
+    "JosefinSans-Regular": require("./assets/fonts/JosefinSans-VariableFont_wght.ttf"),
+    "JosefinSans-Medium": require("./assets/fonts/static/JosefinSans-Medium.ttf"),
+  });
+
+  useEffect(() => {
+    async function prepare() {
+      await SplashScreen.preventAutoHideAsync();
+    }
+
+    prepare();
+  }, []);
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>SplashScreen Demo! 👋</Text>
+      </View>
+    );
+  }
+
+  if (fontsLoaded) {
+    (async () => {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await SplashScreen.hideAsync();
+    })();
+  }
 
   return (
     <PaperProvider style={{ flex: 1 }}>
@@ -156,13 +188,6 @@ export default function App() {
             <Stack.Navigator
               initialRouteName="Home"
               screenOptions={{
-                tabBarStyle: {
-                  backgroundColor: "#171717",
-                  borderTopWidth: 1,
-                  height: 53,
-                  borderTopColor: "#282828",
-                },
-                tabBarActiveTintColor: "#40e6b5",
                 headerTitle: "Shera Ai",
                 headerTintColor: "#FFFFFF",
                 headerStyle: styles.headerStyle,
@@ -193,9 +218,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
   },
   headerTitleStyle: {
-    fontWeight: "bold",
+    //fontWeight: "bold",
+    fontFamily:'JosefinSans-Medium',
     fontSize: 25,
-    left: 15,
+    left: 18,
+    bottom:2
   },
   container: {
     flex: 1,
@@ -210,5 +237,6 @@ const styles = StyleSheet.create({
     backgroundColor: "black",
     alignItems: "center",
     justifyContent: "center",
+    fontFamily: "JosefinSans-Medium",
   },
 });
