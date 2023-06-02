@@ -41,14 +41,17 @@ const styles = StyleSheet.create({
   },
   Title: {
     alignSelf: 'center',
-    fontWeight: 'bold',
+    //fontWeight: 'bold',
     fontSize: 16,
+    bottom:5,
     color: '#7f7f7f',
+    fontFamily:'JosefinSans-Medium'
   },
   textStyle:{
     color:'#FFFFFF',
     alignSelf:'center',
-    fontSize:15
+    fontSize:15,
+    fontFamily:'JosefinSans-Medium'
   },
   item:{
     backgroundColor:'#1c1c1e',
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
   leftStyle:{
     position:'absolute',
     left:95,
-    bottom:19 
+    bottom:21 
   },
   content:{
     bottom:17
