@@ -6,13 +6,17 @@ import { FlatList } from "react-native-gesture-handler";
 const renderItem = ({ item }) => {
   return (
     <View style={styles.itemStyle}>
+      <Image
+        source={item.icon}
+        style={{width:30,height:30,aspectRatio:1}}
+      />
       <Text style={styles.itemTitleStyle}>{item.title}</Text>
       <Text style={styles.itemsubTitleStyle}>{item.subTitle}</Text>
     </View>
   );
 };
 
-const ExploreList = ({ title, data }) => {
+const ExploreList = ({ title, data,icon }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.titleStyle}>{title}</Text>
