@@ -32,7 +32,7 @@ export default YourAiAssistant = ({navigation}) => {
         </Text>
       </View>
       <View style={styles.iconimage}>
-        <Image source={require("../../../assets/icon.png")} />
+        <Image source={require("../../../assets/icons/rate_us.png")} />
       </View>
       <View style={styles.buttonstyle}>
         <TouchableHighlight onPress={nextscreen}>

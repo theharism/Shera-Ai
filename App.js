@@ -6,6 +6,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { CardStyleInterpolators } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
 import HelpUsGrow from "./src/screens/onBoarding/HelpUsGrow";
 import EnableNotifications from "./src/screens/onBoarding/EnableNotifications";
@@ -27,9 +28,34 @@ SplashScreen.preventAutoHideAsync();
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const config = {
+  animation: 'spring',
+  config: {
+    stiffness: 1000,
+    damping: 300,
+    mass: 3,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.01,
+    restSpeedThreshold: 0.01,
+  },
+};
+
 function OnBoarding({ setFlag }) {
   return (
-    <Stack.Navigator initialRouteName="YourAiAssistant">
+    <Stack.Navigator
+      initialRouteName="YourAiAssistant"
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: "horizontal",
+        transitionSpec: {
+          open: config,
+          close: config,
+        },
+        headerMode: "float",
+        animationEnabled: true,
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
+    >
       <Stack.Screen
         name="YourAiAssistant"
         options={{
@@ -75,8 +101,6 @@ const customHeaderLeft = (prop) => (
     style={{ width: 35, height: 35, left: 25, bottom: 2 }}
   />
 );
-
-
 
 const customHeaderRight = ({ showModal }) => (
   <View style={{ flexDirection: "row" }}>
@@ -198,7 +222,7 @@ export default function App() {
     })();
   }
 
-  const chatHeaderLeft = ({navigation}) => {
+  const chatHeaderLeft = ({ navigation }) => {
     return (
       <View
         style={{
@@ -207,10 +231,10 @@ export default function App() {
           marginLeft: 10,
         }}
       >
-        <TouchableOpacity onPress={()=>navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
         </TouchableOpacity>
-  
+
         <Image
           source={require("./assets/logo.png")}
           style={{ width: 35, height: 35, left: 60, bottom: 2 }}
@@ -256,7 +280,8 @@ export default function App() {
                   headerStyle: styles.headerStyle,
                   headerTitleStyle: styles.chatHeader,
                   headerTitleAlign: "center",
-                  headerLeft: () => (chatHeaderLeft({ navigation }))
+                  headerLeft: () => chatHeaderLeft({ navigation }),
+                  gestureDirection: "horizontal",
                 })}
               />
             </Stack.Navigator>
