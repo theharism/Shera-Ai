@@ -20,15 +20,16 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     alignSelf: "center",
     paddingRight: "26%",
-    marginLeft: "38%",
+    marginLeft: "38%"
   },
   button: {
     backgroundColor: "white",
     flexDirection: "row",
     alignContent: "center",
     alignItems: "center",
-    height: "120%",
+    height: "110%",
     borderRadius: 40,
+    marginHorizontal:10
   },
   buttontext: {
     fontSize: 22,

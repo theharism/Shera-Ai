@@ -60,7 +60,10 @@ const ChatHome = ({ navigation }) => {
         <CustomTextInput
           message={message}
           setMessage={setMessage}
-          onPress={() => navigation.navigate("ChatScreen")}
+          onPress={() => {
+            navigation.navigate("ChatScreen", { message });
+            setMessage("");
+          }}
           addShow={true}
         />
       </View>

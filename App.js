@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
 import HelpUsGrow from "./src/screens/onBoarding/HelpUsGrow";
@@ -20,6 +20,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ChatScreen from "./src/components/ChatScreen";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
+import { COLORS } from "./src/constants/COLORS";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,7 +37,7 @@ function OnBoarding({ setFlag }) {
           headerTintColor: "#FFFFFF",
           headerStyle: styles.headerStyle,
           headerTitleStyle: styles.onboardingHeader,
-          headerLeft:null
+          headerLeft: null,
         }}
       >
         {(props) => <YourAiAssistant {...props} />}
@@ -49,7 +50,7 @@ function OnBoarding({ setFlag }) {
           headerTintColor: "#FFFFFF",
           headerStyle: styles.headerStyle,
           headerTitleStyle: styles.onboardingHeader,
-          headerLeft:null
+          headerLeft: null,
         }}
       />
       <Stack.Screen
@@ -59,7 +60,7 @@ function OnBoarding({ setFlag }) {
           headerTintColor: "#FFFFFF",
           headerStyle: styles.headerStyle,
           headerTitleStyle: styles.onboardingHeader,
-          headerLeft:null
+          headerLeft: null,
         }}
       >
         {(props) => <EnableNotifications setFlag={setFlag} {...props} />}
@@ -74,6 +75,9 @@ const customHeaderLeft = (prop) => (
     style={{ width: 35, height: 35, left: 25, bottom: 2 }}
   />
 );
+
+
+
 const customHeaderRight = ({ showModal }) => (
   <View style={{ flexDirection: "row" }}>
     <Button
@@ -168,7 +172,7 @@ export default function App() {
   const [fontsLoaded] = useFonts({
     "JosefinSans-Regular": require("./assets/fonts/JosefinSans-VariableFont_wght.ttf"),
     "JosefinSans-Medium": require("./assets/fonts/static/JosefinSans-Medium.ttf"),
-    "JosefinSans-Bold":require('./assets/fonts/static/JosefinSans-Bold.ttf')
+    "JosefinSans-Bold": require("./assets/fonts/static/JosefinSans-Bold.ttf"),
   });
 
   useEffect(() => {
@@ -194,6 +198,27 @@ export default function App() {
     })();
   }
 
+  const chatHeaderLeft = ({navigation}) => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginLeft: 10,
+        }}
+      >
+        <TouchableOpacity onPress={()=>navigation.navigate("Home")}>
+          <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
+        </TouchableOpacity>
+  
+        <Image
+          source={require("./assets/logo.png")}
+          style={{ width: 35, height: 35, left: 60, bottom: 2 }}
+        />
+      </View>
+    );
+  };
+
   return (
     <PaperProvider style={{ flex: 1 }}>
       <NavigationContainer>
@@ -209,19 +234,31 @@ export default function App() {
               </Modal>
             </Portal>
 
-            <Stack.Navigator
-              initialRouteName="Home"
-              screenOptions={{
-                headerTitle: "Shera Ai",
-                headerTintColor: "#FFFFFF",
-                headerStyle: styles.headerStyle,
-                headerTitleStyle: styles.headerTitleStyle,
-                headerLeft: customHeaderLeft,
-                headerRight: () => customHeaderRight({ showModal }),
-              }}
-            >
-              <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="ChatScreen" component={ChatScreen} />
+            <Stack.Navigator initialRouteName="Home">
+              <Stack.Screen
+                name="Home"
+                component={Home}
+                options={{
+                  headerTitle: "Shera Ai",
+                  headerTintColor: "#FFFFFF",
+                  headerStyle: styles.headerStyle,
+                  headerTitleStyle: styles.headerTitleStyle,
+                  headerLeft: customHeaderLeft,
+                  headerRight: () => customHeaderRight({ showModal }),
+                }}
+              />
+              <Stack.Screen
+                name="ChatScreen"
+                component={ChatScreen}
+                options={({ navigation }) => ({
+                  headerTitle: "Shera Ai",
+                  headerTintColor: "#FFFFFF",
+                  headerStyle: styles.headerStyle,
+                  headerTitleStyle: styles.chatHeader,
+                  headerTitleAlign: "center",
+                  headerLeft: () => (chatHeaderLeft({ navigation }))
+                })}
+              />
             </Stack.Navigator>
           </>
         ) : (
@@ -247,6 +284,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     left: 18,
     bottom: 2,
+  },
+  chatHeader: {
+    fontFamily: "JosefinSans-Medium",
+    fontSize: 25,
+    bottom: 2,
+    alignSelf: "center",
+    alignContent: "center",
+    alignItems: "center",
+    justifyContent: "center",
   },
   onboardingHeader: {
     //fontWeight: "bold",
