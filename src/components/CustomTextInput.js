@@ -4,7 +4,7 @@ import { COLORS } from "../constants/COLORS";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
-const CustomTextInput = ({message,setMessage,newChat}) => {
+const CustomTextInput = ({message,setMessage,onPress,addShow}) => {
   const [height, setHeight] = useState(50);
   //const [message, setMessage] = useState("");
   const maxHeight = 140;
@@ -22,8 +22,8 @@ const CustomTextInput = ({message,setMessage,newChat}) => {
   };
 
   return (
-    <View style={styles.messageInput}>
-      <Ionicons name="add-circle-sharp" size={32} color="#c0c0c0" />
+    <View style={[ {paddingHorizontal: addShow ? 20 : 5 },styles.messageInput]}>
+      {addShow ? <Ionicons name="add-circle-sharp" size={32} color="#c0c0c0" /> : null}
       <TextInput
         style={[
           styles.textInput,
@@ -41,7 +41,7 @@ const CustomTextInput = ({message,setMessage,newChat}) => {
         value={message}
         scrollEnabled={scrollEnabled}
       />
-      <TouchableOpacity style={styles.sendButton} onPress={newChat}>
+      <TouchableOpacity style={styles.sendButton} onPress={onPress}>
         <FontAwesome name="send" size={24} color="#c0c0c0" />
       </TouchableOpacity>
     </View>
@@ -56,7 +56,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: COLORS.black,
     paddingVertical: 10,
-    paddingHorizontal: 20,
     marginBottom: 7,
   },
   textInput: {
