@@ -34,7 +34,7 @@ const ChatScreen = () => {
   }, [message]);
 
   useEffect(() => {
-    if (messageReceived.length > 0) {
+    if (messageReceived) {
       setMessage(messageReceived);
       setSendPressed(true);
     }
@@ -46,17 +46,27 @@ const ChatScreen = () => {
     }
   }, [submitted]);
 
+  function generateRandomString(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    
+    return result;
+  }
+  
+
   const handleSendMessage = () => {
     if (message.trim() === "") {
       return;
     }
 
     if (messages.length === 0) {
-      //dispatch(setChatTitle({ id: id, chatTitle: message }));
-      dispatch(addChat({ id: 0 }));
+      dispatch(addChat({id:generateRandomString(10),title:message}))
     }
-
-    //  setHeight(0);
 
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -189,7 +199,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: "100%",
-    height: 60, // Set a fixed height for the text input container
+    height: 60
   },
   chatItem: {
     minHeight: 100,
@@ -203,16 +213,9 @@ const styles = StyleSheet.create({
     borderTopColor: "#2a2a2a",
     borderWidth: 1,
   },
-  // chatInner: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   //paddingRight: 30,
-  //   marginRight:15
-  // },
   chatInner: {
     flexDirection: "row",
     alignItems: "center",
-    //flexShrink: 1,
   },
   avator: {
     width: 25,
@@ -221,17 +224,10 @@ const styles = StyleSheet.create({
     marginRight: 8,
     alignSelf: "flex-start",
   },
-  // chatText: {
-  //   color: COLORS.white,
-  //   fontSize: 18,
-  //   fontFamily: "JosefinSans-Medium",
-  //   //paddingRight:10
-  // },
   chatText: {
     color: COLORS.white,
     fontSize: 16,
     fontFamily: "JosefinSans-Medium",
-    //flexWrap: "wrap",
     flexShrink: 1,
     textAlign: "auto",
   },
