@@ -15,8 +15,6 @@ const ChatHomeItem = ({title,icon,title1,title2,setMessage,leftStyle}) => {
     );
   };
 
-console.log(leftStyle)
-
   return (
     <Card mode="outlined" style={title1.length < 36 ? styles.smallCard : styles.bigCard}>
       <Card.Title 

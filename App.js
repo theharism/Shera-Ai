@@ -1,10 +1,10 @@
 import "react-native-gesture-handler";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image,Animated,Dimensions,Easing } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer, useFocusEffect, useIsFocused } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
@@ -38,6 +38,47 @@ const config = {
     restDisplacementThreshold: 0.01,
     restSpeedThreshold: 0.01,
   },
+};
+
+const FadeInView = (props, { navigation }) => {
+  const SCREEN_WIDTH = Dimensions.get('window').width;
+  const slideAnim = React.useRef(new Animated.Value(1)).current; // Initial value for slide: SCREEN_WIDTH
+  
+  useFocusEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 500,
+      easing: Easing.in(Easing.poly(1)),
+      useNativeDriver: true,
+    }).start();
+    return () => {
+      Animated.timing(slideAnim, {
+        toValue: SCREEN_WIDTH,
+        duration: 500,
+        useNativeDriver: true,
+        easing: Easing.in(Easing.poly(1)),
+      }).start();
+    };
+  });
+
+  return (
+    <Animated.View
+      style={{
+        flex: 1,
+        transform: [
+          {
+            translateX: slideAnim.interpolate({
+              inputRange: [0, SCREEN_WIDTH],
+              outputRange: [0, SCREEN_WIDTH],
+              extrapolate: 'clamp',
+            }),
+          },
+        ],
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  );
 };
 
 function OnBoarding({ setFlag }) {
@@ -123,6 +164,24 @@ const customHeaderRight = ({ showModal }) => (
   </View>
 );
 
+const FadeHomeScreen = (props, { navigation }) => (
+  <FadeInView>
+    <ChatHome {...props} />
+  </FadeInView>
+);
+
+const FadeHomeScree = (props, { navigation }) => (
+  <FadeInView>
+    <ExploreHome {...props} />
+  </FadeInView>
+);
+
+const FadeHomeScre = (props, { navigation }) => (
+  <FadeInView>
+    <RecentsHome {...props} />
+  </FadeInView>
+);
+
 function Home() {
   return (
     <View style={styles.container}>
@@ -143,6 +202,7 @@ function Home() {
           tabBarActiveTintColor: "#40e6b5",
           headerShown: false,
           tabBarHideOnKeyboard: true,
+          //tabBarButton: (props) => <SlideInView>{props.children}</SlideInView>,
         }}
       >
         <Tab.Screen

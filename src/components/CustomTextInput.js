@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: COLORS.black,
-    paddingVertical: 10,
+    paddingVertical: 5,
     marginBottom: 7,
   },
   textInput: {
@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     borderColor: "#7f7f7f",
     borderWidth: 0.2,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     marginLeft: 10,
     minHeight: 60,
     color: COLORS.white,
