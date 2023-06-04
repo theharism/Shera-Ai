@@ -12,17 +12,20 @@ import CustomTextInput from "./CustomTextInput";
 import { FlatList } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { chatWithGPT3 } from "../Api/chatgpt";
-import { addMessage, addChat, getChatsSize } from "../slices/chatsSlice";
+import { addMessage, addChat, getChatMessages } from "../slices/chatsSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { generateRandomString } from "../utilities/StringGenerator";
 
 const ChatScreen = () => {
   const route = useRoute();
   const messageReceived = route.params?.message;
+  const id = route.params?.id;
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [sendPressed, setSendPressed] = useState(false);
+  const [chatID, setChatID] = useState("");
   const [typing, setTyping] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -46,26 +49,53 @@ const ChatScreen = () => {
     }
   }, [submitted]);
 
-  function generateRandomString(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    const charactersLength = characters.length;
-    
-    for (let i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    
-    return result;
-  }
-  
+  let messagesArray = [];
 
-  const handleSendMessage = () => {
+  if (id) {
+    messagesArray = useSelector(
+      (state) =>
+        state.chatSlice.chats.find((chat) => chat.id === id)?.messages || []
+    );
+    if (messagesArray) {
+      useEffect(() => {
+        setMessages(messagesArray);
+      }, []);
+    }
+  }
+
+  console.log(messagesArray);
+
+  // useEffect(() => {
+  //   if (messagesArray) {
+  //     setMessages(messagesArray);
+  //   }
+  // }, [messagesArray]);
+
+  const handleSetChatId = (id) => {
+    return new Promise((resolve) => {
+      setChatID(id);
+      resolve(id);
+    });
+  };
+
+  const handleSendMessage = async () => {
     if (message.trim() === "") {
       return;
     }
 
     if (messages.length === 0) {
-      dispatch(addChat({id:generateRandomString(10),title:message}))
+      const newID = generateRandomString(10);
+      dispatch(addChat({ id: newID, title: message }));
+      const newid = await handleSetChatId(newID);
+      dispatch(
+        addMessage({
+          chatId: newID,
+          id: messages.length,
+          message: message.trimEnd(),
+          sender: "user",
+        })
+      );
+      console.log(newid);
     }
 
     setMessages((prevMessages) => [
@@ -77,14 +107,16 @@ const ChatScreen = () => {
       },
     ]);
 
-    dispatch(
-      addMessage({
-        chatId: 0,
-        id: messages.length,
-        message: message.trimEnd(),
-        sender: "user",
-      })
-    );
+    if (chatID) {
+      dispatch(
+        addMessage({
+          chatId: id,
+          id: messages.length,
+          message: message.trimEnd(),
+          sender: "user",
+        })
+      );
+    }
 
     setMessage("");
     setTyping(true);
@@ -100,13 +132,24 @@ const ChatScreen = () => {
         ...prevMessages,
         { id: prevMessages.length + 1, message: reply, sender: "ChatGPT" },
       ]);
+
+      if (chatID) {
+        dispatch(
+          addMessage({
+            chatId: chatID,
+            id: messages.length, message: reply, sender: "ChatGPT"
+          })
+        );
+      }
     }
     setTyping(false);
   };
 
-  if (sendPressed) {
-    handleSendMessage();
-  }
+  useEffect(() => {
+    if (sendPressed) {
+      handleSendMessage();
+    }
+  }, [sendPressed]);
 
   const renderItem = ({ item }) =>
     item.sender === "user" ? (
@@ -199,7 +242,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     width: "100%",
-    height: 60
+    height: 60,
   },
   chatItem: {
     minHeight: 100,

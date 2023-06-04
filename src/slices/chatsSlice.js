@@ -11,26 +11,49 @@ const chatSlice = createSlice({
   reducers: {
     addChat: (state, action) => {
       const { id, title } = action.payload;
-      console.log(state);
       state.chats = [...state.chats, { id, title, messages: [] }];
       state.size += 1;
     },
+    // addMessage: (state, action) => {
+    //   const { chatId, id, message, sender } = action.payload;
+    //   console.log('FUCK',state)
+    //   const chat = state.chats.find((chat) => chat.id === chatId);
+    //   if (chat) {
+    //     if (!chat.messages) {
+    //       chat.messages = [];
+    //     }
+    //     chat.messages.push({ id: id, message, sender });
+    //   }
+    // },
     addMessage: (state, action) => {
-      const { chatId, id, message, sender } = action.payload;
-      const chat = state.chats.find((chat) => chat.id === chatId);
-      if (chat) {
-        if (!chat.messages) {
-          chat.messages = [];
-        }
-        chat.messages.push({ id: id, message, sender });
-      }
-    },
+        const { chatId, id, message, sender } = action.payload;
+        console.log(chatId, id, message, sender)
+        const updatedChats = state.chats.map((chat) => {
+          if (chat.id === chatId) {
+            const updatedMessages = [...chat.messages, { id, message, sender }];
+            console.log(updatedMessages); // Console log the updated messages
+            return {
+              ...chat,
+              messages: updatedMessages,
+            };
+          }
+          return chat;
+        });
+      
+        return {
+          ...state,
+          chats: updatedChats,
+        };
+      },
+      
+      
     getChatMessages: (state, action) => {
       const { chatId } = action.payload;
-      console.log(chatId)
-      const chat = state.chats.find((chat) => chat.id === chatId);
-      if (chat) {
-        return chat.messages;
+      if (chatId) {
+        const chat = state.chats.find((chat) => chat.id === chatId);
+        if (chat) {
+          return chat.messages;
+        }
       }
       return [];
     },
