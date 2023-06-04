@@ -12,13 +12,14 @@ import CustomTextInput from "./CustomTextInput";
 import { FlatList } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { chatWithGPT3 } from "../Api/chatgpt";
+import { addMessage, addChat, getChatsSize } from "../slices/chatsSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const ChatScreen = () => {
   const route = useRoute();
   const messageReceived = route.params?.message;
 
   const [message, setMessage] = useState("");
-
   const [messages, setMessages] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [sendPressed, setSendPressed] = useState(false);
@@ -26,23 +27,34 @@ const ChatScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const flatListRef = useRef(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setSubmitted(false);
+  }, [message]);
 
   useEffect(() => {
     if (messageReceived.length > 0) {
       setMessage(messageReceived);
       setSendPressed(true);
-      console.log("HI");
     }
   }, []);
+
+  useEffect(() => {
+    if (submitted) {
+      handleResponseMessage();
+    }
+  }, [submitted]);
 
   const handleSendMessage = () => {
     if (message.trim() === "") {
       return;
     }
 
-    // if (messages.length === 0) {
-    //   dispatch(setChatTitle({ id: id, chatTitle: message }));
-    // }
+    if (messages.length === 0) {
+      //dispatch(setChatTitle({ id: id, chatTitle: message }));
+      dispatch(addChat({ id: 0 }));
+    }
 
     //  setHeight(0);
 
@@ -55,17 +67,20 @@ const ChatScreen = () => {
       },
     ]);
 
+    dispatch(
+      addMessage({
+        chatId: 0,
+        id: messages.length,
+        message: message.trimEnd(),
+        sender: "user",
+      })
+    );
+
     setMessage("");
     setTyping(true);
     setSubmitted(true);
     setSendPressed(false);
   };
-
-  useEffect(() => {
-    if (submitted) {
-      handleResponseMessage();
-    }
-  }, [submitted]);
 
   const handleResponseMessage = async () => {
     const reply = await chatWithGPT3(messages);
@@ -78,10 +93,6 @@ const ChatScreen = () => {
     }
     setTyping(false);
   };
-
-  useEffect(() => {
-    setSubmitted(false);
-  }, [message]);
 
   if (sendPressed) {
     handleSendMessage();
@@ -175,7 +186,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     flex: 1,
     justifyContent: "space-between",
-  },  
+  },
   textInput: {
     width: "100%",
     height: 60, // Set a fixed height for the text input container
@@ -202,7 +213,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     //flexShrink: 1,
-  },  
+  },
   avator: {
     width: 25,
     height: 25,
@@ -218,10 +229,10 @@ const styles = StyleSheet.create({
   // },
   chatText: {
     color: COLORS.white,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: "JosefinSans-Medium",
     //flexWrap: "wrap",
     flexShrink: 1,
-    textAlign:'auto'
-  }
+    textAlign: "auto",
+  },
 });

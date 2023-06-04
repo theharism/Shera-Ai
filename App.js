@@ -1,10 +1,22 @@
 import "react-native-gesture-handler";
-import { StyleSheet, Text, View, Image,Animated,Dimensions,Easing } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Animated,
+  Dimensions,
+  Easing,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { NavigationContainer, useFocusEffect, useIsFocused } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useFocusEffect,
+  useIsFocused,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
@@ -23,13 +35,23 @@ import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { COLORS } from "./src/constants/COLORS";
 
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider, useDispatch } from "react-redux";
+import chatSlice from "./src/slices/chatsSlice";
+
+const store = configureStore({
+  reducer: {
+    chatSlice
+  },
+});
+
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const config = {
-  animation: 'spring',
+  animation: "spring",
   config: {
     stiffness: 1000,
     damping: 300,
@@ -41,9 +63,9 @@ const config = {
 };
 
 const FadeInView = (props, { navigation }) => {
-  const SCREEN_WIDTH = Dimensions.get('window').width;
+  const SCREEN_WIDTH = Dimensions.get("window").width;
   const slideAnim = React.useRef(new Animated.Value(1)).current; // Initial value for slide: SCREEN_WIDTH
-  
+
   useFocusEffect(() => {
     Animated.timing(slideAnim, {
       toValue: 0,
@@ -70,7 +92,7 @@ const FadeInView = (props, { navigation }) => {
             translateX: slideAnim.interpolate({
               inputRange: [0, SCREEN_WIDTH],
               outputRange: [0, SCREEN_WIDTH],
-              extrapolate: 'clamp',
+              extrapolate: "clamp",
             }),
           },
         ],
@@ -244,14 +266,14 @@ function Home() {
   );
 }
 
-export default function App() {
+function Screens() {
   const [visible, setVisible] = React.useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
-  const [flag, setFlag] = useState(false);
+  const [flag, setFlag] = useState(true);
 
   const [fontsLoaded] = useFonts({
     "JosefinSans-Regular": require("./assets/fonts/JosefinSans-VariableFont_wght.ttf"),
@@ -304,55 +326,63 @@ export default function App() {
   };
 
   return (
-    <PaperProvider style={{ flex: 1 }}>
-      <NavigationContainer>
-        {flag ? (
-          <>
-            <Portal>
-              <Modal
-                visible={visible}
-                onDismiss={hideModal}
-                contentContainerStyle={containerStyle}
-              >
-                <Text>You have 10 points Left</Text>
-              </Modal>
-            </Portal>
+    <NavigationContainer>
+      {flag ? (
+        <>
+          <Portal>
+            <Modal
+              visible={visible}
+              onDismiss={hideModal}
+              contentContainerStyle={containerStyle}
+            >
+              <Text>You have 10 points Left</Text>
+            </Modal>
+          </Portal>
 
-            <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen
-                name="Home"
-                component={Home}
-                options={{
-                  headerTitle: "Shera Ai",
-                  headerTintColor: "#FFFFFF",
-                  headerStyle: styles.headerStyle,
-                  headerTitleStyle: styles.headerTitleStyle,
-                  headerLeft: customHeaderLeft,
-                  headerRight: () => customHeaderRight({ showModal }),
-                }}
-              />
-              <Stack.Screen
-                name="ChatScreen"
-                component={ChatScreen}
-                options={({ navigation }) => ({
-                  headerTitle: "Shera Ai",
-                  headerTintColor: "#FFFFFF",
-                  headerStyle: styles.headerStyle,
-                  headerTitleStyle: styles.chatHeader,
-                  headerTitleAlign: "center",
-                  headerLeft: () => chatHeaderLeft({ navigation }),
-                  gestureDirection: "horizontal",
-                })}
-              />
-            </Stack.Navigator>
-          </>
-        ) : (
-          <>
-            <OnBoarding setFlag={setFlag} />
-          </>
-        )}
-      </NavigationContainer>
-    </PaperProvider>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{
+                headerTitle: "Shera Ai",
+                headerTintColor: "#FFFFFF",
+                headerStyle: styles.headerStyle,
+                headerTitleStyle: styles.headerTitleStyle,
+                headerLeft: customHeaderLeft,
+                headerRight: () => customHeaderRight({ showModal }),
+              }}
+            />
+            <Stack.Screen
+              name="ChatScreen"
+              component={ChatScreen}
+              options={({ navigation }) => ({
+                headerTitle: "Shera Ai",
+                headerTintColor: "#FFFFFF",
+                headerStyle: styles.headerStyle,
+                headerTitleStyle: styles.chatHeader,
+                headerTitleAlign: "center",
+                headerLeft: () => chatHeaderLeft({ navigation }),
+                gestureDirection: "horizontal",
+              })}
+            />
+          </Stack.Navigator>
+        </>
+      ) : (
+        <>
+          <OnBoarding setFlag={setFlag} />
+        </>
+      )}
+    </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
+    <Provider store={store}>
+      <PaperProvider style={{ flex: 1 }}>
+        <Screens />
+      </PaperProvider>
+    </Provider>
   );
 }
 
