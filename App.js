@@ -1,11 +1,24 @@
 import "react-native-gesture-handler";
-import { StyleSheet, Text, View, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Animated,
+  Dimensions,
+  Easing,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useFocusEffect,
+  useIsFocused,
+} from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { CardStyleInterpolators } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
 import HelpUsGrow from "./src/screens/onBoarding/HelpUsGrow";
 import EnableNotifications from "./src/screens/onBoarding/EnableNotifications";
@@ -22,14 +35,90 @@ import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { COLORS } from "./src/constants/COLORS";
 
+import { configureStore } from "@reduxjs/toolkit";
+import { Provider, useDispatch } from "react-redux";
+import chatSlice from "./src/slices/chatsSlice";
+
+const store = configureStore({
+  reducer: {
+    chatSlice
+  },
+});
+
 SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
+const config = {
+  animation: "spring",
+  config: {
+    stiffness: 1000,
+    damping: 300,
+    mass: 3,
+    overshootClamping: true,
+    restDisplacementThreshold: 0.01,
+    restSpeedThreshold: 0.01,
+  },
+};
+
+const FadeInView = (props, { navigation }) => {
+  const SCREEN_WIDTH = Dimensions.get("window").width;
+  const slideAnim = React.useRef(new Animated.Value(1)).current; // Initial value for slide: SCREEN_WIDTH
+
+  useFocusEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 500,
+      easing: Easing.in(Easing.poly(1)),
+      useNativeDriver: true,
+    }).start();
+    return () => {
+      Animated.timing(slideAnim, {
+        toValue: SCREEN_WIDTH,
+        duration: 500,
+        useNativeDriver: true,
+        easing: Easing.in(Easing.poly(1)),
+      }).start();
+    };
+  });
+
+  return (
+    <Animated.View
+      style={{
+        flex: 1,
+        transform: [
+          {
+            translateX: slideAnim.interpolate({
+              inputRange: [0, SCREEN_WIDTH],
+              outputRange: [0, SCREEN_WIDTH],
+              extrapolate: "clamp",
+            }),
+          },
+        ],
+      }}
+    >
+      {props.children}
+    </Animated.View>
+  );
+};
+
 function OnBoarding({ setFlag }) {
   return (
-    <Stack.Navigator initialRouteName="YourAiAssistant">
+    <Stack.Navigator
+      initialRouteName="YourAiAssistant"
+      screenOptions={{
+        gestureEnabled: true,
+        gestureDirection: "horizontal",
+        transitionSpec: {
+          open: config,
+          close: config,
+        },
+        headerMode: "float",
+        animationEnabled: true,
+        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+      }}
+    >
       <Stack.Screen
         name="YourAiAssistant"
         options={{
@@ -76,8 +165,6 @@ const customHeaderLeft = (prop) => (
   />
 );
 
-
-
 const customHeaderRight = ({ showModal }) => (
   <View style={{ flexDirection: "row" }}>
     <Button
@@ -97,6 +184,24 @@ const customHeaderRight = ({ showModal }) => (
       color="#c0c0c0"
     />
   </View>
+);
+
+const FadeHomeScreen = (props, { navigation }) => (
+  <FadeInView>
+    <ChatHome {...props} />
+  </FadeInView>
+);
+
+const FadeHomeScree = (props, { navigation }) => (
+  <FadeInView>
+    <ExploreHome {...props} />
+  </FadeInView>
+);
+
+const FadeHomeScre = (props, { navigation }) => (
+  <FadeInView>
+    <RecentsHome {...props} />
+  </FadeInView>
 );
 
 function Home() {
@@ -119,6 +224,7 @@ function Home() {
           tabBarActiveTintColor: "#40e6b5",
           headerShown: false,
           tabBarHideOnKeyboard: true,
+          //tabBarButton: (props) => <SlideInView>{props.children}</SlideInView>,
         }}
       >
         <Tab.Screen
@@ -160,14 +266,14 @@ function Home() {
   );
 }
 
-export default function App() {
+function Screens() {
   const [visible, setVisible] = React.useState(false);
 
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
-  const [flag, setFlag] = useState(false);
+  const [flag, setFlag] = useState(true);
 
   const [fontsLoaded] = useFonts({
     "JosefinSans-Regular": require("./assets/fonts/JosefinSans-VariableFont_wght.ttf"),
@@ -198,7 +304,7 @@ export default function App() {
     })();
   }
 
-  const chatHeaderLeft = ({navigation}) => {
+  const chatHeaderLeft = ({ navigation }) => {
     return (
       <View
         style={{
@@ -207,10 +313,10 @@ export default function App() {
           marginLeft: 10,
         }}
       >
-        <TouchableOpacity onPress={()=>navigation.navigate("Home")}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
         </TouchableOpacity>
-  
+
         <Image
           source={require("./assets/logo.png")}
           style={{ width: 35, height: 35, left: 60, bottom: 2 }}
@@ -220,54 +326,63 @@ export default function App() {
   };
 
   return (
-    <PaperProvider style={{ flex: 1 }}>
-      <NavigationContainer>
-        {flag ? (
-          <>
-            <Portal>
-              <Modal
-                visible={visible}
-                onDismiss={hideModal}
-                contentContainerStyle={containerStyle}
-              >
-                <Text>You have 10 points Left</Text>
-              </Modal>
-            </Portal>
+    <NavigationContainer>
+      {flag ? (
+        <>
+          <Portal>
+            <Modal
+              visible={visible}
+              onDismiss={hideModal}
+              contentContainerStyle={containerStyle}
+            >
+              <Text>You have 10 points Left</Text>
+            </Modal>
+          </Portal>
 
-            <Stack.Navigator initialRouteName="Home">
-              <Stack.Screen
-                name="Home"
-                component={Home}
-                options={{
-                  headerTitle: "Shera Ai",
-                  headerTintColor: "#FFFFFF",
-                  headerStyle: styles.headerStyle,
-                  headerTitleStyle: styles.headerTitleStyle,
-                  headerLeft: customHeaderLeft,
-                  headerRight: () => customHeaderRight({ showModal }),
-                }}
-              />
-              <Stack.Screen
-                name="ChatScreen"
-                component={ChatScreen}
-                options={({ navigation }) => ({
-                  headerTitle: "Shera Ai",
-                  headerTintColor: "#FFFFFF",
-                  headerStyle: styles.headerStyle,
-                  headerTitleStyle: styles.chatHeader,
-                  headerTitleAlign: "center",
-                  headerLeft: () => (chatHeaderLeft({ navigation }))
-                })}
-              />
-            </Stack.Navigator>
-          </>
-        ) : (
-          <>
-            <OnBoarding setFlag={setFlag} />
-          </>
-        )}
-      </NavigationContainer>
-    </PaperProvider>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{
+                headerTitle: "Shera Ai",
+                headerTintColor: "#FFFFFF",
+                headerStyle: styles.headerStyle,
+                headerTitleStyle: styles.headerTitleStyle,
+                headerLeft: customHeaderLeft,
+                headerRight: () => customHeaderRight({ showModal }),
+              }}
+            />
+            <Stack.Screen
+              name="ChatScreen"
+              component={ChatScreen}
+              options={({ navigation }) => ({
+                headerTitle: "Shera Ai",
+                headerTintColor: "#FFFFFF",
+                headerStyle: styles.headerStyle,
+                headerTitleStyle: styles.chatHeader,
+                headerTitleAlign: "center",
+                headerLeft: () => chatHeaderLeft({ navigation }),
+                gestureDirection: "horizontal",
+              })}
+            />
+          </Stack.Navigator>
+        </>
+      ) : (
+        <>
+          <OnBoarding setFlag={setFlag} />
+        </>
+      )}
+    </NavigationContainer>
+  );
+}
+
+export default function App() {
+  return (
+    <Provider store={store}>
+      <PaperProvider style={{ flex: 1 }}>
+        <Screens />
+      </PaperProvider>
+    </Provider>
   );
 }
 
