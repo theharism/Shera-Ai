@@ -19,11 +19,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { generateRandomString } from "../utilities/StringGenerator";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
+import { subtractPoints } from "../slices/pointsSlice";
 
 const ChatScreen = () => {
   const route = useRoute();
   const messageReceived = route.params?.message;
   const id = route.params?.id;
+  const content = route.params?.content;
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -35,6 +37,19 @@ const ChatScreen = () => {
 
   const flatListRef = useRef(null);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (content) {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          id: prevMessages.length + 1,
+          message: content,
+          sender: "system",
+        },
+      ]);
+    }
+  }, [content]);
 
   useEffect(() => {
     setSubmitted(false);
@@ -75,7 +90,7 @@ const ChatScreen = () => {
 
   const copyToClipboard = async (text) => {
     await Clipboard.setStringAsync(text);
-    ToastAndroid.show('Copied to Clipboard',ToastAndroid.SHORT)
+    ToastAndroid.show("Copied to Clipboard", ToastAndroid.SHORT);
   };
 
   const handleSetChatId = (id) => {
@@ -89,6 +104,8 @@ const ChatScreen = () => {
     if (message.trim() === "") {
       return;
     }
+
+    dispatch(subtractPoints({ value: 1 }));
 
     if (messages.length === 0) {
       const newID = generateRandomString(10);
@@ -205,18 +222,10 @@ const ChatScreen = () => {
               />
               <Text style={styles.copyButtonText}>Copy</Text>
             </TouchableOpacity>
-            <View style={styles.copyButtonContainer}>
-              <MaterialCommunityIcons
-                name="content-copy"
-                size={24}
-                color={COLORS.white}
-              />
-              <Text style={styles.copyButtonText}>Copy</Text>
-            </View>
           </View>
         </>
       )
-    ) : (
+    ) : item.sender === "ChatGPT" ? (
       <>
         <View style={[{ backgroundColor: "#171717" }, styles.chatItem]}>
           <View style={styles.chatInner}>
@@ -239,7 +248,7 @@ const ChatScreen = () => {
           </TouchableOpacity>
         </View>
       </>
-    );
+    ) : null;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -333,8 +342,14 @@ const styles = StyleSheet.create({
   copyButtonContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "flex-end", // Aligns the button to the right side
-    marginTop: 5, // Adjust the margin as needed
+    alignSelf: "flex-end",
+    justifyContent: "center", // Aligns the button to the right side
+    marginTop: 10, // Adjust the margin as needed
+    borderColor: COLORS.white,
+    borderRadius: 20,
+    borderWidth: 1,
+    width: 70,
+    height: 30,
   },
   copyButtonText: {
     marginLeft: 5,

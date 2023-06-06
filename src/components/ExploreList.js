@@ -1,22 +1,26 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import { COLORS } from "../constants/COLORS";
-import { FlatList } from "react-native-gesture-handler";
+import { FlatList, TouchableOpacity } from "react-native-gesture-handler";
 
-const renderItem = ({ item }) => {
-  return (
-    <View style={styles.itemStyle}>
-      <Image
-        source={item.icon}
-        style={{width:30,height:30,aspectRatio:1}}
-      />
-      <Text style={styles.itemTitleStyle}>{item.title}</Text>
-      <Text style={styles.itemsubTitleStyle}>{item.subTitle}</Text>
-    </View>
-  );
-};
+const ExploreList = ({ title, data, navigation }) => {
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.itemStyle}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ChatScreen", {content:item.content })}
+        >
+          <Image
+            source={item.icon}
+            style={{ width: 30, height: 30, aspectRatio: 1 }}
+          />
+          <Text style={styles.itemTitleStyle}>{item.title}</Text>
+          <Text style={styles.itemsubTitleStyle}>{item.subTitle}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
-const ExploreList = ({ title, data,icon }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.titleStyle}>{title}</Text>

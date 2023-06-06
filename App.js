@@ -36,12 +36,14 @@ import { useFonts } from "expo-font";
 import { COLORS } from "./src/constants/COLORS";
 
 import { configureStore } from "@reduxjs/toolkit";
-import { Provider, useDispatch } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import chatSlice from "./src/slices/chatsSlice";
+import pointsSlice from "./src/slices/pointsSlice";
 
 const store = configureStore({
   reducer: {
-    chatSlice
+    chatSlice,
+    pointsSlice
   },
 });
 
@@ -49,6 +51,30 @@ SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
+
+
+
+function select(state) {
+  return state.pointsSlice.points
+}
+
+let currentValue
+function handleChange() {
+  let previousValue = currentValue
+  currentValue = select(store.getState())
+
+  if (previousValue !== currentValue) {
+    console.log(
+      'Some deep nested property changed from',
+      previousValue,
+      'to',
+      currentValue
+    )
+  }
+}
+
+const unsubscribe = store.subscribe(handleChange)
+//unsubscribe()
 
 const config = {
   animation: "spring",
@@ -165,7 +191,7 @@ const customHeaderLeft = (prop) => (
   />
 );
 
-const customHeaderRight = ({ showModal }) => (
+const customHeaderRight = ({ showModal,points }) => (
   <View style={{ flexDirection: "row" }}>
     <Button
       icon="star"
@@ -175,7 +201,7 @@ const customHeaderRight = ({ showModal }) => (
       buttonColor="#40e6b4"
       onPress={showModal}
     >
-      10
+      {points}
     </Button>
     <MaterialIcons
       name="account-circle"
@@ -268,12 +294,12 @@ function Home() {
 
 function Screens() {
   const [visible, setVisible] = React.useState(false);
-
+  const points = useSelector((state) => state.pointsSlice.points);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
-  const [flag, setFlag] = useState(true);
+  const [flag, setFlag] = useState(false);
 
   const [fontsLoaded] = useFonts({
     "JosefinSans-Regular": require("./assets/fonts/JosefinSans-VariableFont_wght.ttf"),
@@ -349,7 +375,7 @@ function Screens() {
                 headerStyle: styles.headerStyle,
                 headerTitleStyle: styles.headerTitleStyle,
                 headerLeft: customHeaderLeft,
-                headerRight: () => customHeaderRight({ showModal }),
+                headerRight: () => customHeaderRight({ showModal,points }),
               }}
             />
             <Stack.Screen
