@@ -4,6 +4,8 @@ import {
   Image,
   View,
   KeyboardAvoidingView,
+  TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,6 +17,8 @@ import { chatWithGPT3 } from "../Api/chatgpt";
 import { addMessage, addChat, getChatMessages } from "../slices/chatsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { generateRandomString } from "../utilities/StringGenerator";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Clipboard from "expo-clipboard";
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -63,13 +67,16 @@ const ChatScreen = () => {
     }
   }
 
-  console.log(messagesArray);
-
   // useEffect(() => {
   //   if (messagesArray) {
   //     setMessages(messagesArray);
   //   }
   // }, [messagesArray]);
+
+  const copyToClipboard = async (text) => {
+    await Clipboard.setStringAsync(text);
+    ToastAndroid.show('Copied to Clipboard',ToastAndroid.SHORT)
+  };
 
   const handleSetChatId = (id) => {
     return new Promise((resolve) => {
@@ -95,7 +102,6 @@ const ChatScreen = () => {
           sender: "user",
         })
       );
-      console.log(newid);
     }
 
     setMessages((prevMessages) => [
@@ -137,7 +143,9 @@ const ChatScreen = () => {
         dispatch(
           addMessage({
             chatId: chatID,
-            id: messages.length, message: reply, sender: "ChatGPT"
+            id: messages.length,
+            message: reply,
+            sender: "ChatGPT",
           })
         );
       }
@@ -154,36 +162,83 @@ const ChatScreen = () => {
   const renderItem = ({ item }) =>
     item.sender === "user" ? (
       item.id === 1 ? (
-        <View style={styles.firstChatItem}>
-          <View style={styles.chatInner}>
-            <Image
-              source={require("../../assets/icons/user_avatar.png")}
-              style={styles.avator}
-            />
-            <Text style={styles.chatText}>{item.message}</Text>
+        <>
+          <View style={styles.firstChatItem}>
+            <View style={styles.chatInner}>
+              <Image
+                source={require("../../assets/icons/user_avatar.png")}
+                style={styles.avatar}
+              />
+              <Text style={styles.chatText}>{item.message}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.copyButtonContainer}
+              onPress={() => copyToClipboard(item.message)}
+            >
+              <MaterialCommunityIcons
+                name="content-copy"
+                size={24}
+                color={COLORS.white}
+              />
+              <Text style={styles.copyButtonText}>Copy</Text>
+            </TouchableOpacity>
           </View>
-        </View>
+        </>
       ) : (
-        <View style={styles.chatItem}>
-          <View style={styles.chatInner}>
-            <Image
-              source={require("../../assets/icons/user_avatar.png")}
-              style={styles.avator}
-            />
-            <Text style={styles.chatText}>{item.message}</Text>
+        <>
+          <View style={styles.chatItem}>
+            <View style={styles.chatInner}>
+              <Image
+                source={require("../../assets/icons/user_avatar.png")}
+                style={styles.avatar}
+              />
+              <Text style={styles.chatText}>{item.message}</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.copyButtonContainer}
+              onPress={() => copyToClipboard(item.message)}
+            >
+              <MaterialCommunityIcons
+                name="content-copy"
+                size={24}
+                color={COLORS.white}
+              />
+              <Text style={styles.copyButtonText}>Copy</Text>
+            </TouchableOpacity>
+            <View style={styles.copyButtonContainer}>
+              <MaterialCommunityIcons
+                name="content-copy"
+                size={24}
+                color={COLORS.white}
+              />
+              <Text style={styles.copyButtonText}>Copy</Text>
+            </View>
           </View>
-        </View>
+        </>
       )
     ) : (
-      <View style={[{ backgroundColor: "#171717" }, styles.chatItem]}>
-        <View style={styles.chatInner}>
-          <Image
-            source={require("../../assets/logo.png")}
-            style={styles.avator}
-          />
-          <Text style={styles.chatText}>{item.message}</Text>
+      <>
+        <View style={[{ backgroundColor: "#171717" }, styles.chatItem]}>
+          <View style={styles.chatInner}>
+            <Image
+              source={require("../../assets/logo.png")}
+              style={styles.avatar}
+            />
+            <Text style={styles.chatText}>{item.message}</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.copyButtonContainer}
+            onPress={() => copyToClipboard(item.message)}
+          >
+            <MaterialCommunityIcons
+              name="content-copy"
+              size={24}
+              color={COLORS.white}
+            />
+            <Text style={styles.copyButtonText}>Copy</Text>
+          </TouchableOpacity>
         </View>
-      </View>
+      </>
     );
 
   return (
@@ -259,8 +314,9 @@ const styles = StyleSheet.create({
   chatInner: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "flex-start",
   },
-  avator: {
+  avatar: {
     width: 25,
     height: 25,
     aspectRatio: 1,
@@ -273,5 +329,15 @@ const styles = StyleSheet.create({
     fontFamily: "JosefinSans-Medium",
     flexShrink: 1,
     textAlign: "auto",
+  },
+  copyButtonContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end", // Aligns the button to the right side
+    marginTop: 5, // Adjust the margin as needed
+  },
+  copyButtonText: {
+    marginLeft: 5,
+    color: COLORS.white,
   },
 });
