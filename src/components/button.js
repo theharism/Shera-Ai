@@ -33,7 +33,8 @@ const styles = StyleSheet.create({
   },
   buttontext: {
     fontSize: 22,
-    fontFamily:'JosefinSans-Medium'
+    fontFamily:'JosefinSans-Medium',
+    
   },
   nextbutton: {},
 });

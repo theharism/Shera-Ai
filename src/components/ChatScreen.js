@@ -37,19 +37,6 @@ const ChatScreen = () => {
   const flatListRef = useRef(null);
   const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   if (content) {
-  //     setMessages((prevMessages) => [
-  //       ...prevMessages,
-  //       {
-  //         id: prevMessages.length + 1,
-  //         message: content,
-  //         sender: "system",
-  //       },
-  //     ]);
-  //   }
-  // }, [content]);
-
   useEffect(() => {
     setSubmitted(false);
   }, [message]);
@@ -103,7 +90,18 @@ const ChatScreen = () => {
 
     if (messages.length === 0) {
       const newID = generateRandomString(10);
-      dispatch(addChat({ id: newID, title: message }));
+      const now = new Date();
+      const dateString = now.toLocaleDateString();
+      const timeString = now.toLocaleTimeString();
+      date = dateString + " " + timeString;
+
+      dispatch(
+        addChat({
+          id: newID,
+          title: message,
+          date
+        })
+      );
       const newid = await handleSetChatId(newID);
       dispatch(
         addMessage({
@@ -142,7 +140,7 @@ const ChatScreen = () => {
   };
 
   const handleResponseMessage = async () => {
-    const reply = await chatWithGPT3(messages,content);
+    const reply = await chatWithGPT3(messages, content);
 
     if (reply) {
       setMessages((prevMessages) => [
