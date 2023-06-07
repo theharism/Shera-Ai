@@ -45,18 +45,17 @@ const chatSlice = createSlice({
       },
       
       
-    getChatMessages: (state, action) => {
-      const { chatId } = action.payload;
-      if (chatId) {
-        const chat = state.chats.find((chat) => chat.id === chatId);
-        if (chat) {
-          return chat.messages;
+    saveChats:async (state, action) => {
+        try {
+          console.log(state)
+          const jsonValue = JSON.stringify(state)
+          await AsyncStorage.setItem('chats', jsonValue)
+        } catch (e) {
+          // saving error
         }
       }
-      return [];
-    },
   },
 });
 
-export const { addChat, addMessage, getChatMessages } = chatSlice.actions;
+export const { addChat, addMessage, saveChats } = chatSlice.actions;
 export default chatSlice.reducer;

@@ -1,11 +1,8 @@
 import {
   StyleSheet,
-  Text,
-  Image,
   View,
   KeyboardAvoidingView,
-  TouchableOpacity,
-  ToastAndroid,
+  BackHandler
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,7 +11,7 @@ import CustomTextInput from "./CustomTextInput";
 import { FlatList } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
 import { chatWithGPT3 } from "../Api/chatgpt";
-import { addMessage, addChat, getChatMessages } from "../slices/chatsSlice";
+import { addMessage, addChat, saveChats } from "../slices/chatsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { generateRandomString } from "../utilities/StringGenerator";
 import { subtractPoints } from "../slices/pointsSlice";
@@ -36,6 +33,18 @@ const ChatScreen = () => {
 
   const flatListRef = useRef(null);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      // Handle back button press
+      // Your code here
+     dispatch(saveChats())
+      // Return true to prevent default back button behavior
+      return false;
+    });
+
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     setSubmitted(false);
