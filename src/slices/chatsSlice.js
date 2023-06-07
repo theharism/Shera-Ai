@@ -27,11 +27,9 @@ const chatSlice = createSlice({
     // },
     addMessage: (state, action) => {
         const { chatId, id, message, sender } = action.payload;
-        console.log(chatId, id, message, sender)
         const updatedChats = state.chats.map((chat) => {
           if (chat.id === chatId) {
             const updatedMessages = [...chat.messages, { id, message, sender }];
-            console.log(updatedMessages); // Console log the updated messages
             return {
               ...chat,
               messages: updatedMessages,
