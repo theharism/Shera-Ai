@@ -16,7 +16,7 @@ import ExploreHome from "./src/screens/explore/ExploreHome";
 import RecentsHome from "./src/screens/recents/RecentsHome";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ChatScreen from "./src/screens/chat/ChatScreen";
 
@@ -88,10 +88,14 @@ function Home() {
             height: 75,
             borderTopColor: "#282828",
           },
-          tabBarLabelStyle:{bottom:15,fontFamily:'JosefinSans-Medium',fontSize:14},
+          tabBarLabelStyle: {
+            bottom: 15,
+            fontFamily: "JosefinSans-Medium",
+            fontSize: 14,
+          },
           tabBarActiveTintColor: "#40e6b5",
           headerShown: false,
-          tabBarHideOnKeyboard:true
+          tabBarHideOnKeyboard: true,
         }}
       >
         <Tab.Screen
@@ -165,34 +169,35 @@ export default function App() {
                 </Modal>
               </Portal>
 
-            <Stack.Navigator
-              initialRouteName="Home"
-              screenOptions={{
-                tabBarStyle: {
-                  backgroundColor: "#171717",
-                  borderTopWidth: 1,
-                  height: 53,
-                  borderTopColor: "#282828",
-                },
-                tabBarActiveTintColor: "#40e6b5",
-                headerTitle: "Shera Ai",
-                headerTintColor: "#FFFFFF",
-                headerStyle: styles.headerStyle,
-                headerTitleStyle: styles.headerTitleStyle,
-                headerLeft: customHeaderLeft,
-                headerRight: () => customHeaderRight({ showModal }),
-              }}
-            >
-              <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="ChatScreen" component={ChatScreen} />
-            </Stack.Navigator>
-          </>
-        ) : (
-          <>
-            <OnBoarding setFlag={setFlag} />
-          </>
-        )}
-      </NavigationContainer>
+              <Stack.Navigator
+                initialRouteName="Home"
+                screenOptions={{
+                  tabBarStyle: {
+                    backgroundColor: "#171717",
+                    borderTopWidth: 1,
+                    height: 53,
+                    borderTopColor: "#282828",
+                  },
+                  tabBarActiveTintColor: "#40e6b5",
+                  headerTitle: "Shera Ai",
+                  headerTintColor: "#FFFFFF",
+                  headerStyle: styles.headerStyle,
+                  headerTitleStyle: styles.headerTitleStyle,
+                  headerLeft: customHeaderLeft,
+                  headerRight: () => customHeaderRight({ showModal }),
+                }}
+              >
+                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="ChatScreen" component={ChatScreen} />
+              </Stack.Navigator>
+            </>
+          ) : (
+            <>
+              <OnBoarding setFlag={setFlag} />
+            </>
+          )}
+        </NavigationContainer>
+      </GestureHandlerRootView>
     </PaperProvider>
   );
 }
@@ -206,10 +211,10 @@ const styles = StyleSheet.create({
   },
   headerTitleStyle: {
     //fontWeight: "bold",
-    fontFamily:'JosefinSans-Medium',
+    fontFamily: "JosefinSans-Medium",
     fontSize: 25,
     left: 18,
-    bottom:2
+    bottom: 2,
   },
   container: {
     flex: 1,
