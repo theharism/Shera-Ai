@@ -9,9 +9,6 @@ import camera from '../../assets/camera.svg'
 const renderItem = ({item}) => {
     return (
         <View style={styles.itemStyle}>
-            <Svg width="200" height="200">
-        <Path d={idk} fill="blue" />
-      </Svg>
 
         <Text style={styles.itemTitleStyle}>           
          {item.title}
@@ -47,25 +44,28 @@ const styles = StyleSheet.create({
     },
     titleStyle:{
         color:COLORS.white,
-        fontWeight:'bold',
+        //fontWeight:'bold',
         fontSize:20,
-        marginBottom:15
+        marginBottom:15,
+        fontFamily:'JosefinSans-Medium'
     },
     itemStyle:{
         borderColor:'#292929',
         borderWidth:2,
         borderRadius:10,
-        marginRight:5,
+        marginRight:10,
         padding:10,
         width:170
     },
     itemTitleStyle:{
         color:COLORS.white,
         fontSize:16,
-        marginVertical:5
+        marginVertical:5,
+        fontFamily:'JosefinSans-Medium'
     },
     itemsubTitleStyle:{
         color:'#7f7f7f',
-        fontSize:14
+        fontSize:14,
+        fontFamily:'JosefinSans-Medium'
     }
 })
