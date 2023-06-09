@@ -27,7 +27,10 @@ import RecentsHome from "./src/screens/recents/RecentsHome";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
 import ChatScreen from "./src/screens/chat/ChatScreen";
-import BottomSheet, { useBottomSheet } from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  useBottomSheet,
+  BottomSheetScrollView,
+} from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const Stack = createStackNavigator();

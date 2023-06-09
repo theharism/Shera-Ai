@@ -32,7 +32,7 @@ export default YourAiAssistant = ({navigation}) => {
         </Text>
       </View>
       <View style={styles.iconimage}>
-        <Image source={require("../../../assets/icon.png")} />
+        <Image source={require("../../../assets/icons/rate_us.png")} />
       </View>
       <View style={styles.buttonstyle}>
         <TouchableHighlight onPress={nextscreen}>
@@ -47,10 +47,11 @@ const styles = StyleSheet.create({
   textcontainer: {
     alignItems: "center",
     flex: 3,
+    marginHorizontal:17
   },
   text: {
     alignSelf: "flex-start",
-    paddingLeft: "1%",
+    //paddingLeft: "5%",
     paddingTop: 10,
     color: "white",
     fontSize: 16,

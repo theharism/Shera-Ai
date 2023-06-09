@@ -1,12 +1,13 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
 import { Avatar, Button, Card, Text } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 import React from 'react';
 
-const ChatHomeItem = ({title,title1,title2,setMessage}) => {
+const ChatHomeItem = ({title,icon,title1,title2,setMessage,leftStyle}) => {
+  
   const button = (title) => {
     return (
-      <TouchableOpacity style={styles.item} onPress={()=>setMessage(title)}>
+      <TouchableOpacity style={ title.length < 36 ? styles.smallItem : styles.largeItem} onPress={()=>setMessage(title)}>
         <Text style={styles.textStyle}>
           {title}
         </Text>
@@ -15,12 +16,12 @@ const ChatHomeItem = ({title,title1,title2,setMessage}) => {
   };
 
   return (
-    <Card mode="outlined" style={styles.card}>
+    <Card mode="outlined" style={title1.length < 36 ? styles.smallCard : styles.bigCard}>
       <Card.Title 
-        title="Write an Email"
+        title={title}
         titleStyle={styles.Title}
-        left={() => <MaterialCommunityIcons name="email-outline" size={24} color="#7f7f7f" />}
-        leftStyle={styles.leftStyle} />
+        left={() => icon}
+        leftStyle={leftStyle} />
       <Card.Content style={styles.content}>
         {button(title1)}
         {button(title2)}
@@ -32,40 +33,52 @@ const ChatHomeItem = ({title,title1,title2,setMessage}) => {
 export default ChatHomeItem;
 
 const styles = StyleSheet.create({
-  card: {
+  smallCard: {
     borderColor: '#1c1c1e',
     backgroundColor: '#000000',
     marginHorizontal: 8,
     marginVertical:10,
-    height:180
+    height:183
+  },
+  bigCard:{
+    borderColor: '#1c1c1e',
+    backgroundColor: '#000000',
+    marginHorizontal: 8,
+    marginVertical:10,
+    height:210
   },
   Title: {
     alignSelf: 'center',
     //fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 17,
     bottom:5,
     color: '#7f7f7f',
-    fontFamily:'JosefinSans-Medium'
+    fontFamily:'JosefinSans-Bold'
   },
   textStyle:{
     color:'#FFFFFF',
-    alignSelf:'center',
-    fontSize:15,
+    textAlign:'center',
+    fontSize:16,
     fontFamily:'JosefinSans-Medium'
   },
-  item:{
+  smallItem:{
     backgroundColor:'#1c1c1e',
-    height:50,
+    height:55,
     borderRadius:10,
     marginVertical:5,
-    justifyContent:'center'
+    justifyContent:'center',
+    padding:10
   },
-  leftStyle:{
-    position:'absolute',
-    left:95,
-    bottom:21 
+  largeItem:{
+    backgroundColor:'#1c1c1e',
+    height:"40%",
+    borderRadius:10,
+    marginVertical:5,
+    justifyContent:'center',
+    paddingHorizontal:16
   },
   content:{
-    bottom:17
+    bottom:25,
+    //alignSelf:'center'
   }
 });
