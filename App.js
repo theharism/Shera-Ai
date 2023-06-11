@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
@@ -26,12 +25,13 @@ import ExploreHome from "./src/screens/explore/ExploreHome";
 import RecentsHome from "./src/screens/recents/RecentsHome";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
-import ChatScreen from "./src/screens/chat/ChatScreen";
-import BottomSheet, {
-  useBottomSheet,
-  BottomSheetScrollView,
-} from "@gorhom/bottom-sheet";
+
+import ChatScreen from "./src/components/ChatScreen";
+import BottomSheetContent from "./src/components/BottomSheetContent";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -163,7 +163,7 @@ export default function App() {
   const [bflag, setbFlag] = useState(false);
 
   const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ["99%"], []);
+  const snapPoints = useMemo(() => ["99.9%"], []);
 
   const handleSheetChanges = useCallback((index) => {
     console.log("handleSheetChanges", index);
@@ -215,17 +215,12 @@ export default function App() {
                 <Stack.Screen name="ChatScreen" component={ChatScreen} />
               </Stack.Navigator>
 
-              <BottomSheet
+              {/* <BottomSheets
                 snapPoints={snapPoints}
-                ref={bottomSheetModalRef}
-                index={-1}
-                onChange={handleSheetChanges}
-                enableHandlePanningGesture={true}
-                animateOnMount={true}
+                index="-1"
+                bottomSheetModalRef={bottomSheetModalRef}
+                handleSheetChanges={handleSheetChanges}
                 enablePanDownToClose={true}
-                topInset={StatusBar.currentHeight}
-                handleStyle={{ backgroundColor: "black" }}
-                handleIndicatorStyle={{ backgroundColor: "gray" }}
               >
                 <View
                   style={{
@@ -244,6 +239,31 @@ export default function App() {
                     Awesome
                   </Text>
                 </View>
+              </BottomSheets> */}
+
+              <BottomSheet
+                snapPoints={snapPoints}
+                ref={bottomSheetModalRef}
+                index={-1}
+                onChange={handleSheetChanges}
+                enableHandlePanningGesture={true}
+                animateOnMount={true}
+                enablePanDownToClose={true}
+                topInset={StatusBar.currentHeight}
+                handleStyle={{
+                  backgroundColor: "rgba(1,1,1,0.95)",
+                  borderColor: "rgba(1,1,1,0.95)",
+                }}
+                handleIndicatorStyle={{ backgroundColor: "gray" }}
+              >
+                <BottomSheetScrollView
+                  contentContainerStyle={{
+                    backgroundColor: "rgba(1,1,1,0.9)",
+                    borderColor: "rgba(1,1,1,0.9)",
+                  }}
+                >
+                  <BottomSheetContent />
+                </BottomSheetScrollView>
               </BottomSheet>
             </>
           ) : (
