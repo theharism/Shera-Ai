@@ -34,16 +34,16 @@ import ChatScreen from "./src/components/ChatScreen";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { COLORS } from "./src/constants/COLORS";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider, useDispatch, useSelector } from "react-redux";
-import chatSlice from "./src/slices/chatsSlice";
-import pointsSlice from "./src/slices/pointsSlice";
+import chatSlice, { saveChats, setChatsData } from "./src/slices/chatsSlice";
+import pointsSlice, { setPoints } from "./src/slices/pointsSlice";
 
 const store = configureStore({
   reducer: {
     chatSlice,
-    pointsSlice
+    pointsSlice,
   },
 });
 
@@ -51,30 +51,6 @@ SplashScreen.preventAutoHideAsync();
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
-
-
-
-function select(state) {
-  return state.pointsSlice.points
-}
-
-let currentValue
-function handleChange() {
-  let previousValue = currentValue
-  currentValue = select(store.getState())
-
-  if (previousValue !== currentValue) {
-    console.log(
-      'Some deep nested property changed from',
-      previousValue,
-      'to',
-      currentValue
-    )
-  }
-}
-
-const unsubscribe = store.subscribe(handleChange)
-//unsubscribe()
 
 const config = {
   animation: "spring",
@@ -191,7 +167,7 @@ const customHeaderLeft = (prop) => (
   />
 );
 
-const customHeaderRight = ({ showModal,points }) => (
+const customHeaderRight = ({ showModal, points }) => (
   <View style={{ flexDirection: "row" }}>
     <Button
       icon="star"
@@ -300,6 +276,54 @@ function Screens() {
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
   const [flag, setFlag] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const jsonValue = await AsyncStorage.getItem("chats");
+        let size = await AsyncStorage.getItem("size");
+        let points = await AsyncStorage.getItem("points");
+        const chats = jsonValue != null ? JSON.parse(jsonValue) : null;
+        size = parseInt(size);
+        points = parseInt(points);
+        return { chats, size, points };
+      } catch (e) {
+        console.log("Error: ", e);
+        return { chats: null, size: null, points: null };
+      }
+    };
+
+    getData().then(({ chats, size, points }) => {
+      dispatch(setChatsData({ chats, size }));
+      dispatch(setPoints({ points }));
+    });
+  }, []);
+
+  useEffect(() => {
+    const getAuthState = async () => {
+      try {
+        const authState = await AsyncStorage.getItem("authFlag");
+        return authState === "yes" ? true : false;
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getAuthState().then((flag) => {
+      setFlag(flag);
+    });
+  }, []);
+
+  useEffect(() => {
+    async function saveAuthState() {
+      await AsyncStorage.setItem("authFlag", flag ? "yes" : "no");
+    }
+
+    saveAuthState().then(() => {
+      console.log("auth state saved as ",flag);
+    });
+  },[flag]);
 
   const [fontsLoaded] = useFonts({
     "JosefinSans-Regular": require("./assets/fonts/JosefinSans-VariableFont_wght.ttf"),
@@ -331,6 +355,21 @@ function Screens() {
   }
 
   const chatHeaderLeft = ({ navigation }) => {
+    const { chats, size } = useSelector((state) => state.chatSlice);
+    const points = useSelector((state) => state.pointsSlice.points);
+
+    const handleSaveChatButtonPress = async () => {
+      try {
+        await AsyncStorage.setItem("chats", JSON.stringify(chats));
+        await AsyncStorage.setItem("size", size.toString());
+        await AsyncStorage.setItem("points", points.toString());
+
+        console.log("Chat saved successfully!");
+      } catch (error) {
+        console.log("Error saving chat:", error);
+      }
+    };
+
     return (
       <View
         style={{
@@ -339,7 +378,12 @@ function Screens() {
           marginLeft: 10,
         }}
       >
-        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Home");
+            handleSaveChatButtonPress();
+          }}
+        >
           <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
         </TouchableOpacity>
 
@@ -375,7 +419,7 @@ function Screens() {
                 headerStyle: styles.headerStyle,
                 headerTitleStyle: styles.headerTitleStyle,
                 headerLeft: customHeaderLeft,
-                headerRight: () => customHeaderRight({ showModal,points }),
+                headerRight: () => customHeaderRight({ showModal, points }),
               }}
             />
             <Stack.Screen
@@ -420,7 +464,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000",
   },
   headerTitleStyle: {
-    //fontWeight: "bold",
     fontFamily: "JosefinSans-Medium",
     fontSize: 25,
     left: 18,
@@ -436,7 +479,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   onboardingHeader: {
-    //fontWeight: "bold",
     fontFamily: "JosefinSans-Bold",
     fontSize: 25,
     bottom: 2,

@@ -7,9 +7,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 const RecentsHome = ({ navigation }) => {
   const chats = useSelector((state) => state.chatSlice.chats);
-  const chatList = chats.map((chat) => ({ id: chat.id, title: chat.title }));
+  const chatList = chats.map((chat) => ({ id: chat.id, title: chat.title,date:chat.date }));
 
   const renderItem = ({ item }) => {
+    
     const truncatedTitle =
       item.title.length > 42 ? item.title.substring(0, 43) + "..." : item.title;
     return (
@@ -17,6 +18,7 @@ const RecentsHome = ({ navigation }) => {
         onPress={() => navigation.navigate("ChatScreen", { id: item.id })}
       >
         <View style={styles.chatItem}>
+          <Text style={styles.date}>{item.date}</Text>
           <Text style={styles.chatTitle}>{truncatedTitle}</Text>
         </View>
       </TouchableOpacity>
@@ -62,4 +64,8 @@ const styles = StyleSheet.create({
   list: {
     marginHorizontal: 15,
   },
+  date:{
+    color:COLORS.white,
+    fontFamily: "JosefinSans-Regular",
+  }
 });

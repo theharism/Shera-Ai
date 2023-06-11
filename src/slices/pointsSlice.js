@@ -9,9 +9,12 @@ const pointsSlice = createSlice({
         },
         subtractPoints:(state,action)=>{
             state.points -= action.payload.value
+        },
+        setPoints:(state,action)=>{
+            state.points = action.payload.points;
         }
     }
 })
 
-export const {addPoints,subtractPoints} = pointsSlice.actions;
+export const {addPoints,subtractPoints,setPoints} = pointsSlice.actions;
 export default pointsSlice.reducer;
