@@ -1,4 +1,9 @@
-export async function chatWithGPT3(chatMessages) {
+export async function chatWithGPT3(chatMessages,content) {
+
+  if(content){
+    chatMessages.unshift({ id: 0, message: content, sender: "system" })
+  }
+
   let apiMessages = chatMessages.map((messageObject) => {
     var role = "";
     if (messageObject.sender === "ChatGPT") {

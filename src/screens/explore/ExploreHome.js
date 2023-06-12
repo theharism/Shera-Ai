@@ -15,12 +15,14 @@ import {
 } from "../../constants/ExploreData";
 import ExploreList from "../../components/ExploreList";
 import { ScrollView } from "react-native-gesture-handler";
+import ImageGenerator from "../../components/ImageGenerator";
 
 const ExploreHome = (props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.container}>
         <ScrollView>
+          <ImageGenerator {...props} />
           <ExploreList title="Content" data={Content} {...props} />
           <ExploreList title="Artist" data={Artist} {...props} />
           <ExploreList title="Business" data={Business} {...props} />
