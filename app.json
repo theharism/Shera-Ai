@@ -9,17 +9,7 @@
     "splash": {
       "image": "./assets/SHERA_AI.png",
       "resizeMode": "cover",
-      "backgroundColor": "#0b1023",
-      "plugins": [
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
-          "isAccessMediaLocationEnabled": true
-        }
-      ]
-    ]
+      "backgroundColor": "#0b1023"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
