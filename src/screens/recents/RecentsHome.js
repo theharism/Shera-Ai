@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../constants/COLORS";
 import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import Animated,{SlideInLeft,SlideInRight,Layout} from "react-native-reanimated";
 
 const RecentsHome = ({ navigation }) => {
   const chats = useSelector((state) => state.chatSlice.chats);
@@ -26,7 +27,11 @@ const RecentsHome = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Animated.View
+    entering={SlideInRight}
+    style={styles.container}
+    >
+      <SafeAreaView style={styles.container}>
       <FlatList
         data={chats}
         renderItem={renderItem}
@@ -34,7 +39,9 @@ const RecentsHome = ({ navigation }) => {
         keyExtractor={(item) => item.id.toString()}
       />
     </SafeAreaView>
-  );
+  
+    </Animated.View>
+    );
 };
 
 export default RecentsHome;
