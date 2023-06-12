@@ -22,14 +22,13 @@ import { CardStyleInterpolators } from "@react-navigation/stack";
 import YourAiAssistant from "./src/screens/onBoarding/YourAiAssistant";
 import HelpUsGrow from "./src/screens/onBoarding/HelpUsGrow";
 import EnableNotifications from "./src/screens/onBoarding/EnableNotifications";
-
+import ImageScreen from "./src/components/ImageScreen";
 import ChatHome from "./src/screens/chat/ChatHome";
 import ExploreHome from "./src/screens/explore/ExploreHome";
 import RecentsHome from "./src/screens/recents/RecentsHome";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import ChatScreen from "./src/components/ChatScreen";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
@@ -206,6 +205,29 @@ const FadeHomeScre = (props, { navigation }) => (
   </FadeInView>
 );
 
+// function ChatHomeStack() {
+//   return (
+//     <Stack.Navigator>
+//       <Stack.Screen
+//         name="hi"
+//         component={ChatHome}
+//         options={{
+//           headerShown: false,
+//           gestureEnabled: true,
+//           gestureDirection: "horizontal",
+//           // transitionSpec: {
+//           //   open: config,
+//           //   close: config,
+//           // },
+//           headerMode: "screen",
+//           animationEnabled: true,
+//           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+//         }}
+//       />
+//     </Stack.Navigator>
+//   );
+// }
+
 function Home() {
   return (
     <View style={styles.container}>
@@ -217,6 +239,8 @@ function Home() {
             borderTopWidth: 1,
             height: 75,
             borderTopColor: "#282828",
+            animate: true,
+            interpolate: CardStyleInterpolators.forHorizontalIOS,
           },
           tabBarLabelStyle: {
             bottom: 15,
@@ -317,13 +341,16 @@ function Screens() {
 
   useEffect(() => {
     async function saveAuthState() {
-      await AsyncStorage.setItem("authFlag", flag ? "yes" : "no");
+      if (flag) {
+        console.log(flag)
+        await AsyncStorage.setItem("authFlag", flag ? "yes" : "no");
+      }
     }
 
     saveAuthState().then(() => {
-      console.log("auth state saved as ",flag);
+      console.log("auth state saved as ", flag);
     });
-  },[flag]);
+  }, [flag]);
 
   const [fontsLoaded] = useFonts({
     "JosefinSans-Regular": require("./assets/fonts/JosefinSans-VariableFont_wght.ttf"),
@@ -409,15 +436,28 @@ function Screens() {
             </Modal>
           </Portal>
 
-          <Stack.Navigator initialRouteName="Home">
+          <Stack.Navigator
+            initialRouteName="Home"
+            screenOptions={{
+              headerTitle: "Shera Ai",
+              headerTintColor: "#FFFFFF",
+              headerStyle: styles.headerStyle,
+              headerTitleStyle: styles.headerTitleStyle,
+              gestureEnabled: true,
+              gestureDirection: "horizontal",
+              // transitionSpec: {
+              //   open: config,
+              //   close: config,
+              // },
+              headerMode: "screen",
+              animationEnabled: true,
+              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+            }}
+          >
             <Stack.Screen
               name="Home"
               component={Home}
               options={{
-                headerTitle: "Shera Ai",
-                headerTintColor: "#FFFFFF",
-                headerStyle: styles.headerStyle,
-                headerTitleStyle: styles.headerTitleStyle,
                 headerLeft: customHeaderLeft,
                 headerRight: () => customHeaderRight({ showModal, points }),
               }}
@@ -426,14 +466,22 @@ function Screens() {
               name="ChatScreen"
               component={ChatScreen}
               options={({ navigation }) => ({
-                headerTitle: "Shera Ai",
-                headerTintColor: "#FFFFFF",
-                headerStyle: styles.headerStyle,
+                // headerTitle: "Shera Ai",
+                // headerTintColor: "#FFFFFF",
+                // headerStyle: styles.headerStyle,
                 headerTitleStyle: styles.chatHeader,
                 headerTitleAlign: "center",
                 headerLeft: () => chatHeaderLeft({ navigation }),
                 gestureDirection: "horizontal",
               })}
+            />
+            <Stack.Screen
+              name="ImageScreen"
+              component={ImageScreen}
+              options={{
+                headerLeft: customHeaderLeft,
+                headerRight: () => customHeaderRight({ showModal, points }),
+              }}
             />
           </Stack.Navigator>
         </>
