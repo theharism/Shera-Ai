@@ -1,13 +1,5 @@
 import "react-native-gesture-handler";
 import "react-native-reanimated";
-import React, { useState, useEffect } from "react";
-
-import {
-  NavigationContainer,
-  useFocusEffect,
-  useIsFocused,
-} from "@react-navigation/native";
-
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import chatSlice from "./src/slices/chatsSlice";
@@ -23,7 +15,7 @@ const store = configureStore({
   },
 });
 
-import React, { useCallback, useRef, useMemo, useState } from "react";
+import React, { useCallback, useRef, useMemo, useEffect,useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -66,48 +58,9 @@ export default function App() {
   return (
     <PaperProvider style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ height: "100%" }}>
-        <NavigationContainer>
-          {flag ? (
-            <>
-              {/* <BottomSheet isVisible={bflag} onClose={() => setbFlag(false)} /> */}
-
-              <Portal>
-                <Modal
-                  visible={visible}
-                  onDismiss={hideModal}
-                  contentContainerStyle={containerStyle}
-                >
-                  <Animated.View>
-                    <Text>You have 10 points Left</Text>
-                  </Animated.View>
-                </Modal>
-              </Portal>
-
-              <Stack.Navigator
-                initialRouteName="Home"
-                screenOptions={{
-                  tabBarStyle: {
-                    backgroundColor: "#171717",
-                    borderTopWidth: 1,
-                    height: 53,
-                    borderTopColor: "#282828",
-                  },
-                  tabBarActiveTintColor: "#40e6b5",
-                  headerTitle: "Shera Ai",
-                  headerTintColor: "#FFFFFF",
-                  headerStyle: styles.headerStyle,
-                  headerTitleStyle: styles.headerTitleStyle,
-                  headerLeft: customHeaderLeft,
-                  headerRight: () =>
-                    customHeaderRight({
-                      showModal,
-                      showBottomSheet,
-                    }),
-                }}
-              >
-                <Stack.Screen name="Home" component={Home} />
-                <Stack.Screen name="ChatScreen" component={ChatScreen} />
-              </Stack.Navigator>
+       
+              
+        <Screens/>
 
               {/* <BottomSheets
                 snapPoints={snapPoints}
@@ -158,14 +111,7 @@ export default function App() {
                 >
                   <BottomSheetContent />
                 </BottomSheetScrollView>
-              </BottomSheet>
-            </>
-          ) : (
-            <>
-              <OnBoarding setFlag={setFlag} />
-            </>
-          )}
-        </NavigationContainer>
+              </BottomSheet>    
       </GestureHandlerRootView>
     </PaperProvider>
   );
