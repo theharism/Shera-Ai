@@ -106,7 +106,12 @@ export const styles = StyleSheet.create({
     />
   );
   
-  export const customHeaderRight = ({ showModal, points }) => (
+
+
+  export const customHeaderRight = ({showModal, points, }) => {
+
+    return (
+
     <View style={{ flexDirection: "row" }}>
       <Button
         icon="star"
@@ -125,7 +130,8 @@ export const styles = StyleSheet.create({
         color="#c0c0c0"
       />
     </View>
-  );
+    )
+  };
   
   const FadeHomeScreen = (props, { navigation }) => (
     <FadeInView>

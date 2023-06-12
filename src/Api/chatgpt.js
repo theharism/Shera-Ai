@@ -18,11 +18,8 @@ export async function chatWithGPT3(chatMessages, content) {
     const apiRequestBody = {
       model: "gpt-3.5-turbo",
       messages: apiMessages,
-      stream:true
+      //stream:true
     };
-
-  console.log(apiMessages)
-
     try {
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
@@ -34,12 +31,12 @@ export async function chatWithGPT3(chatMessages, content) {
         body: JSON.stringify(apiRequestBody),
       });
 
-     const reader = response.body.getReader()
+    //  const reader = response.body.getReader()
 
-     console.log(reader)
-      // const result = await response.json();
-      // const reply = result.choices[0].message.content;
-      // return reply;
+    //  console.log(reader)
+      const result = await response.json();
+      const reply = result.choices[0].message.content;
+      return reply;
     } catch (error) {
       console.log("GPT Error", error);
       return "Error Generating Text";

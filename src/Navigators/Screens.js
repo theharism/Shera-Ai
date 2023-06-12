@@ -10,7 +10,7 @@ import {
 
 import { Ionicons } from "@expo/vector-icons";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 
 import {
   NavigationContainer,
@@ -23,6 +23,7 @@ import { CardStyleInterpolators } from "@react-navigation/stack";
 
 import ImageScreen from "../components/ImageScreen";
 
+import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
 
@@ -37,6 +38,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { saveChats, setChatsData } from "../slices/chatsSlice";
 import { setPoints } from "../slices/pointsSlice";
 
+import BottomSheet from "@gorhom/bottom-sheet";
+
 import {
   styles,
   FadeInView,
@@ -49,18 +52,28 @@ SplashScreen.preventAutoHideAsync();
 
 import OnBoarding from "./OnBoarding";
 import Home from "./Home";
+import PickAssets from "../components/PickAsset";
 
 const Stack = createStackNavigator();
 
 export default Screens = () => {
   const [visible, setVisible] = React.useState(false);
   const points = useSelector((state) => state.pointsSlice.points);
-  const showModal = () => setVisible(true);
+  const showModal = PickAsset;
   const hideModal = () => setVisible(false);
   const containerStyle = { backgroundColor: "white", padding: 20 };
 
   const [flag, setFlag] = useState(false);
   const dispatch = useDispatch();
+
+  const snapPoints = useMemo(() => ["30%"], []);
+
+  const PickAsset = () => {
+    console.log("Picking File or Image");
+    assetBottomSheet.current?.snapToIndex(0);
+  };
+
+  const assetBottomSheet = useRef(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -182,20 +195,33 @@ export default Screens = () => {
     );
   };
 
+  const customHeaderRight = ({ points }) => {
+    return (
+      <View style={{ flexDirection: "row" }}>
+        <Button
+          icon="star"
+          mode="contained"
+          textColor="#000000"
+          compact="true"
+          buttonColor="#40e6b4"
+          onPress={PickAsset}
+        >
+          {points}
+        </Button>
+        <MaterialIcons
+          name="account-circle"
+          size={40}
+          style={{ marginHorizontal: 10 }}
+          color="#c0c0c0"
+        />
+      </View>
+    );
+  };
+
   return (
     <NavigationContainer>
       {flag ? (
         <>
-          <Portal>
-            <Modal
-              visible={visible}
-              onDismiss={hideModal}
-              contentContainerStyle={containerStyle}
-            >
-              <Text>You have 10 points Left</Text>
-            </Modal>
-          </Portal>
-
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{
@@ -244,6 +270,53 @@ export default Screens = () => {
               }}
             />
           </Stack.Navigator>
+
+          <BottomSheet
+            snapPoints={snapPoints}
+            enablePanDownToClose={true}
+            index={-1}
+            ref={assetBottomSheet}
+            style={{ marginHorizontal: 2 }}
+            backgroundStyle={{ backgroundColor: "#171717" }}
+            //backgroundColor = {COLORS.black}
+            handleStyle={{ backgroundColor: "#171717", borderRadius: 10 }}
+            handleIndicatorStyle={{ backgroundColor: "rgb(200,200,200)" }}
+          >
+            <View style={{ alignItems: "center", flex: 1, marginTop: 10 }}>
+              <Ionicons
+                name="ios-information-circle"
+                size={50}
+                color="#FFFFFF"
+              />
+              <Text
+                style={{
+                  color: COLORS.white,
+                  fontFamily: "JosefinSans-Medium",
+                  fontSize: 20,
+                  textAlign: "center",
+                  marginTop: 10,
+                }}
+              >
+                Wishes function as the credit system for Shera Ai. One request
+                to Shera deducts one wish from your balance.
+              </Text>
+              <Button
+                mode="contained"
+                style={{
+                  backgroundColor: "#40e6b4",
+                  marginTop: 10,
+                  paddingVertical:0,
+                  width: "80%",
+                  height:45,
+                }}
+                textColor={COLORS.black}
+                labelStyle={{fontSize:17}}
+                onPress={() => console.log("Pressed")}
+              >
+                Upgrade
+              </Button>
+            </View>
+          </BottomSheet>
         </>
       ) : (
         <>
