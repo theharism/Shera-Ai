@@ -29,6 +29,7 @@ const RecentsHome = ({ navigation }) => {
   return (
     <Animated.View
     entering={SlideInRight}
+    exiting={SlideInLeft}
     style={styles.container}
     >
       <SafeAreaView style={styles.container}>

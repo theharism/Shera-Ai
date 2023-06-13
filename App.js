@@ -56,6 +56,7 @@ export default function App() {
   }, []);
 
   return (
+    <Provider store={store}>
     <PaperProvider style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ height: "100%" }}>
        
@@ -114,6 +115,7 @@ export default function App() {
               </BottomSheet>    
       </GestureHandlerRootView>
     </PaperProvider>
+    </Provider>
   );
 }
 
