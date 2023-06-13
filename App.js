@@ -1,13 +1,5 @@
 import "react-native-gesture-handler";
 import "react-native-reanimated";
-import React, { useState, useEffect } from "react";
-
-import {
-  NavigationContainer,
-  useFocusEffect,
-  useIsFocused,
-} from "@react-navigation/native";
-
 import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import chatSlice from "./src/slices/chatsSlice";
@@ -23,7 +15,13 @@ const store = configureStore({
   },
 });
 
-import React, { useCallback, useRef, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useRef,
+  useMemo,
+  useEffect,
+  useState,
+} from "react";
 import {
   StyleSheet,
   Text,
@@ -66,50 +64,9 @@ export default function App() {
   return (
     <PaperProvider style={{ flex: 1 }}>
       <GestureHandlerRootView style={{ height: "100%" }}>
-        <NavigationContainer>
-          {flag ? (
-            <>
-              {/* <BottomSheet isVisible={bflag} onClose={() => setbFlag(false)} /> */}
+        <Screens />
 
-              <Portal>
-                <Modal
-                  visible={visible}
-                  onDismiss={hideModal}
-                  contentContainerStyle={containerStyle}
-                >
-                  <Animated.View>
-                    <Text>You have 10 points Left</Text>
-                  </Animated.View>
-                </Modal>
-              </Portal>
-
-              <Stack.Navigator
-                initialRouteName="Home"
-                screenOptions={{
-                  tabBarStyle: {
-                    backgroundColor: "#171717",
-                    borderTopWidth: 1,
-                    height: 53,
-                    borderTopColor: "#282828",
-                  },
-                  tabBarActiveTintColor: "#40e6b5",
-                  headerTitle: "Shera Ai",
-                  headerTintColor: "#FFFFFF",
-                  headerStyle: styles.headerStyle,
-                  headerTitleStyle: styles.headerTitleStyle,
-                  headerLeft: customHeaderLeft,
-                  headerRight: () =>
-                    customHeaderRight({
-                      showModal,
-                      showBottomSheet,
-                    }),
-                }}
-              >
-                <Stack.Screen name="Home" component={Home} />
-                <Stack.Screen name="ChatScreen" component={ChatScreen} />
-              </Stack.Navigator>
-
-              {/* <BottomSheets
+        {/* <BottomSheets
                 snapPoints={snapPoints}
                 index="-1"
                 bottomSheetModalRef={bottomSheetModalRef}
@@ -135,37 +92,30 @@ export default function App() {
                 </View>
               </BottomSheets> */}
 
-              <BottomSheet
-                snapPoints={snapPoints}
-                ref={bottomSheetModalRef}
-                index={-1}
-                onChange={handleSheetChanges}
-                enableHandlePanningGesture={true}
-                animateOnMount={true}
-                enablePanDownToClose={true}
-                topInset={StatusBar.currentHeight}
-                handleStyle={{
-                  backgroundColor: "rgba(1,1,1,0.95)",
-                  borderColor: "rgba(1,1,1,0.95)",
-                }}
-                handleIndicatorStyle={{ backgroundColor: "gray" }}
-              >
-                <BottomSheetScrollView
-                  contentContainerStyle={{
-                    backgroundColor: "rgba(1,1,1,0.9)",
-                    borderColor: "rgba(1,1,1,0.9)",
-                  }}
-                >
-                  <BottomSheetContent />
-                </BottomSheetScrollView>
-              </BottomSheet>
-            </>
-          ) : (
-            <>
-              <OnBoarding setFlag={setFlag} />
-            </>
-          )}
-        </NavigationContainer>
+        <BottomSheet
+          snapPoints={snapPoints}
+          ref={bottomSheetModalRef}
+          index={-1}
+          onChange={handleSheetChanges}
+          enableHandlePanningGesture={true}
+          animateOnMount={true}
+          enablePanDownToClose={true}
+          topInset={StatusBar.currentHeight}
+          handleStyle={{
+            backgroundColor: "rgba(1,1,1,0.95)",
+            borderColor: "rgba(1,1,1,0.95)",
+          }}
+          handleIndicatorStyle={{ backgroundColor: "gray" }}
+        >
+          <BottomSheetScrollView
+            contentContainerStyle={{
+              backgroundColor: "rgba(1,1,1,0.9)",
+              borderColor: "rgba(1,1,1,0.9)",
+            }}
+          >
+            <BottomSheetContent />
+          </BottomSheetScrollView>
+        </BottomSheet>
       </GestureHandlerRootView>
     </PaperProvider>
   );
