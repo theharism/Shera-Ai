@@ -9,7 +9,9 @@
     "web": "expo start --web"
   },
   "dependencies": {
+
     "@gorhom/bottom-sheet": "^4.0.0",
+    "@react-native-async-storage/async-storage": "^1.18.2",
     "@react-native-masked-view/masked-view": "^0.2.9",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/material-bottom-tabs": "^6.2.15",
