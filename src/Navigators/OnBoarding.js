@@ -1,20 +1,5 @@
-import {
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    Animated,
-    Dimensions,
-    Easing,
-  } from "react-native";
 
-  import React, { useState, useEffect } from "react";
-
-import {
-  NavigationContainer,
-  useFocusEffect,
-  useIsFocused,
-} from "@react-navigation/native";
+import React from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
@@ -23,20 +8,7 @@ import YourAiAssistant from "../screens/onBoarding/YourAiAssistant";
 import HelpUsGrow from "../screens/onBoarding/HelpUsGrow";
 import EnableNotifications from "../screens/onBoarding/EnableNotifications";
 
-import { styles,FadeInView,config,customHeaderLeft,customHeaderRight } from "../constants/HeaderStyles";
-
-
-
-
-
-
-
-
-
-
-
-
-
+import { styles,config } from "../constants/HeaderStyles";
 
 const Stack = createStackNavigator();
 

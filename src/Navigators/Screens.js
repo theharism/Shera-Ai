@@ -38,8 +38,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { saveChats, setChatsData } from "../slices/chatsSlice";
 import { setPoints } from "../slices/pointsSlice";
 
-import BottomSheet from "@gorhom/bottom-sheet";
-
 import {
   styles,
   FadeInView,
@@ -53,6 +51,8 @@ SplashScreen.preventAutoHideAsync();
 import OnBoarding from "./OnBoarding";
 import Home from "./Home";
 import PickAssets from "../components/PickAsset";
+import PointsBottomSheet from "../components/PointsBottomSheet";
+import Subscription from "../screens/subscription/Subscription";
 
 const Stack = createStackNavigator();
 
@@ -66,10 +66,7 @@ export default Screens = () => {
   const [flag, setFlag] = useState(false);
   const dispatch = useDispatch();
 
-  const snapPoints = useMemo(() => ["30%"], []);
-
   const PickAsset = () => {
-    console.log("Picking File or Image");
     assetBottomSheet.current?.snapToIndex(0);
   };
 
@@ -115,14 +112,13 @@ export default Screens = () => {
   useEffect(() => {
     async function saveAuthState() {
       if (flag) {
-        console.log(flag);
+        //const points = 20;
         await AsyncStorage.setItem("authFlag", flag ? "yes" : "no");
+        //await AsyncStorage.setItem("points",points.toString())
       }
     }
 
-    saveAuthState().then(() => {
-      console.log("auth state saved as ", flag);
-    });
+    saveAuthState();
   }, [flag]);
 
   const [fontsLoaded] = useFonts({
@@ -157,7 +153,6 @@ export default Screens = () => {
   const chatHeaderLeft = ({ navigation }) => {
     const { chats, size } = useSelector((state) => state.chatSlice);
     const points = useSelector((state) => state.pointsSlice.points);
-
     const handleSaveChatButtonPress = async () => {
       try {
         await AsyncStorage.setItem("chats", JSON.stringify(chats));
@@ -231,10 +226,6 @@ export default Screens = () => {
               headerTitleStyle: styles.headerTitleStyle,
               gestureEnabled: true,
               gestureDirection: "horizontal",
-              // transitionSpec: {
-              //   open: config,
-              //   close: config,
-              // },
               headerMode: "screen",
               animationEnabled: true,
               cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
@@ -257,6 +248,7 @@ export default Screens = () => {
                 // headerStyle: styles.headerStyle,
                 headerTitleStyle: styles.chatHeader,
                 headerTitleAlign: "center",
+                presentation: "modal",
                 headerLeft: () => chatHeaderLeft({ navigation }),
                 gestureDirection: "horizontal",
               })}
@@ -269,54 +261,27 @@ export default Screens = () => {
                 headerRight: () => customHeaderRight({ showModal, points }),
               }}
             />
+
+            <Stack.Screen
+              name="Subscription"
+              component={Subscription}
+              options={{
+                headerTitle: "Try Pro for Free",
+                headerTintColor: "#FFFFFF",
+                headerStyle: styles.headerStyle,
+                headerTitleStyle: styles.onboardingHeader,
+                headerLeft: null,
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                headerRight: () => (
+                  <TouchableOpacity>
+                    <Text style={styles.skipStyle}>Skip</Text>
+                  </TouchableOpacity>
+                ),
+              }}
+            />
           </Stack.Navigator>
 
-          <BottomSheet
-            snapPoints={snapPoints}
-            enablePanDownToClose={true}
-            index={-1}
-            ref={assetBottomSheet}
-            style={{ marginHorizontal: 2 }}
-            backgroundStyle={{ backgroundColor: "#171717" }}
-            //backgroundColor = {COLORS.black}
-            handleStyle={{ backgroundColor: "#171717", borderRadius: 10 }}
-            handleIndicatorStyle={{ backgroundColor: "rgb(200,200,200)" }}
-          >
-            <View style={{ alignItems: "center", flex: 1, marginTop: 10 }}>
-              <Ionicons
-                name="ios-information-circle"
-                size={50}
-                color="#FFFFFF"
-              />
-              <Text
-                style={{
-                  color: COLORS.white,
-                  fontFamily: "JosefinSans-Medium",
-                  fontSize: 20,
-                  textAlign: "center",
-                  marginTop: 10,
-                }}
-              >
-                Wishes function as the credit system for Shera Ai. One request
-                to Shera deducts one wish from your balance.
-              </Text>
-              <Button
-                mode="contained"
-                style={{
-                  backgroundColor: "#40e6b4",
-                  marginTop: 10,
-                  paddingVertical:0,
-                  width: "80%",
-                  height:45,
-                }}
-                textColor={COLORS.black}
-                labelStyle={{fontSize:17}}
-                onPress={() => console.log("Pressed")}
-              >
-                Upgrade
-              </Button>
-            </View>
-          </BottomSheet>
+          <PointsBottomSheet assetBottomSheet={assetBottomSheet} />
         </>
       ) : (
         <>
