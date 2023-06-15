@@ -274,10 +274,15 @@ export default Screens = () => {
             <Stack.Screen
               name="ImageScreen"
               component={ImageScreen}
-              options={{
-                headerLeft: customHeaderLeft,
-                headerRight: () => customHeaderRight({ showModal, points }),
-              }}
+              options={({ navigation }) => ({
+                // headerTitle: "Shera Ai",
+                // headerTintColor: "#FFFFFF",
+                // headerStyle: styles.headerStyle,
+                headerTitleStyle: styles.chatHeader,
+                headerTitleAlign: "center",
+                presentation: "modal",
+                gestureDirection: "horizontal",
+              })}
             />
 
             <Stack.Screen

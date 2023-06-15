@@ -27,7 +27,7 @@ import { Entypo } from "@expo/vector-icons";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 import * as Notifications from "expo-notifications";
-import { uploadToFirebase } from "../utilities/UploadImage";
+import { deleteFromFirebae, uploadToFirebase } from "../utilities/UploadImage";
 //import CheckInternet from '../Utilities/CheckInternet';
 
 const ImageScreen = ({ route }) => {
@@ -59,13 +59,17 @@ const ImageScreen = ({ route }) => {
     });
   }
 
+  useEffect(() => {
+    setImageName(`images/${new Date().getTime()}.jpg`);
+  }, []);
+
   const handleGenerateImage = async () => {
     try {
       Keyboard.dismiss();
       setIsLoading(true);
       const newPrompt = prompt;
       const blob = await generateImage(prompt);
-      const imageUrl = await uploadToFirebase(blob);
+      const imageUrl = await uploadToFirebase(blob, imageName);
       setImageURL(imageUrl);
       //const imageData = { prompt: prompt, url: imageUrl }
       //const id = await addNewImage(walletAddress, imageData)
@@ -98,6 +102,7 @@ const ImageScreen = ({ route }) => {
           .catch((error) => {
             console.error(error);
           });
+        deleteFromFirebae(imageName);
         setIsDownloading(false);
       } catch (error) {
         setIsDownloading(false);
@@ -127,7 +132,6 @@ const ImageScreen = ({ route }) => {
                 numberOfLines={3}
                 onChangeText={(text) => {
                   setPrompt(text.trimStart());
-                  setImageName(text.trimEnd());
                 }}
                 value={prompt}
               />

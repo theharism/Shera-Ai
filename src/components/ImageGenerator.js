@@ -3,21 +3,24 @@ import React from "react";
 import { COLORS } from "../constants/COLORS";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const ImageGenerator = ({navigation }) => {
-
+const ImageGenerator = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.titleStyle}>AI Image Generator</Text>
       <View style={styles.itemStyle}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate("ImageScreen")}
-        >
-          {/* <Image
-            source={it}
-            style={{ width: 30, height: 30, aspectRatio: 1 }}
-          /> */}
+        <TouchableOpacity onPress={() => navigation.navigate("ImageScreen")}>
+          <Image
+            source={require("../../assets/icons/AI_art.png")}
+            style={{
+              width: "100%",
+              height: "100%",
+              borderRadius:10,
+              // borderColor: COLORS.white,
+              // borderWidth: 1,
+            }}
+          />
 
-          <Text style={styles.itemsubTitleStyle}>Generator Ai Images</Text>
+          {/* <Text style={styles.itemsubTitleStyle}>Generator Ai Images</Text> */}
         </TouchableOpacity>
       </View>
     </View>
@@ -43,9 +46,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     marginRight: 10,
-    padding: 10,
     width: "100%",
-    height:150
+    height: 180,
   },
   itemTitleStyle: {
     color: COLORS.white,
