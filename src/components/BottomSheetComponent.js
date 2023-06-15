@@ -1,46 +1,106 @@
-import * as React from "react";
-import { StyleSheet, View, Text } from "react-native";
-import { Button } from "react-native-paper";
-import { FontAwesome } from "@expo/vector-icons";
+import {
+  View,
+  Text,
+  TouchableNativeFeedback,
+  Image,
+  Pressable,
+  Dimensions,
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { useFonts } from "expo-font";
+
 import { Ionicons } from "@expo/vector-icons";
 
-const BottomSheetComponent = ({ icon }) => (
-  <View style={styles.button}>
-    <View style={styles.continue}>
-      <Text style={styles.buttontext}>Continue</Text>
-    </View>
-    <View style={styles.nextbutton}>
-      <Ionicons name={icon} color="black" size={30} backgroundColor="red" />
-    </View>
-  </View>
-);
+const BottomSheetComponent = ({
+  bgcolor,
+  title,
+  iconname,
+  bottom,
+  top,
+  icon,
+}) => {
+  const AssetType = () => {
+    console.log(`Picking ${title}`);
+  };
 
-const styles = StyleSheet.create({
-  continue: {
-    backgroundColor: "black",
-    alignSelf: "center",
-    paddingRight: "26%",
-    marginLeft: "38%",
-  },
-  button: {
-    backgroundColor: "black",
-    flexDirection: "row",
-    alignContent: "center",
-    alignItems: "center",
-    height: "110%",
-    borderRadius: 40,
-    marginHorizontal: 10,
-    marginBottom: 40,
-    flexDirection: "row-reverse",
-    borderBottomColor: "red",
-    borderBottomWidth: 5,
-  },
-  buttontext: {
-    color: "white",
-    fontSize: 22,
-    fontFamily: "JosefinSans-Medium",
-  },
-  nextbutton: {},
-});
+  const Screen_Height = Dimensions.get("screen").height;
+
+  return (
+    <Pressable
+      onPress={AssetType}
+      style={{
+        backgroundColor: bgcolor,
+        height: Screen_Height / 11,
+        justifyContent: "flex-end",
+        flexDirection: "row-reverse",
+        borderBottomColor: "rgb(200,200,200)",
+        marginRight: "2%",
+        borderTopStartRadius: top === "true" ? 10 : 0,
+        borderBottomEndRadius: bottom === "true" ? 10 : 0,
+        borderBottomStartRadius: bottom === "true" ? 10 : 0,
+        borderTopEndRadius: top === "true" ? 10 : 0,
+      }}
+      android_disableSound="true"
+      android_ripple={{ color: "rgb(100,100,100)", foreground: "true" }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          flex: 1,
+          paddingRight: "3%",
+        }}
+      >
+        <Ionicons
+          name="ios-chevron-forward"
+          color="rgb(50,50,50)"
+          style={{
+            textAlign: "right",
+            flexGrow: 1,
+          }}
+          size={22}
+        />
+      </View>
+
+      <Text
+        style={{
+          color: "white",
+          fontWeight: "bold",
+          alignSelf: "center",
+          paddingLeft: 20,
+          fontSize: 16,
+          fontFamily: "JosefinSans-Medium",
+        }}
+      >
+        {title}
+      </Text>
+      <View
+        style={{
+          alignSelf: "center",
+          marginLeft: "3%",
+        }}
+      >
+        {icon === "true" ? (
+          <Ionicons
+            name={iconname}
+            color="white"
+            size={33}
+            style={{ backgroundColor: "black", borderRadius: 8 }}
+          />
+        ) : (
+          <Image
+            source={iconname}
+            style={{
+              resizeMode: "contain",
+              padding: 16,
+              borderRadius: 8,
+              backgroundColor: "black",
+            }}
+          />
+        )}
+      </View>
+    </Pressable>
+  );
+};
 
 export default BottomSheetComponent;

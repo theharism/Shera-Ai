@@ -8,7 +8,8 @@ import Animated,{SlideInLeft,SlideInRight,Layout} from "react-native-reanimated"
 
 const RecentsHome = ({ navigation }) => {
   const chats = useSelector((state) => state.chatSlice.chats);
-  const chatList = chats.map((chat) => ({ id: chat.id, title: chat.title,date:chat.date }));
+  //console.log(chats)
+  //const chatList = chats.map((chat) => ({ id: chat.id, title: chat.title,date:chat.date }));
 
   const renderItem = ({ item }) => {
     

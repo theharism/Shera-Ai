@@ -1,6 +1,7 @@
 import { StyleSheet,Image,View } from "react-native";
 import { Button } from "react-native-paper";
 import { MaterialIcons } from "@expo/vector-icons";
+import { COLORS } from "./COLORS";
 
 export const styles = StyleSheet.create({
     tabText: {
@@ -44,6 +45,12 @@ export const styles = StyleSheet.create({
       justifyContent: "center",
       fontFamily: "JosefinSans-Medium",
     },
+    skipStyle:{
+      color:COLORS.white,
+      fontFamily:"JosefinSans-Medium",
+      fontSize:17,
+      marginRight:20
+    }
   });
 
   export const config = {
@@ -106,8 +113,6 @@ export const styles = StyleSheet.create({
     />
   );
   
-
-
   export const customHeaderRight = ({showModal, points, }) => {
 
     return (
