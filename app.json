@@ -1,6 +1,11 @@
 {
   "expo": {
     "name": "Shera Ai",
+    "notification": {
+  "icon": "./assets/adaptive-icon.png",
+  "color": "#3B3B3B",
+  "iosDisplayInForeground": true
+},
     "slug": "SheraAi",
     "version": "1.0.1",
     "orientation": "default",
