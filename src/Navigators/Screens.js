@@ -5,12 +5,19 @@ import {
   Image,
   Animated,
   Dimensions,
+  StatusBar,
   Easing,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useCallback,
+} from "react";
 
 import {
   NavigationContainer,
@@ -28,6 +35,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
 
 import ChatScreen from "../components/ChatScreen";
+import BottomSheetContent from "../components/BottomSheetContent";
 import * as SplashScreen from "expo-splash-screen";
 
 import { useFonts } from "expo-font";
@@ -37,6 +45,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { saveChats, setChatsData } from "../slices/chatsSlice";
 import { setPoints } from "../slices/pointsSlice";
+
+import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 import {
   styles,
@@ -71,6 +81,13 @@ export default Screens = () => {
   };
 
   const assetBottomSheet = useRef(null);
+
+  const bottomSheetModalRef = useRef(null);
+  const bssnapPoints = useMemo(() => ["99.9%"], []);
+
+  const showBottomSheet = () => {
+    bottomSheetModalRef.current?.snapToIndex(0);
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -208,6 +225,7 @@ export default Screens = () => {
           size={40}
           style={{ marginHorizontal: 10 }}
           color="#c0c0c0"
+          onPress={showBottomSheet}
         />
       </View>
     );
@@ -282,6 +300,21 @@ export default Screens = () => {
           </Stack.Navigator>
 
           <PointsBottomSheet assetBottomSheet={assetBottomSheet} />
+
+          <BottomSheet
+            snapPoints={bssnapPoints}
+            ref={bottomSheetModalRef}
+            index={-1}
+            enablePanDownToClose={true}
+            topInset={StatusBar.currentHeight}
+            handleStyle={{
+              backgroundColor: "#171717",
+              borderColor: "#171717",
+            }}
+            handleIndicatorStyle={{ backgroundColor: "rgba(100,100,100,0.6)" }}
+          >
+            <BottomSheetContent />
+          </BottomSheet>
         </>
       ) : (
         <>

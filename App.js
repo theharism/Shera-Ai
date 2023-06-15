@@ -29,31 +29,31 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import BottomSheetContent from "./src/components/BottomSheetContent";
+//import BottomSheetContent from "./src/components/BottomSheetContent";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+//import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 
 export default function App() {
-  const bscontainerStyle = {
-    color: "black",
-  };
+  // const bscontainerStyle = {
+  //   color: "black",
+  // };
 
-  const showBottomSheet = () => {
-    console.log("Setbflag now true");
-    setbFlag(true);
-    bottomSheetModalRef.current?.snapToIndex(0);
-  };
+  // const showBottomSheet = () => {
+  //   console.log("Setbflag now true");
+  //   setbFlag(true);
+  //   bottomSheetModalRef.current?.snapToIndex(0);
+  // };
 
-  const [bflag, setbFlag] = useState(false);
+  // const [bflag, setbFlag] = useState(false);
 
-  const bottomSheetModalRef = useRef(null);
-  const snapPoints = useMemo(() => ["99.9%"], []);
+  // const bottomSheetModalRef = useRef(null);
+  // const snapPoints = useMemo(() => ["99.9%"], []);
 
-  const handleSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+  // const handleSheetChanges = useCallback((index) => {
+  //   console.log("handleSheetChanges", index);
+  // }, []);
 
   return (
     <Provider store={store}>
@@ -89,7 +89,7 @@ export default function App() {
                 </View>
               </BottomSheets> */}
 
-              <BottomSheet
+              {/* <BottomSheet
                 snapPoints={snapPoints}
                 ref={bottomSheetModalRef}
                 index={-1}
@@ -112,70 +112,9 @@ export default function App() {
                 >
                   <BottomSheetContent />
                 </BottomSheetScrollView>
-              </BottomSheet>    
+              </BottomSheet>     */}
       </GestureHandlerRootView>
     </PaperProvider>
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  tabText: {
-    fontSize: 12,
-  },
-  headerStyle: {
-    backgroundColor: "#000000",
-  },
-  headerTitleStyle: {
-    fontWeight: "bold",
-    fontSize: 25,
-    left: 15,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: "#000000",
-  },
-  modalContent: {
-    backgroundColor: "#1c1c1e",
-    padding: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    backgroundColor: "black",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  contentContainer: {
-    paddingTop: 2,
-    flex: 1,
-    alignItems: "center",
-  },
-  button: {
-    backgroundColor: "green",
-    alignItems: "center",
-    height: 60,
-    justifyContent: "center",
-  },
-  closeButton: {
-    marginTop: 16,
-    backgroundColor: "red",
-    borderRadius: 8,
-    flex: 1,
-    padding: 12,
-  },
-  closeButtonText: {
-    backgroundColor: "#fff",
-    alignSelf: "center",
-    fontSize: 70,
-    fontWeight: "bold",
-  },
-  bottomSheetContainer: {
-    flex: 1,
-    width: "100%",
-    justifyContent: "flex-start",
-    backgroundColor: "black",
-  },
-  buttonText: {
-    color: "white",
-  },
-});
