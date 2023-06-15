@@ -7,7 +7,6 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import TextRecognition from "react-native-text-recognition";
 import * as MediaLibrary from "expo-media-library";
 
 const PickAssets = ({ bgcolor, title }) => {

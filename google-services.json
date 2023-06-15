@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "438211645474",
+    "project_id": "shera-ai-79035",
+    "storage_bucket": "shera-ai-79035.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:438211645474:android:ba233474ccb2d37d843a7b",
+        "android_client_info": {
+          "package_name": "com.theharism.SheraAi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "438211645474-n7n38icdhkjq9vimbij8l4vrv4ss005v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1fghy4WV7FDtSedAUuU8ViaSrYEmaRxQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "438211645474-n7n38icdhkjq9vimbij8l4vrv4ss005v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

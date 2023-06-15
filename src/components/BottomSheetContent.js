@@ -207,6 +207,11 @@ const BottomSheetContent = () => {
         top="false"
         icon="true"
       />
+      <View
+        style={{
+          marginTop: "5%",
+        }}
+      />
     </BottomSheetScrollView>
   );
 };
