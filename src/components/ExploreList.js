@@ -12,7 +12,7 @@ const ExploreList = ({ title, data, navigation }) => {
         >
           <Image
             source={item.icon}
-            style={{ width: 30, height: 30, aspectRatio: 1 }}
+            style={{ width: 80, height: 80, aspectRatio: 1 ,borderColor:COLORS.white,borderWidth:1}}
           />
           <Text style={styles.itemTitleStyle}>{item.title}</Text>
           <Text style={styles.itemsubTitleStyle}>{item.subTitle}</Text>
@@ -43,10 +43,11 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: COLORS.white,
-    //fontWeight:'bold',
-    fontSize: 20,
+    //fontWeight:"100",
+    fontSize: 18,
     marginBottom: 15,
-    fontFamily: "JosefinSans-Medium",
+    //fontFamily: "JosefinSans-Medium",
+    fontFamily:"GalanoGrotesqueBold"
   },
   itemStyle: {
     borderColor: "#292929",
@@ -58,9 +59,9 @@ const styles = StyleSheet.create({
   },
   itemTitleStyle: {
     color: COLORS.white,
-    fontSize: 16,
+    fontSize: 14,
     marginVertical: 5,
-    fontFamily: "JosefinSans-Medium",
+    fontFamily: "GalanoGrotesqueBold",
   },
   itemsubTitleStyle: {
     color: "#7f7f7f",

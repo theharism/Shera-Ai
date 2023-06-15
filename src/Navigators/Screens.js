@@ -142,6 +142,8 @@ export default Screens = () => {
     "JosefinSans-Regular": require("../../assets/fonts/JosefinSans-VariableFont_wght.ttf"),
     "JosefinSans-Medium": require("../../assets/fonts/static/JosefinSans-Medium.ttf"),
     "JosefinSans-Bold": require("../../assets/fonts/static/JosefinSans-Bold.ttf"),
+    "MaterialIcons":require("../../assets/fonts/MaterialIcons-Regular.otf"),
+    "GalanoGrotesqueBold":require('../../assets/fonts/GalanoGrotesqueBold.otf')
   });
 
   useEffect(() => {

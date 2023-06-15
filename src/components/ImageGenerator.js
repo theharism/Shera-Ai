@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     //fontWeight:'bold',
     fontSize: 20,
     marginBottom: 15,
-    fontFamily: "JosefinSans-Medium",
+    fontFamily: "GalanoGrotesqueBold",
   },
   itemStyle: {
     borderColor: "#292929",
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
     marginVertical: 5,
-    fontFamily: "JosefinSans-Medium",
+    fontFamily: "GalanoGrotesqueBold",
   },
   itemsubTitleStyle: {
     color: "#7f7f7f",
