@@ -10,13 +10,11 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     addChat: (state, action) => {
-      console.log(action);
       const { id, title, date } = action.payload;
       state.chats = [...state.chats, { id, title, date, messages: [] }];
       state.size += 1;
     },
     addMessage: (state, action) => {
-      console.log(action.payload)
       const { chatId, id, message, sender } = action.payload;
       const updatedChats = state.chats.map((chat) => {
         if (chat.id === chatId) {

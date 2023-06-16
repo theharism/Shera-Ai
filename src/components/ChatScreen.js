@@ -117,9 +117,6 @@ const ChatScreen = () => {
     ]);
 
     if (chatID) {
-
-       console.log('HIIIIIIIIIIIIIIIIIIIIIIIIIIII')
-
       dispatch(
         addMessage({
           chatId: chatID,

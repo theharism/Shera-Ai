@@ -4,6 +4,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import chatSlice from "./src/slices/chatsSlice";
 import pointsSlice from "./src/slices/pointsSlice";
+import imagesSlice from "./src/slices/imagesSlice";
 import { PaperProvider } from "react-native-paper";
 
 import Screens from "./src/Navigators/Screens";
@@ -12,6 +13,7 @@ const store = configureStore({
   reducer: {
     chatSlice,
     pointsSlice,
+    imagesSlice
   },
 });
 

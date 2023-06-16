@@ -63,6 +63,7 @@ import Home from "./Home";
 import PickAssets from "../components/PickAsset";
 import PointsBottomSheet from "../components/PointsBottomSheet";
 import Subscription from "../screens/subscription/Subscription";
+import { deleteImage } from "../slices/imagesSlice";
 
 const Stack = createStackNavigator();
 
@@ -169,6 +170,38 @@ export default Screens = () => {
     })();
   }
 
+
+  const imageHeaderLeft = ({ navigation }) => {
+
+    //const imageName = useSelector((state) => state.imagesSlice.imageName);
+
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginLeft: 10,
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Explore");
+
+            dispatch(deleteImage())
+          }}
+        >
+          <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
+        </TouchableOpacity>
+  
+        <Image
+          source={require("../../assets/logo.png")}
+          style={{ width: 40, height: 40, left: 65, bottom: 2 }}
+        />
+      </View>
+    );
+  };
+  
+
   const chatHeaderLeft = ({ navigation }) => {
     const { chats, size } = useSelector((state) => state.chatSlice);
     const points = useSelector((state) => state.pointsSlice.points);
@@ -203,7 +236,7 @@ export default Screens = () => {
 
         <Image
           source={require("../../assets/logo.png")}
-          style={{ width: 35, height: 35, left: 60, bottom: 2 }}
+          style={{ width: 40, height: 40, left: 65, bottom: 2 }}
         />
       </View>
     );
@@ -282,6 +315,7 @@ export default Screens = () => {
                 // headerStyle: styles.headerStyle,
                 headerTitleStyle: styles.chatHeader,
                 headerTitleAlign: "center",
+                headerLeft: () => imageHeaderLeft({ navigation }),
                 presentation: "modal",
                 gestureDirection: "horizontal",
               })}

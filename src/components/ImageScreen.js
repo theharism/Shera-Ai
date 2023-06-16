@@ -28,12 +28,15 @@ import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 import * as Notifications from "expo-notifications";
 import { deleteFromFirebae, uploadToFirebase } from "../utilities/UploadImage";
+import { COLORS } from "../constants/COLORS";
+import { subtractPoints } from "../slices/pointsSlice";
+import { setName } from "../slices/imagesSlice";
 //import CheckInternet from '../Utilities/CheckInternet';
 
 const ImageScreen = ({ route }) => {
   const [imageURL, setImageURL] = useState("");
   const [prompt, setPrompt] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [imageName, setImageName] = useState("");
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const [isDownloading, setIsDownloading] = useState(false);
@@ -66,15 +69,17 @@ const ImageScreen = ({ route }) => {
   const handleGenerateImage = async () => {
     try {
       Keyboard.dismiss();
+      dispatch(subtractPoints({ value: 2 }))
       setIsLoading(true);
-      const newPrompt = prompt;
       const blob = await generateImage(prompt);
       const imageUrl = await uploadToFirebase(blob, imageName);
       setImageURL(imageUrl);
+      dispatch(setName(imageName))
       //const imageData = { prompt: prompt, url: imageUrl }
       //const id = await addNewImage(walletAddress, imageData)
+      setIsLoading(false)
     } catch (error) {
-      console.error("Image Error" + error);
+      console.error("Image Error1" + error);
     }
   };
 
@@ -102,7 +107,7 @@ const ImageScreen = ({ route }) => {
           .catch((error) => {
             console.error(error);
           });
-        deleteFromFirebae(imageName);
+        //deleteFromFirebae(imageName);
         setIsDownloading(false);
       } catch (error) {
         setIsDownloading(false);
@@ -146,11 +151,12 @@ const ImageScreen = ({ route }) => {
             </View>
 
             <View style={styles.imageContainer}>
-              {/* {isLoading ? (
+              {isLoading ? (
                 <ActivityIndicator size='large' color="#FFD700" style={[styles.loadingIndicator, { opacity: 1 }]} />
               )
+
                 :
-                ( */}
+                (
               <>
                 {imageURL && (
                   <>
@@ -167,7 +173,7 @@ const ImageScreen = ({ route }) => {
                   </>
                 )}
               </>
-              {/* )} */}
+              )}
               {/* {
             isDownloading ? <ActivityIndicator size='large' color="#ffffff" style={[styles.loadingIndicator, { opacity: 1 }]} /> : null
           } */}
@@ -183,7 +189,7 @@ const ImageScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0b0b0b",
+    backgroundColor: COLORS.black,
   },
   messageList: {
     flex: 1,
@@ -193,7 +199,7 @@ const styles = StyleSheet.create({
   messageInput: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#0b0b0b",
+    backgroundColor: COLORS.black,
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderTopWidth: 1,
