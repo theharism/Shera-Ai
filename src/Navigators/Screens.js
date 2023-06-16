@@ -130,9 +130,7 @@ export default Screens = () => {
   useEffect(() => {
     async function saveAuthState() {
       if (flag) {
-        //const points = 20;
         await AsyncStorage.setItem("authFlag", flag ? "yes" : "no");
-        //await AsyncStorage.setItem("points",points.toString())
       }
     }
 
@@ -143,8 +141,8 @@ export default Screens = () => {
     "JosefinSans-Regular": require("../../assets/fonts/JosefinSans-VariableFont_wght.ttf"),
     "JosefinSans-Medium": require("../../assets/fonts/static/JosefinSans-Medium.ttf"),
     "JosefinSans-Bold": require("../../assets/fonts/static/JosefinSans-Bold.ttf"),
-    "MaterialIcons":require("../../assets/fonts/MaterialIcons-Regular.otf"),
-    "GalanoGrotesqueBold":require('../../assets/fonts/GalanoGrotesqueBold.otf')
+    MaterialIcons: require("../../assets/fonts/MaterialIcons-Regular.otf"),
+    GalanoGrotesqueBold: require("../../assets/fonts/GalanoGrotesqueBold.otf"),
   });
 
   useEffect(() => {
@@ -170,9 +168,7 @@ export default Screens = () => {
     })();
   }
 
-
   const imageHeaderLeft = ({ navigation }) => {
-
     //const imageName = useSelector((state) => state.imagesSlice.imageName);
 
     return (
@@ -187,12 +183,12 @@ export default Screens = () => {
           onPress={() => {
             navigation.navigate("Explore");
 
-            dispatch(deleteImage())
+            dispatch(deleteImage());
           }}
         >
           <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
         </TouchableOpacity>
-  
+
         <Image
           source={require("../../assets/logo.png")}
           style={{ width: 40, height: 40, left: 65, bottom: 2 }}
@@ -200,7 +196,6 @@ export default Screens = () => {
       </View>
     );
   };
-  
 
   const chatHeaderLeft = ({ navigation }) => {
     const { chats, size } = useSelector((state) => state.chatSlice);
@@ -284,60 +279,77 @@ export default Screens = () => {
               cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
             }}
           >
-            <Stack.Screen
-              name="Home"
-              component={Home}
-              options={{
-                headerLeft: customHeaderLeft,
-                headerRight: () => customHeaderRight({ showModal, points }),
-              }}
-            />
-            <Stack.Screen
-              name="ChatScreen"
-              component={ChatScreen}
-              options={({ navigation }) => ({
-                // headerTitle: "Shera Ai",
-                // headerTintColor: "#FFFFFF",
-                // headerStyle: styles.headerStyle,
-                headerTitleStyle: styles.chatHeader,
-                headerTitleAlign: "center",
-                presentation: "modal",
-                headerLeft: () => chatHeaderLeft({ navigation }),
-                gestureDirection: "horizontal",
-              })}
-            />
-            <Stack.Screen
-              name="ImageScreen"
-              component={ImageScreen}
-              options={({ navigation }) => ({
-                // headerTitle: "Shera Ai",
-                // headerTintColor: "#FFFFFF",
-                // headerStyle: styles.headerStyle,
-                headerTitleStyle: styles.chatHeader,
-                headerTitleAlign: "center",
-                headerLeft: () => imageHeaderLeft({ navigation }),
-                presentation: "modal",
-                gestureDirection: "horizontal",
-              })}
-            />
+            {points > 0 ? (
+              <>
+                <Stack.Screen
+                  name="Home"
+                  component={Home}
+                  options={{
+                    headerLeft: customHeaderLeft,
+                    headerRight: () => customHeaderRight({ showModal, points }),
+                  }}
+                />
+                <Stack.Screen
+                  name="ChatScreen"
+                  component={ChatScreen}
+                  options={({ navigation }) => ({
+                    headerTitleStyle: styles.chatHeader,
+                    headerTitleAlign: "center",
+                    presentation: "modal",
+                    headerLeft: () => chatHeaderLeft({ navigation }),
+                    gestureDirection: "horizontal",
+                  })}
+                />
+                <Stack.Screen
+                  name="ImageScreen"
+                  component={ImageScreen}
+                  options={({ navigation }) => ({
+                    headerTitleStyle: styles.chatHeader,
+                    headerTitleAlign: "center",
+                    headerLeft: () => imageHeaderLeft({ navigation }),
+                    presentation: "modal",
+                    gestureDirection: "horizontal",
+                  })}
+                />
 
-            <Stack.Screen
-              name="Subscription"
-              component={Subscription}
-              options={{
-                headerTitle: "Try Pro for Free",
-                headerTintColor: "#FFFFFF",
-                headerStyle: styles.headerStyle,
-                headerTitleStyle: styles.onboardingHeader,
-                headerLeft: null,
-                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-                headerRight: () => (
-                  <TouchableOpacity>
-                    <Text style={styles.skipStyle}>Skip</Text>
-                  </TouchableOpacity>
-                ),
-              }}
-            />
+                <Stack.Screen
+                  name="Subscription"
+                  component={Subscription}
+                  options={{
+                    headerTitle: "Try Pro for Free",
+                    headerTintColor: "#FFFFFF",
+                    headerStyle: styles.headerStyle,
+                    headerTitleStyle: styles.onboardingHeader,
+                    headerLeft: null,
+                    cardStyleInterpolator:
+                      CardStyleInterpolators.forVerticalIOS,
+                    headerRight: () => (
+                      <TouchableOpacity>
+                        <Text style={styles.skipStyle}>Skip</Text>
+                      </TouchableOpacity>
+                    ),
+                  }}
+                />
+              </>
+            ) : (
+              <Stack.Screen
+                name="NewSubscription"
+                component={Subscription}
+                options={{
+                  headerTitle: "Try Pro for Free",
+                  headerTintColor: "#FFFFFF",
+                  headerStyle: styles.headerStyle,
+                  headerTitleStyle: styles.onboardingHeader,
+                  headerLeft: null,
+                  cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
+                  headerRight: () => (
+                    <TouchableOpacity>
+                      <Text style={styles.skipStyle}>Skip</Text>
+                    </TouchableOpacity>
+                  ),
+                }}
+              />
+            )}
           </Stack.Navigator>
 
           <PointsBottomSheet assetBottomSheet={assetBottomSheet} />
