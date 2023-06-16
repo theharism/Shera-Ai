@@ -4,12 +4,11 @@
     "slug": "SheraAi",
     "version": "1.0.1",
     "orientation": "default",
-    "icon": "./assets/new_logo.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/SHERA_AI.png",
-      "resizeMode": "cover",
-      "backgroundColor": "#0b1023",
+      "image": "./assets/splash.png",
+      "backgroundColor": "#000000",
       "plugins": [
       [
         "expo-media-library",
@@ -27,8 +26,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/new_logo.png",
-        "backgroundColor": "#0b1023"
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#000000"
       },
       "package": "com.theharism.SheraAi",
       "versionCode": 2

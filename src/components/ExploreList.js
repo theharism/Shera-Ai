@@ -12,7 +12,7 @@ const ExploreList = ({ title, data, navigation }) => {
         >
           <Image
             source={item.icon}
-            style={{ width: 80, height: 80, aspectRatio: 1 ,borderColor:COLORS.white,borderWidth:1,borderRadius:10}}
+            style={{ width: 40, height: 40, aspectRatio: 1,borderRadius:10}}
           />
           <Text style={styles.itemTitleStyle}>{item.title}</Text>
           <Text style={styles.itemsubTitleStyle}>{item.subTitle}</Text>
