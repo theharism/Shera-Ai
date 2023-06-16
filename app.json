@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Shera Ai",
-    "slug": "SheraAi",
-    "version": "1.0.1",
+    "slug": "Shera-Ai",
+    "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -29,19 +29,10 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#000000"
       },
-      "package": "com.theharism.SheraAi",
-      "versionCode": 2
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "d3940d7d-c198-4015-a443-cbf65bc31c92"
-      }
     }
-  },
-  "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-7133387510338737~4677436322"
   }
 }
