@@ -1,8 +1,13 @@
 {
   "expo": {
     "name": "Shera Ai",
-    "slug": "SheraAi",
-    "version": "1.0.1",
+    "notification": {
+      "icon": "./assets/icon.png",
+      "color": "#3B3B3B",
+      "iosDisplayInForeground": true
+    },
+    "slug": "Shera-Ai",
+    "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -10,38 +15,39 @@
       "image": "./assets/splash.png",
       "backgroundColor": "#000000",
       "plugins": [
-      [
-        "expo-media-library",
-        {
-          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
-          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
-          "isAccessMediaLocationEnabled": true
-        }
+        [
+          "expo-media-library",
+          {
+            "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+            "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+            "isAccessMediaLocationEnabled": true
+          }
+        ]
       ]
-    ]
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ai.chatgpt.sheraai.imagegenerator.aichat"
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#000000"
       },
-      "package": "com.theharism.SheraAi",
-      "versionCode": 2
+      "versionCode": 1,
+      "package": "com.ai.chatgpt.sheraai.imagegenerator.aichat"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "d3940d7d-c198-4015-a443-cbf65bc31c92"
+        "projectId": "ac097b08-72bd-4b78-aac7-58ddf064c389"
       }
     }
-  },
-  "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-7133387510338737~4677436322"
   }
 }
