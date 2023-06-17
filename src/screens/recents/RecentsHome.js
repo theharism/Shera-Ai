@@ -4,7 +4,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../constants/COLORS";
 import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import Animated,{SlideInLeft,SlideInRight,Layout} from "react-native-reanimated";
 
 const RecentsHome = ({ navigation }) => {
   const chats = useSelector((state) => state.chatSlice.chats);
@@ -12,7 +11,6 @@ const RecentsHome = ({ navigation }) => {
   //const chatList = chats.map((chat) => ({ id: chat.id, title: chat.title,date:chat.date }));
 
   const renderItem = ({ item }) => {
-    
     const truncatedTitle =
       item.title.length > 42 ? item.title.substring(0, 43) + "..." : item.title;
     return (
@@ -28,12 +26,7 @@ const RecentsHome = ({ navigation }) => {
   };
 
   return (
-    <Animated.View
-    entering={SlideInRight}
-    exiting={SlideInLeft}
-    style={styles.container}
-    >
-      <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <FlatList
         data={chats}
         renderItem={renderItem}
@@ -41,9 +34,7 @@ const RecentsHome = ({ navigation }) => {
         keyExtractor={(item) => item.id.toString()}
       />
     </SafeAreaView>
-  
-    </Animated.View>
-    );
+  );
 };
 
 export default RecentsHome;
@@ -73,8 +64,8 @@ const styles = StyleSheet.create({
   list: {
     marginHorizontal: 15,
   },
-  date:{
-    color:COLORS.white,
+  date: {
+    color: COLORS.white,
     fontFamily: "JosefinSans-Regular",
-  }
+  },
 });

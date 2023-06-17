@@ -14,7 +14,7 @@ import { Platform } from "react-native";
 import MyComponent from "../../components/button";
 import { useNavigation } from "@react-navigation/native";
 
-const YourAiAssistant = ({navigation}) => {
+const YourAiAssistant = ({ navigation }) => {
   // const navigation = useNavigation();
 
   const nextscreen = () => {
@@ -22,7 +22,7 @@ const YourAiAssistant = ({navigation}) => {
     //   index: 0,
     //   routes: [{ name: "Help Us Grow" }],
     // });
-    navigation.navigate('HelpUsGrow')
+    navigation.navigate("HelpUsGrow");
   };
   return (
     <SafeAreaView style={styles.main}>
@@ -33,7 +33,10 @@ const YourAiAssistant = ({navigation}) => {
         </Text>
       </View>
       <View style={styles.iconimage}>
-        <Image source={require("../../../assets/icon.png")} />
+        <Image
+          source={require("../../../assets/icon.png")}
+          style={{ height: "100%", width: "100%" ,aspectRatio:1}}
+        />
       </View>
       <View style={styles.buttonstyle}>
         <TouchableHighlight onPress={nextscreen}>
@@ -42,13 +45,13 @@ const YourAiAssistant = ({navigation}) => {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   textcontainer: {
     alignItems: "center",
     flex: 3,
-    marginHorizontal:20
+    marginHorizontal: 20,
   },
   text: {
     alignSelf: "flex-start",
@@ -77,4 +80,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default YourAiAssistant
+export default YourAiAssistant;
