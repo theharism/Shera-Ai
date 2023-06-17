@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
     headerTitleStyle: {
       fontFamily: "JosefinSans-Medium",
       fontSize: 25,
-      left: 18,
+      left: 5,
       bottom: 2,
     },
     chatHeader: {
@@ -109,7 +109,7 @@ export const styles = StyleSheet.create({
   export const customHeaderLeft = () => (
     <Image
       source={require("../../assets/logo.png")}
-      style={{ width: 35, height: 35, left: 25, bottom: 2 }}
+      style={{ width: 40, height: 40, left:20, bottom: 2 }}
     />
   );
   

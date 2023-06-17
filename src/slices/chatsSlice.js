@@ -10,7 +10,6 @@ const chatSlice = createSlice({
   initialState,
   reducers: {
     addChat: (state, action) => {
-      console.log(action);
       const { id, title, date } = action.payload;
       state.chats = [...state.chats, { id, title, date, messages: [] }];
       state.size += 1;

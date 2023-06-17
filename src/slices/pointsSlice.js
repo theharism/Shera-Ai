@@ -16,7 +16,7 @@ const pointsSlice = createSlice({
       if (points) {
         state.points = points;
       }
-    },
+    }
   },
 });
 

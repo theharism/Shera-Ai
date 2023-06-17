@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { generateRandomString } from "../utilities/StringGenerator";
 import { subtractPoints } from "../slices/pointsSlice";
 import renderItem from "./renderItem";
+import EventSource from "react-native-sse";
+import "react-native-url-polyfill/auto";
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -33,37 +35,6 @@ const ChatScreen = () => {
 
   const flatListRef = useRef(null);
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-  //     // Handle back button press
-  //     // Your code here
-  //    dispatch(saveChats())
-  //     // Return true to prevent default back button behavior
-  //     return false;
-  //   });
-
-  //   return () => backHandler.remove();
-  // }, []);
-
-  // useEffect(() => {
-  //   const handleBackButton = async () => {
-  //     try {
-  //       await AsyncStorage.setItem('chats', JSON.stringify(chats));
-  //     } catch (error) {
-  //       console.log('Error saving chat:', error);
-  //     }
-  //   };
-
-  //   const backHandler = BackHandler.addEventListener(
-  //     'hardwareBackPress',
-  //     handleBackButton
-  //   );
-
-  //   return () => {
-  //     backHandler.remove();
-  //   };
-  // }, [chats]);
 
   useEffect(() => {
     setSubmitted(false);
@@ -92,15 +63,10 @@ const ChatScreen = () => {
     if (messagesArray) {
       useEffect(() => {
         setMessages(messagesArray);
+        setChatID(id)
       }, []);
     }
   }
-
-  // useEffect(() => {
-  //   if (messagesArray) {
-  //     setMessages(messagesArray);
-  //   }
-  // }, [messagesArray]);
 
   const handleSetChatId = (id) => {
     return new Promise((resolve) => {
@@ -153,7 +119,7 @@ const ChatScreen = () => {
     if (chatID) {
       dispatch(
         addMessage({
-          chatId: id,
+          chatId: chatID,
           id: messages.length,
           message: message.trimEnd(),
           sender: "user",
@@ -168,26 +134,136 @@ const ChatScreen = () => {
   };
 
   const handleResponseMessage = async () => {
-    const reply = await chatWithGPT3(messages, content);
+    //const reply = await
+    //chatWithGPT3(messages, content,setMessages);
 
-    if (reply) {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { id: prevMessages.length + 1, message: reply, sender: "ChatGPT" },
-      ]);
+    // if (reply) {
+    //   setMessages((prevMessages) => [
+    //     ...prevMessages,
+    //     { id: prevMessages.length + 1, message: reply, sender: "ChatGPT" },
+    //   ]);
 
-      if (chatID) {
-        dispatch(
-          addMessage({
-            chatId: chatID,
-            id: messages.length,
-            message: reply,
-            sender: "ChatGPT",
-          })
-        );
-      }
+   
+
+    const OPENAI_KEY = "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";
+
+    let newContent = "";
+
+    if (content) {
+      messages.unshift({ id: 0, message: content, sender: "system" });
     }
-    setTyping(false);
+
+    let apiMessages = messages.map((messageObject) => {
+      var role = "";
+      if (messageObject.sender === "ChatGPT") {
+        role = "assistant";
+      } else if (messageObject.sender === "user") {
+        role = "user";
+      } else {
+        role = "system";
+      }
+      return { content: messageObject.message, role: role };
+    });
+
+    let url = "https://api.openai.com/v1/chat/completions";
+
+    // Parameters to pass to the API
+    let data = {
+      model: "gpt-3.5-turbo",
+      messages: apiMessages,
+      temperature: 0.75,
+      top_p: 0.95,
+      max_tokens: 100,
+      stream: true,
+      n: 1,
+      max_tokens: 200,
+    };
+
+    const es = new EventSource(url, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${OPENAI_KEY}`,
+      },
+      method: "POST",
+      body: JSON.stringify(data),
+      pollingInterval: 25000,
+    });
+
+    const message = {
+      id: messages.length + 1,
+      message: "",
+      sender: "ChatGPT",
+    };
+
+    setMessages((previousMessages) => [...previousMessages, message]);
+
+    const listener = (event) => {
+      if (event.type === "open") {
+        console.log("Open SSE connection.");
+      } else if (event.type === "message") {
+        if (event.data !== "[DONE]") {
+          // get every piece of text
+          const data = JSON.parse(event.data);
+          const delta = data.choices[0].delta;
+
+          // Check if is the last text to close the events request
+          const finish_reason = data.choices[0].finish_reason;
+
+          if (finish_reason === "stop") {
+            es.close();
+          } else {
+            if (delta && delta.content) {
+              // Update content with new data
+              newContent = newContent + delta.content;
+
+              // Continuously update the last message in the state
+              // with new piece of data
+              setMessages((previousMessages) => {
+                // Get the last array
+                const last = [...previousMessages];
+
+                // Update the list
+                const mewLIst = last.map((m, i) => {
+                  if (m.id === message.id)
+                     m.message = newContent;
+
+                  return m;
+                });
+                // Return the new array
+                return mewLIst;
+              });
+            }
+          }
+        } else {
+          es.close();
+
+          if (chatID) {
+            dispatch(
+              addMessage({
+                chatId: chatID,
+                id:(message.id -1),
+                message:message.message,
+                sender:message.sender
+              })
+            );
+          }
+        }
+      } else if (event.type === "error") {
+        console.error("Connection error:", event.message);
+      } else if (event.type === "exception") {
+        console.error("Error:", event.message, event.error);
+      }
+    };
+
+    // Add listener
+    es.addEventListener("open", listener);
+    es.addEventListener("message", listener);
+    es.addEventListener("error", listener);
+
+    return () => {
+      es.removeAllEventListeners();
+      es.close();
+    };
   };
 
   useEffect(() => {
