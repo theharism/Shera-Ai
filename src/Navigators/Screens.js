@@ -64,6 +64,7 @@ import PickAssets from "../components/PickAsset";
 import PointsBottomSheet from "../components/PointsBottomSheet";
 import Subscription from "../screens/subscription/Subscription";
 import { deleteImage } from "../slices/imagesSlice";
+import { handleSaveChatButtonPress } from "../utilities/SaveData";
 
 const Stack = createStackNavigator();
 
@@ -189,28 +190,13 @@ export default Screens = () => {
           <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
         </TouchableOpacity>
 
-        <Image
-          source={require("../../assets/logo.png")}
-          style={{ width: 40, height: 40, left: 65, bottom: 2 }}
-        />
       </View>
     );
   };
 
-  const chatHeaderLeft = ({ navigation }) => {
+  const ChatHeaderLeft = ({ navigation }) => {
     const { chats, size } = useSelector((state) => state.chatSlice);
     const points = useSelector((state) => state.pointsSlice.points);
-    const handleSaveChatButtonPress = async () => {
-      try {
-        await AsyncStorage.setItem("chats", JSON.stringify(chats));
-        await AsyncStorage.setItem("size", size.toString());
-        await AsyncStorage.setItem("points", points.toString());
-
-        console.log("Chat saved successfully!");
-      } catch (error) {
-        console.log("Error saving chat:", error);
-      }
-    };
 
     return (
       <View
@@ -223,16 +209,29 @@ export default Screens = () => {
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Home");
-            handleSaveChatButtonPress();
+            handleSaveChatButtonPress(chats, size, points);
           }}
         >
           <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
         </TouchableOpacity>
 
+      </View>
+    );
+  };
+
+  const HeaderTitle = () => {
+    return (
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
         <Image
           source={require("../../assets/logo.png")}
-          style={{ width: 40, height: 40, left: 65, bottom: 2 }}
+          style={{ width: 40, height: 40,bottom: 2 }}
         />
+        <Text style={styles.headerTitleStyle}>Shera Ai</Text>
       </View>
     );
   };
@@ -261,6 +260,18 @@ export default Screens = () => {
     );
   };
 
+  const CustomHeaderTitle = () => {
+    return (
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <Image
+          source={require("../../assets/logo.png")}
+          style={{ width: 40, height: 40, left: 5, bottom: 2 }}
+        />
+        <Text style={styles.headerTitleStyle}>Shera Ai</Text>
+      </View>
+    );
+  };
+
   return (
     <NavigationContainer>
       {flag ? (
@@ -268,10 +279,8 @@ export default Screens = () => {
           <Stack.Navigator
             initialRouteName="Home"
             screenOptions={{
-              headerTitle: "Shera Ai",
               headerTintColor: "#FFFFFF",
               headerStyle: styles.headerStyle,
-              headerTitleStyle: styles.headerTitleStyle,
               gestureEnabled: true,
               gestureDirection: "horizontal",
               headerMode: "screen",
@@ -285,7 +294,8 @@ export default Screens = () => {
                   name="Home"
                   component={Home}
                   options={{
-                    headerLeft: customHeaderLeft,
+                    headerTitle: () => <CustomHeaderTitle />,
+                    //headerLeft: customHeaderLeft,
                     headerRight: () => customHeaderRight({ showModal, points }),
                   }}
                 />
@@ -293,10 +303,11 @@ export default Screens = () => {
                   name="ChatScreen"
                   component={ChatScreen}
                   options={({ navigation }) => ({
-                    headerTitleStyle: styles.chatHeader,
+                    //headerTitleStyle: styles.chatHeader,
                     headerTitleAlign: "center",
                     presentation: "modal",
-                    headerLeft: () => chatHeaderLeft({ navigation }),
+                    headerTitle: () => <HeaderTitle />,
+                    headerLeft: () => ChatHeaderLeft({ navigation }),
                     gestureDirection: "horizontal",
                   })}
                 />
@@ -304,8 +315,9 @@ export default Screens = () => {
                   name="ImageScreen"
                   component={ImageScreen}
                   options={({ navigation }) => ({
-                    headerTitleStyle: styles.chatHeader,
+                    //headerTitleStyle: styles.chatHeader,
                     headerTitleAlign: "center",
+                    headerTitle: () => <HeaderTitle />,
                     headerLeft: () => imageHeaderLeft({ navigation }),
                     presentation: "modal",
                     gestureDirection: "horizontal",
@@ -315,7 +327,7 @@ export default Screens = () => {
                 <Stack.Screen
                   name="Subscription"
                   component={Subscription}
-                  options={{
+                  options={({ navigation }) => ({
                     headerTitle: "Try Pro for Free",
                     headerTintColor: "#FFFFFF",
                     headerStyle: styles.headerStyle,
@@ -324,18 +336,18 @@ export default Screens = () => {
                     cardStyleInterpolator:
                       CardStyleInterpolators.forVerticalIOS,
                     headerRight: () => (
-                      <TouchableOpacity>
+                      <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Text style={styles.skipStyle}>Skip</Text>
                       </TouchableOpacity>
                     ),
-                  }}
+                  })}
                 />
               </>
             ) : (
               <Stack.Screen
                 name="NewSubscription"
                 component={Subscription}
-                options={{
+                options={({ navigation }) => ({
                   headerTitle: "Try Pro for Free",
                   headerTintColor: "#FFFFFF",
                   headerStyle: styles.headerStyle,
@@ -343,11 +355,11 @@ export default Screens = () => {
                   headerLeft: null,
                   cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
                   headerRight: () => (
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
                       <Text style={styles.skipStyle}>Skip</Text>
                     </TouchableOpacity>
                   ),
-                }}
+                })}
               />
             )}
           </Stack.Navigator>

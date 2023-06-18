@@ -22,6 +22,11 @@ const ChatHomeItem = ({title,icon,title1,title2,setMessage,leftStyle}) => {
         titleStyle={styles.Title}
         left={() => icon}
         leftStyle={leftStyle} />
+        {/* <Card.Title
+        title={title}
+        titleStyle={styles.title}
+        left={() => <View style={styles.leftContainer}>{icon}</View>}
+      /> */}
       <Card.Content style={styles.content}>
         {button(title1)}
         {button(title2)}
@@ -46,6 +51,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     marginVertical:10,
     height:210
+  },
+  title: {
+    flex: 1,
+    alignSelf: 'flex-start',
+    // additional title styles
+  },
+  leftContainer: {
+    marginRight: 10,
+    // additional styles for the left container if needed
   },
   Title: {
     alignSelf: 'center',
