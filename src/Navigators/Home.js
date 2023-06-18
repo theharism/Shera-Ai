@@ -36,6 +36,8 @@ import {
 
 const Tab = createBottomTabNavigator();
 
+const { height } = Dimensions.get('window');
+
 export default Home = () => {
   return (
     <View style={styles.container}>
@@ -45,7 +47,7 @@ export default Home = () => {
           tabBarStyle: {
             backgroundColor: "#171717",
             borderTopWidth: 1,
-            height: 75,
+            height: height*0.09,
             borderTopColor: "#282828",
             animate: true,
             interpolate: CardStyleInterpolators.forHorizontalIOS,
