@@ -18,6 +18,7 @@ import { subtractPoints } from "../slices/pointsSlice";
 import renderItem from "./renderItem";
 import EventSource from "react-native-sse";
 import "react-native-url-polyfill/auto";
+import { handleSaveChatButtonPress } from "../utilities/SaveData";
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -35,6 +36,29 @@ const ChatScreen = () => {
 
   const flatListRef = useRef(null);
   const dispatch = useDispatch();
+
+  const { chats, size } = useSelector((state) => state.chatSlice);
+  const points = useSelector((state) => state.pointsSlice.points);
+
+  useEffect(() => {
+    const handleBackPress = () => {
+      // Perform your custom logic here
+      console.log("Hardware back button pressed!");
+
+      handleSaveChatButtonPress(chats,size,points)
+
+      // Return true to indicate that you've handled the event
+      return false;
+    };
+
+    // Add the event listener for hardware back button press
+    BackHandler.addEventListener("hardwareBackPress", handleBackPress);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener("hardwareBackPress", handleBackPress);
+    };
+  }, []);
 
   useEffect(() => {
     setSubmitted(false);
@@ -63,7 +87,7 @@ const ChatScreen = () => {
     if (messagesArray) {
       useEffect(() => {
         setMessages(messagesArray);
-        setChatID(id)
+        setChatID(id);
       }, []);
     }
   }
@@ -142,8 +166,6 @@ const ChatScreen = () => {
     //     ...prevMessages,
     //     { id: prevMessages.length + 1, message: reply, sender: "ChatGPT" },
     //   ]);
-
-   
 
     const OPENAI_KEY = "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";
 
@@ -224,8 +246,7 @@ const ChatScreen = () => {
 
                 // Update the list
                 const mewLIst = last.map((m, i) => {
-                  if (m.id === message.id)
-                     m.message = newContent;
+                  if (m.id === message.id) m.message = newContent;
 
                   return m;
                 });
@@ -241,9 +262,9 @@ const ChatScreen = () => {
             dispatch(
               addMessage({
                 chatId: chatID,
-                id:(message.id -1),
-                message:message.message,
-                sender:message.sender
+                id: message.id - 1,
+                message: message.message,
+                sender: message.sender,
               })
             );
           }

@@ -24,7 +24,7 @@ export default renderItem = ({ item }) =>
           <View style={styles.chatInner}>
             <Image
               source={require("../../assets/icons/user_avatar.png")}
-              style={styles.avatar}
+              style={styles.userAvatar}
             />
             <Text style={styles.chatText}>{item.message}</Text>
           </View>
@@ -47,7 +47,7 @@ export default renderItem = ({ item }) =>
           <View style={styles.chatInner}>
             <Image
               source={require("../../assets/icons/user_avatar.png")}
-              style={styles.avatar}
+              style={styles.userAvatar}
             />
             <Text style={styles.chatText}>{item.message}</Text>
           </View>
@@ -71,7 +71,7 @@ export default renderItem = ({ item }) =>
         <View style={styles.chatInner}>
           <Image
             source={require("../../assets/logo.png")}
-            style={styles.avatar}
+            style={styles.chatAvatar}
           />
           <Text style={styles.chatText}>{item.message}</Text>
         </View>
@@ -108,9 +108,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  avatar: {
+  userAvatar: {
     width: 25,
     height: 25,
+    aspectRatio: 1,
+    marginRight: 8,
+    alignSelf: "flex-start",
+  },
+  chatAvatar:{
+    width: 35,
+    height: 35,
     aspectRatio: 1,
     marginRight: 8,
     alignSelf: "flex-start",

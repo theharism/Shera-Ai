@@ -15,6 +15,7 @@ export const styles = StyleSheet.create({
       fontSize: 25,
       left: 5,
       bottom: 2,
+      color:COLORS.white
     },
     chatHeader: {
       fontFamily: "JosefinSans-Medium",

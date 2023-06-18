@@ -2,7 +2,7 @@
   "expo": {
     "name": "Shera Ai",
     "notification": {
-      "icon": "./assets/icon.png",
+      "icon": "./assets/logo.png",
       "color": "#3B3B3B",
       "iosDisplayInForeground": true
     },
