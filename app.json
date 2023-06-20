@@ -29,6 +29,14 @@
             "microphonePermission": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
             "speechRecognitionPermission": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
           }
+        ],
+        [
+          "expo-build-properties",
+          {
+            "ios": {
+              "useFrameworks": "static"
+            }
+          }
         ]
       ]
     },
@@ -56,5 +64,9 @@
         "projectId": "ac097b08-72bd-4b78-aac7-58ddf064c389"
       }
     }
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-7133387510338737~4677436322",
+    "ios_app_id": "ca-app-pub-7133387510338737~4677436322"
   }
 }

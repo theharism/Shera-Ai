@@ -3,24 +3,77 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Permission,
   TextInput,
+  PermissionsAndroid,
 } from "react-native";
-import React, { useCallback, useState, useMemo, useRef } from "react";
+import React, {
+  useCallback,
+  useState,
+  useMemo,
+  useRef,
+  useEffect,
+} from "react";
 import { COLORS } from "../constants/COLORS";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import BottomSheet from "@gorhom/bottom-sheet";
-
+import { FontAwesome5 } from "@expo/vector-icons";
 import PickAssets from "./PickAsset";
-import { color } from "react-native-reanimated";
+import { MaterialIcons } from "@expo/vector-icons";
+import Voice from "@react-native-voice/voice";
 
 const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   const [height, setHeight] = useState(50);
-
+  const [permissionState, setPermissionState] = useState(false);
   const snapPoints = useMemo(() => ["40%"], []);
   //const [message, setMessage] = useState("");
   const maxHeight = 140;
   const [scrollEnabled, setScrollEnabled] = useState(false);
+
+  const [result, setResult] = useState("");
+  const [isLoading, setLoading] = useState(false);
+
+  useEffect(() => {
+    Voice.onSpeechStart = onSpeechStartHandler;
+    Voice.onSpeechEnd = onSpeechEndHandler;
+    Voice.onSpeechResults = onSpeechResultsHandler;
+
+    return () => {
+      //Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+  const onSpeechStartHandler = (e) => {
+    console.log("start handler==>>>", e);
+  };
+  const onSpeechEndHandler = (e) => {
+    setLoading(false);
+    console.log("stop handler", e);
+  };
+
+  const onSpeechResultsHandler = (e) => {
+    let text = e.value[0];
+    setResult(text);
+    console.log("speech result handler", e);
+  };
+
+  const startRecording = async () => {
+    setLoading(true);
+    // try {
+    //   await Voice.start("en-Us");
+    // } catch (error) {
+    //   console.log("error raised", error);
+    // }
+  };
+
+  const stopRecording = async () => {
+    try {
+      await Voice.stop();
+    } catch (error) {
+      console.log("error raised", error);
+    }
+  };
 
   const handleContentSizeChange = (event) => {
     const contentHeight = event.nativeEvent.contentSize.height;
@@ -52,6 +105,14 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
             onPress={PickAsset}
           />
         ) : null}
+        {isLoading ? (
+          <TouchableOpacity
+            style={{ marginLeft: 10 }}
+            onPress={() => setLoading(false)}
+          >
+            <FontAwesome5 name="trash" size={24} color="#c0c0c0" />
+          </TouchableOpacity>
+        ) : null}
         <TextInput
           style={[
             styles.textInput,
@@ -69,10 +130,22 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
           value={message}
           scrollEnabled={scrollEnabled}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={onPress}>
-          <FontAwesome name="send" size={24} color="#c0c0c0" />
-        </TouchableOpacity>
+
+        {isLoading ? (
+          <MaterialIcons name="pause-circle-outline" size={36} color="red" style={{margin:5}} />
+        ) : null}
+
+        {message.length > 0 || isLoading ? (
+          <TouchableOpacity style={[styles.sendButton, isLoading ? null : {marginLeft:10} ]} onPress={onPress}>
+            <FontAwesome name="send" size={24} color="#c0c0c0" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.sendButton1} onPress={startRecording}>
+            <Ionicons name="ios-mic" size={30} color="#c0c0c0" />
+          </TouchableOpacity>
+        )}
       </View>
+
       <BottomSheet
         snapPoints={snapPoints}
         enablePanDownToClose={true}
@@ -109,7 +182,7 @@ const styles = StyleSheet.create({
     borderColor: "#7f7f7f",
     borderWidth: 0.2,
     paddingHorizontal: 10,
-    marginLeft: 10,
+    marginLeft: 15,
     minHeight: 60,
     color: COLORS.white,
     fontSize: 17,
@@ -117,6 +190,10 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     paddingVertical: 10,
-    marginLeft: 15,
+    marginRight: 10,
+  },
+  sendButton1: {
+    paddingVertical: 6,
+    margin: 10,
   },
 });
