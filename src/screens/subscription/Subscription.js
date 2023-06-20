@@ -4,9 +4,46 @@ import { SafeAreaView } from "react-native";
 import { COLORS } from "../../constants/COLORS";
 import { Button } from "react-native-paper";
 import { useState } from "react";
+import { RewardedAd, TestIds } from "react-native-google-mobile-ads";
 
 const Subscription = () => {
   const [status, setStatus] = useState(2);
+
+  const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
+    requestNonPersonalizedAdsOnly: true,
+    keywords: ["fashion", "clothing"],
+  });
+
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const unsubscribeLoaded = rewarded.addAdEventListener(
+      RewardedAdEventType.LOADED,
+      () => {
+        setLoaded(true);
+      }
+    );
+    const unsubscribeEarned = rewarded.addAdEventListener(
+      RewardedAdEventType.EARNED_REWARD,
+      (reward) => {
+        console.log("User earned reward of ", reward);
+      }
+    );
+
+    // Start loading the rewarded ad straight away
+    rewarded.load();
+
+    // Unsubscribe from events on unmount
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeEarned();
+    };
+  }, []);
+
+  // No advert ready to show yet
+  if (!loaded) {
+    return null;
+  }
 
   const SubTitle = ({ icon, text }) => {
     return (
@@ -16,7 +53,7 @@ const Subscription = () => {
     );
   };
 
-  const CustomButton = ({ text, num }) => {
+  const CustomButton = ({ text, num,onPress }) => {
     return (
       <Button
         mode="outlined"
@@ -26,6 +63,7 @@ const Subscription = () => {
         buttonColor={status === num ? "green" : null}
         onPress={() => {
           setStatus(num);
+          onPress
         }}
       >
         {text}
@@ -43,6 +81,7 @@ const Subscription = () => {
         <SubTitle text={"Try 3 Days for Free"} />
       </View>
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
+      <CustomButton text={"Watch an Ad             +5 wishes"} onPress={()=> {rewarded.show()}}/>
         <CustomButton text={"$2250.0/week"} num={1} />
         <CustomButton text={"3 days for free, then s12800.0/year"} num={2} />
       </View>
