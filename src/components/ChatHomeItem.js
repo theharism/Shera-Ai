@@ -13,10 +13,9 @@ const ChatHomeItem = ({
   title1,
   title2,
   setMessage,
-  leftStyle,
 }) => {
   const CustomButton = ({ text }) => (
-    <TouchableOpacity style={styles.button}>
+    <TouchableOpacity style={styles.button} onPress={()=>setMessage(text)}>
       <Text style={styles.buttonText}>{text}</Text>
     </TouchableOpacity>
   );

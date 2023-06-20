@@ -22,6 +22,13 @@
             "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
             "isAccessMediaLocationEnabled": true
           }
+        ],
+        [
+          "@react-native-voice/voice",
+          {
+            "microphonePermission": "CUSTOM: Allow $(PRODUCT_NAME) to access the microphone",
+            "speechRecognitionPermission": "CUSTOM: Allow $(PRODUCT_NAME) to securely recognize user speech"
+          }
         ]
       ]
     },
