@@ -1,10 +1,10 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import React from "react";
+import React,{useEffect} from "react";
 import { SafeAreaView } from "react-native";
 import { COLORS } from "../../constants/COLORS";
 import { Button } from "react-native-paper";
 import { useState } from "react";
-import { RewardedAd, TestIds } from "react-native-google-mobile-ads";
+import { RewardedAd, TestIds,RewardedAdEventType } from "react-native-google-mobile-ads";
 
 const Subscription = () => {
   const [status, setStatus] = useState(2);
