@@ -6,14 +6,12 @@ import { Button } from "react-native-paper";
 import { useState } from "react";
 import { RewardedAd, TestIds,RewardedAdEventType } from "react-native-google-mobile-ads";
 
+const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
+  requestNonPersonalizedAdsOnly: true,
+});
+
 const Subscription = () => {
   const [status, setStatus] = useState(2);
-
-  const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
-    requestNonPersonalizedAdsOnly: true,
-    keywords: ["fashion", "clothing"],
-  });
-
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
@@ -53,7 +51,7 @@ const Subscription = () => {
     );
   };
 
-  const CustomButton = ({ text, num,onPress }) => {
+  const CustomButton = ({ text, num }) => {
     return (
       <Button
         mode="outlined"
@@ -63,7 +61,6 @@ const Subscription = () => {
         buttonColor={status === num ? "green" : null}
         onPress={() => {
           setStatus(num);
-          onPress
         }}
       >
         {text}
@@ -81,7 +78,15 @@ const Subscription = () => {
         <SubTitle text={"Try 3 Days for Free"} />
       </View>
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
-      <CustomButton text={"Watch an Ad             +5 wishes"} onPress={()=> {rewarded.show()}}/>
+      <Button
+        mode="outlined"
+        style={styles.Button}
+        labelStyle={{ color: COLORS.white }}
+        contentStyle={{ alignSelf: "flex-start" }}
+        onPress={()=> {rewarded.show()}}
+      >
+        {"Watch an Ad    (+5 wishes)"}
+      </Button>
         <CustomButton text={"$2250.0/week"} num={1} />
         <CustomButton text={"3 days for free, then s12800.0/year"} num={2} />
       </View>

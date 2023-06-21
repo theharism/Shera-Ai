@@ -27,7 +27,6 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   const [height, setHeight] = useState(50);
   const [permissionState, setPermissionState] = useState(false);
   const snapPoints = useMemo(() => ["40%"], []);
-  //const [message, setMessage] = useState("");
   const maxHeight = 140;
   const [scrollEnabled, setScrollEnabled] = useState(false);
 
@@ -40,7 +39,7 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
     Voice.onSpeechResults = onSpeechResultsHandler;
 
     return () => {
-      //Voice.destroy().then(Voice.removeAllListeners);
+      Voice.destroy().then(Voice.removeAllListeners);
     };
   }, []);
 
@@ -53,18 +52,21 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   };
 
   const onSpeechResultsHandler = (e) => {
-    let text = e.value[0];
-    setResult(text);
+    let text = e;
+    console.log(text)
+    setMessage(text);
     console.log("speech result handler", e);
   };
 
   const startRecording = async () => {
+    
     setLoading(true);
-    // try {
-    //   await Voice.start("en-Us");
-    // } catch (error) {
-    //   console.log("error raised", error);
-    // }
+    try {
+      console.log("gui")
+      await Voice.start("en-Us");
+    } catch (error) {
+      console.log("error raised", error);
+    }
   };
 
   const stopRecording = async () => {
@@ -132,7 +134,10 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
         />
 
         {isLoading ? (
-          <MaterialIcons name="pause-circle-outline" size={36} color="red" style={{margin:5}} />
+          <TouchableOpacity onPress={stopRecording}>
+  <MaterialIcons name="pause-circle-outline" size={36} color="red" style={{margin:5}} />
+          </TouchableOpacity>
+        
         ) : null}
 
         {message.length > 0 || isLoading ? (
