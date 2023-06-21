@@ -1,98 +1,75 @@
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Avatar, Button, Card, Text } from 'react-native-paper';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+} from "react-native";
+import React from "react";
 
-import React from 'react';
-
-const ChatHomeItem = ({title,icon,title1,title2,setMessage,leftStyle}) => {
-  
-  const button = (title) => {
-    return (
-      <TouchableOpacity style={ title.length < 36 ? styles.smallItem : styles.largeItem} onPress={()=>setMessage(title)}>
-        <Text style={styles.textStyle}>
-          {title}
-        </Text>
-      </TouchableOpacity>
-    );
-  };
+const ChatHomeItem = ({
+  title,
+  icon,
+  title1,
+  title2,
+  setMessage,
+}) => {
+  const CustomButton = ({ text }) => (
+    <TouchableOpacity style={styles.button} onPress={()=>setMessage(text)}>
+      <Text style={styles.buttonText}>{text}</Text>
+    </TouchableOpacity>
+  );
 
   return (
-    <Card mode="outlined" style={title1.length < 36 ? styles.smallCard : styles.bigCard}>
-      <Card.Title 
-        title={title}
-        titleStyle={styles.Title}
-        left={() => icon}
-        leftStyle={leftStyle} />
-        {/* <Card.Title
-        title={title}
-        titleStyle={styles.title}
-        left={() => <View style={styles.leftContainer}>{icon}</View>}
-      /> */}
-      <Card.Content style={styles.content}>
-        {button(title1)}
-        {button(title2)}
-      </Card.Content>
-    </Card>
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        {icon}
+        <Text style={styles.titleText}>{title}</Text>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <CustomButton text={title1} />
+        <CustomButton text={title2} />
+      </View>
+    </View>
   );
 };
 
 export default ChatHomeItem;
 
 const styles = StyleSheet.create({
-  smallCard: {
-    borderColor: '#1c1c1e',
-    backgroundColor: '#000000',
-    marginHorizontal: 8,
-    marginVertical:10,
-    height:183
+  container: {
+    borderColor: "#1c1c1e",
+    borderWidth: 1,
+    borderRadius: 10,
+    margin: 10,
+    paddingTop:10,
+    backgroundColor: "#000000",
   },
-  bigCard:{
-    borderColor: '#1c1c1e',
-    backgroundColor: '#000000',
-    marginHorizontal: 8,
-    marginVertical:10,
-    height:210
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom:3
   },
-  title: {
-    flex: 1,
-    alignSelf: 'flex-start',
-    // additional title styles
+  buttonContainer: {},
+  button: {
+    backgroundColor:'#1c1c1e',
+    borderRadius:10,
+    paddingHorizontal:8,
+    paddingVertical:13,
+    marginHorizontal:10,
+    marginVertical:5
   },
-  leftContainer: {
-    marginRight: 10,
-    // additional styles for the left container if needed
-  },
-  Title: {
-    alignSelf: 'center',
-    //fontWeight: 'bold',
+  titleText: {
     fontSize: 17,
-    bottom:5,
-    color: '#7f7f7f',
-    fontFamily:'JosefinSans-Bold'
+    color: "#7f7f7f",
+    fontFamily: "JosefinSans-Bold",
+    marginLeft: 10,
   },
-  textStyle:{
-    color:'#FFFFFF',
-    textAlign:'center',
-    fontSize:16,
-    fontFamily:'JosefinSans-Medium'
+  buttonText: {
+    color: "#FFFFFF",
+    textAlign: "center",
+    fontSize: 16,
+    fontFamily: "JosefinSans-Medium",
   },
-  smallItem:{
-    backgroundColor:'#1c1c1e',
-    height:55,
-    borderRadius:10,
-    marginVertical:5,
-    justifyContent:'center',
-    padding:10
-  },
-  largeItem:{
-    backgroundColor:'#1c1c1e',
-    height:"40%",
-    borderRadius:10,
-    marginVertical:5,
-    justifyContent:'center',
-    paddingHorizontal:16
-  },
-  content:{
-    bottom:25,
-    //alignSelf:'center'
-  }
 });

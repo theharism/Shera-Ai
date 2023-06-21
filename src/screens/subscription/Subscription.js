@@ -1,12 +1,48 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { COLORS } from "../../constants/COLORS";
 import { Button } from "react-native-paper";
 import { useState } from "react";
+import {
+  RewardedAd,
+  TestIds,
+  RewardedAdEventType,
+} from "react-native-google-mobile-ads";
+import { ActivityIndicator } from "react-native";
 
-const Subscription = () => {
+const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
+  requestNonPersonalizedAdsOnly: true,
+});
+
+const Subscription = ({ navigation }) => {
   const [status, setStatus] = useState(2);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const unsubscribeLoaded = rewarded.addAdEventListener(
+      RewardedAdEventType.LOADED,
+      () => {
+        setLoaded(true);
+      }
+    );
+    const unsubscribeEarned = rewarded.addAdEventListener(
+      RewardedAdEventType.EARNED_REWARD,
+      (reward) => {
+        console.log("User earned reward of ", reward);
+        navigation.goBack();
+      }
+    );
+
+    // Start loading the rewarded ad straight away
+    rewarded.load();
+
+    // Unsubscribe from events on unmount
+    return () => {
+      unsubscribeLoaded();
+      unsubscribeEarned();
+    };
+  }, []);
 
   const SubTitle = ({ icon, text }) => {
     return (
@@ -42,7 +78,32 @@ const Subscription = () => {
         <SubTitle text={"Most Advanced AI Model (ChatGPT & GPT-4)"} />
         <SubTitle text={"Try 3 Days for Free"} />
       </View>
+      {!loaded ? (
+        <>
+          <ActivityIndicator
+            size={"large"}
+            style={{ marginTop: 20 }}
+            color={COLORS.primary}
+          />
+          <Text style={{color:COLORS.primary,textAlign:'center'}}>
+            Ad is being loaded
+          </Text>
+        </>
+      ) : null}
       <View style={{ flex: 1, justifyContent: "flex-end" }}>
+        <Button
+          mode="outlined"
+          style={styles.Button}
+          labelStyle={{ color: COLORS.white }}
+          disabled={loaded ? false : true}
+          rippleColor={COLORS.primary}
+          contentStyle={{ alignSelf: "flex-start" }}
+          onPress={() => {
+            loaded && rewarded.show();
+          }}
+        >
+          {"Watch an Ad    (+5 wishes)"}
+        </Button>
         <CustomButton text={"$2250.0/week"} num={1} />
         <CustomButton text={"3 days for free, then s12800.0/year"} num={2} />
       </View>
