@@ -30,18 +30,23 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   const maxHeight = 140;
   const [scrollEnabled, setScrollEnabled] = useState(false);
 
-  const [result, setResult] = useState("");
+  const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
 
   useEffect(() => {
     Voice.onSpeechStart = onSpeechStartHandler;
     Voice.onSpeechEnd = onSpeechEndHandler;
     Voice.onSpeechResults = onSpeechResultsHandler;
+    Voice.onSpeechError = onSpeechErrorHandler;
 
     return () => {
       Voice.destroy().then(Voice.removeAllListeners);
     };
   }, []);
+
+  const onSpeechErrorHandler = (err) => {
+    console.log(err);
+  };
 
   const onSpeechStartHandler = (e) => {
     console.log("start handler==>>>", e);
@@ -52,21 +57,41 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   };
 
   const onSpeechResultsHandler = (e) => {
-    let text = e;
-    console.log(text)
+    let text = e.value;
+    console.log(text);
     setMessage(text);
     console.log("speech result handler", e);
   };
 
-  const startRecording = async () => {
-    
-    setLoading(true);
+  const requestAudioPermission = async () => {
     try {
-      console.log("gui")
-      await Voice.start("en-Us");
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: "Audio Recording Permission",
+          message: "App needs permission to record audio",
+          buttonNeutral: "Ask Me Later",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK",
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        // Permission granted, you can start recording
+        console.log("HIII");
+        startRecording();
+      } else {
+        // Permission denied
+        console.log("Audio recording permission denied");
+      }
     } catch (error) {
-      console.log("error raised", error);
+      console.log("Error while requesting audio recording permission:", error);
     }
+  };
+
+  const startRecording = async () => {
+    setLoading(true);
+
+    await Voice.start("en-Us");
   };
 
   const stopRecording = async () => {
@@ -74,6 +99,7 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
       await Voice.stop();
     } catch (error) {
       console.log("error raised", error);
+      setError(error);
     }
   };
 
@@ -135,17 +161,27 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
 
         {isLoading ? (
           <TouchableOpacity onPress={stopRecording}>
-  <MaterialIcons name="pause-circle-outline" size={36} color="red" style={{margin:5}} />
+            <MaterialIcons
+              name="pause-circle-outline"
+              size={36}
+              color="red"
+              style={{ margin: 5 }}
+            />
           </TouchableOpacity>
-        
         ) : null}
 
         {message.length > 0 || isLoading ? (
-          <TouchableOpacity style={[styles.sendButton, isLoading ? null : {marginLeft:10} ]} onPress={onPress}>
+          <TouchableOpacity
+            style={[styles.sendButton, isLoading ? null : { marginLeft: 10 }]}
+            onPress={onPress}
+          >
             <FontAwesome name="send" size={24} color="#c0c0c0" />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.sendButton1} onPress={startRecording}>
+          <TouchableOpacity
+            style={styles.sendButton1}
+            onPress={requestAudioPermission}
+          >
             <Ionicons name="ios-mic" size={30} color="#c0c0c0" />
           </TouchableOpacity>
         )}
