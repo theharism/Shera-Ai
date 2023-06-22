@@ -69,11 +69,11 @@ import { handleSaveChatButtonPress } from "../utilities/SaveData";
 const Stack = createStackNavigator();
 
 export default Screens = () => {
-  const [visible, setVisible] = React.useState(false);
-  const points = useSelector((state) => state.pointsSlice.points);
+  
   const showModal = PickAsset;
-  const hideModal = () => setVisible(false);
-  const containerStyle = { backgroundColor: "white", padding: 20 };
+
+  const { chats, size } = useSelector((state) => state.chatSlice);
+  const points = useSelector((state) => state.pointsSlice.points);
 
   const [flag, setFlag] = useState(false);
   const dispatch = useDispatch();
@@ -97,6 +97,7 @@ export default Screens = () => {
         const jsonValue = await AsyncStorage.getItem("chats");
         let size = await AsyncStorage.getItem("size");
         let points = await AsyncStorage.getItem("points");
+        console.log('LLLLLLLLLLLLLL',points)
         const chats = jsonValue != null ? JSON.parse(jsonValue) : null;
         size = parseInt(size);
         points = parseInt(points);
@@ -195,9 +196,7 @@ export default Screens = () => {
   };
 
   const ChatHeaderLeft = ({ navigation }) => {
-    const { chats, size } = useSelector((state) => state.chatSlice);
-    const points = useSelector((state) => state.pointsSlice.points);
-
+  
     return (
       <View
         style={{
@@ -336,7 +335,8 @@ export default Screens = () => {
                     cardStyleInterpolator:
                       CardStyleInterpolators.forVerticalIOS,
                     headerRight: () => (
-                      <TouchableOpacity onPress={() => navigation.goBack()}>
+                      <TouchableOpacity onPress={() => {navigation.goBack()
+                        handleSaveChatButtonPress(chats, size, points);}}>
                         <Text style={styles.skipStyle}>Skip</Text>
                       </TouchableOpacity>
                     ),
@@ -354,11 +354,11 @@ export default Screens = () => {
                   headerTitleStyle: styles.onboardingHeader,
                   headerLeft: null,
                   cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-                  headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                      <Text style={styles.skipStyle}>Skip</Text>
-                    </TouchableOpacity>
-                  ),
+                  // headerRight: () => (
+                  //   <TouchableOpacity onPress={() => navigation.goBack()}>
+                  //     <Text style={styles.skipStyle}>Skip</Text>
+                  //   </TouchableOpacity>
+                  // ),
                 })}
               />
             )}
@@ -371,7 +371,6 @@ export default Screens = () => {
             ref={bottomSheetModalRef}
             index={-1}
             enablePanDownToClose={true}
-            topInset={StatusBar.currentHeight}
             handleStyle={{
               backgroundColor: "#171717",
               borderColor: "#171717",

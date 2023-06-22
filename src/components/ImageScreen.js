@@ -125,6 +125,7 @@ const ImageScreen = ({ route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <KeyboardAvoidingView style={{ flex: 1, flexDirection: "column" }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={{ flexDirection: "column", flex: 1 }}>

@@ -13,6 +13,7 @@ import React, { Component } from "react";
 import { Platform } from "react-native";
 import MyComponent from "../../components/button";
 import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../../constants/COLORS";
 
 export default YourAiAssistant = ({setFlag}) =>{
   //const navigation = useNavigation();
@@ -26,6 +27,7 @@ export default YourAiAssistant = ({setFlag}) =>{
   };
   return (
     <SafeAreaView style={styles.main}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <View style={styles.textcontainer}>
         <Text style={styles.text}>
           Allow us To Send Notifications so you wouldn't miss Anything.

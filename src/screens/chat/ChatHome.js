@@ -20,6 +20,7 @@ import ChatHomeItem from "../../components/ChatHomeItem";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../constants/COLORS";
 import CustomTextInput from "../../components/CustomTextInput";
+import { StatusBar } from "react-native";
 
 const ChatHome = ({ navigation }) => {
   const [message, setMessage] = useState("");
@@ -30,6 +31,7 @@ const ChatHome = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <View style={styles.container}>
         <ScrollView>
           {/* Chat items */}

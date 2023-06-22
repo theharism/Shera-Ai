@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../constants/COLORS";
 import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { StatusBar } from "react-native";
 
 const RecentsHome = ({ navigation }) => {
   const chats = useSelector((state) => state.chatSlice.chats);
@@ -27,6 +28,7 @@ const RecentsHome = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <FlatList
         data={chats}
         renderItem={renderItem}

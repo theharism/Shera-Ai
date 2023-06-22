@@ -19,6 +19,7 @@ import renderItem from "./renderItem";
 import EventSource from "react-native-sse";
 import "react-native-url-polyfill/auto";
 import { handleSaveChatButtonPress } from "../utilities/SaveData";
+import { StatusBar } from "react-native";
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -295,6 +296,7 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <KeyboardAvoidingView style={styles.innerContainer}>
         <View style={styles.chatContainer}>
           <View style={{ flex: 1 }}>

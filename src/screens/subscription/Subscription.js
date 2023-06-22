@@ -13,6 +13,7 @@ import { ActivityIndicator } from "react-native";
 import { useDispatch } from "react-redux";
 import { addPoints } from "../../slices/pointsSlice";
 import { ToastAndroid } from "react-native";
+import { StatusBar } from "react-native";
 
 const rewarded = RewardedAd.createForAdRequest("ca-app-pub-7133387510338737/3916203163", {
   requestNonPersonalizedAdsOnly: true,
@@ -80,6 +81,7 @@ const Subscription = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <Text style={styles.title}>GET ACCESS TO:</Text>
       <View style={styles.fishing}>
         <SubTitle text={"Unlimited Questions & Answers"} />

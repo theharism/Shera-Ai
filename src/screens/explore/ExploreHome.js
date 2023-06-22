@@ -16,10 +16,12 @@ import {
 import ExploreList from "../../components/ExploreList";
 import { ScrollView } from "react-native-gesture-handler";
 import ImageGenerator from "../../components/ImageGenerator";
+import { StatusBar } from "react-native";
 
 const ExploreHome = (props) => {
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <View style={styles.container}>
         <ScrollView>
           <ImageGenerator {...props} />
