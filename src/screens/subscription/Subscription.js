@@ -10,14 +10,19 @@ import {
   RewardedAdEventType,
 } from "react-native-google-mobile-ads";
 import { ActivityIndicator } from "react-native";
+import { useDispatch } from "react-redux";
+import { addPoints } from "../../slices/pointsSlice";
+import { ToastAndroid } from "react-native";
 
-const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
+const rewarded = RewardedAd.createForAdRequest("ca-app-pub-7133387510338737/3916203163", {
   requestNonPersonalizedAdsOnly: true,
 });
 
 const Subscription = ({ navigation }) => {
   const [status, setStatus] = useState(2);
   const [loaded, setLoaded] = useState(false);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const unsubscribeLoaded = rewarded.addAdEventListener(
@@ -30,7 +35,11 @@ const Subscription = ({ navigation }) => {
       RewardedAdEventType.EARNED_REWARD,
       (reward) => {
         console.log("User earned reward of ", reward);
-        navigation.goBack();
+        dispatch(addPoints({ value: 5 }))
+        setLoaded(false)
+        ToastAndroid.show("5 wishes Awarded",
+        ToastAndroid.SHORT);
+        //navigation.goBack();
       }
     );
 
@@ -99,7 +108,7 @@ const Subscription = ({ navigation }) => {
           rippleColor={COLORS.primary}
           contentStyle={{ alignSelf: "flex-start" }}
           onPress={() => {
-            loaded && rewarded.show();
+            loaded ? rewarded.show() : null
           }}
         >
           {"Watch an Ad    (+5 wishes)"}
