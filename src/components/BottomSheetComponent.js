@@ -5,6 +5,7 @@ import {
   Image,
   Pressable,
   Dimensions,
+  Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useFonts } from "expo-font";
@@ -18,6 +19,7 @@ const BottomSheetComponent = ({
   bottom,
   top,
   icon,
+  onPress,
 }) => {
   const AssetType = () => {
     console.log(`Picking ${title}`);
@@ -42,6 +44,7 @@ const BottomSheetComponent = ({
       }}
       android_disableSound="true"
       android_ripple={{ color: "rgb(100,100,100)", foreground: "true" }}
+      onPressIn={onPress}
     >
       <View
         style={{
@@ -95,6 +98,8 @@ const BottomSheetComponent = ({
               padding: 16,
               borderRadius: 8,
               backgroundColor: "black",
+              height: "100%",
+              width: "100%",
             }}
           />
         )}
