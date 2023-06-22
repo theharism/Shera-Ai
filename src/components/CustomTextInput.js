@@ -21,7 +21,7 @@ import BottomSheet from "@gorhom/bottom-sheet";
 import { FontAwesome5 } from "@expo/vector-icons";
 import PickAssets from "./PickAsset";
 import { MaterialIcons } from "@expo/vector-icons";
-import Voice from "@react-native-community/voice";
+
 const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   const [height, setHeight] = useState(50);
   const [permissionState, setPermissionState] = useState(false);
@@ -48,45 +48,6 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
     assetBottomSheet.current?.snapToIndex(0);
   };
   const assetBottomSheet = useRef(null);
-
-  const speechStartHandler = (e) => {
-    console.log("speechStart successful", e);
-  };
-  const speechEndHandler = (e) => {
-    setLoading(false);
-    console.log("stop handler", e);
-  };
-  const speechResultsHandler = (e) => {
-    const text = e.value[0];
-    setResult(text);
-  };
-  const startRecording = async () => {
-    setLoading(true);
-    try {
-      await Voice.start("en-Us");
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-  const stopRecording = async () => {
-    try {
-      await Voice.stop();
-      setLoading(false);
-    } catch (error) {
-      console.log("error", error);
-    }
-  };
-  const clear = () => {
-    setResult("");
-  };
-  useEffect(() => {
-    Voice.onSpeechStart = speechStartHandler;
-    Voice.onSpeechEnd = speechEndHandler;
-    Voice.onSpeechResults = speechResultsHandler;
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners);
-    };
-  }, []);
 
   return (
     <>
