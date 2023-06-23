@@ -149,7 +149,6 @@ const ChatScreen = () => {
     }
 
     setMessage("");
-    setTyping(true);
     setSubmitted(true);
     setSendPressed(false);
   };

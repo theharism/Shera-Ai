@@ -11,7 +11,7 @@ export async function handleSaveChatButtonPress(chats, size, points) {
     {
       await AsyncStorage.setItem("size", size.toString());
     }
-    if(points)
+    if(points >= 0)
     {
       await AsyncStorage.setItem("points", points.toString());
     }
