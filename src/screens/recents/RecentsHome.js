@@ -5,6 +5,7 @@ import { COLORS } from "../../constants/COLORS";
 import { useDispatch, useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { StatusBar } from "react-native";
+import Rive from "rive-react-native";
 
 const RecentsHome = ({ navigation }) => {
   const chats = useSelector((state) => state.chatSlice.chats);
@@ -28,13 +29,22 @@ const RecentsHome = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
-      <FlatList
-        data={chats}
-        renderItem={renderItem}
-        style={styles.list}
-        keyExtractor={(item) => item.id.toString()}
-      />
+      <StatusBar translucent={true} backgroundColor={COLORS.black} />
+      {chats.length > 0 ? (
+        <FlatList
+          data={chats}
+          renderItem={renderItem}
+          style={styles.list}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      ) : (
+        <Rive
+          url="https://public.rive.app/community/runtime-files/2195-4346-avatar-pack-use-case.riv"
+          artboardName="Avatar 1"
+          stateMachineName="avatar"
+          style={{ width: 400, height: 400 }}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -45,6 +55,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.black,
+    alignItems: "center",
+    justifyContent: "center",
   },
   chatItem: {
     width: "100%",
