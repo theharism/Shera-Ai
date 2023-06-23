@@ -76,12 +76,14 @@ export default Screens = () => {
   const points = useSelector((state) => state.pointsSlice.points);
   const [isConnected, setIsConnected] = useState(false);
 
-  {
-    points == 0
-      ? (handleSaveChatButtonPress(chats, size, points),
-        console.log("New Points saved"))
-      : null;
-  }
+  useEffect(() => {
+    {
+      points == 0
+        ? (handleSaveChatButtonPress(chats, size, points),
+          console.log("New Points saved"))
+        : null;
+    }
+  }, [points]);
 
   const [flag, setFlag] = useState(false);
   const dispatch = useDispatch();
