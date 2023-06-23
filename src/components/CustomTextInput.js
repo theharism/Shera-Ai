@@ -1,18 +1,13 @@
 import {
   StyleSheet,
-  Text,
   View,
   TouchableOpacity,
-  Permission,
   TextInput,
-  PermissionsAndroid,
 } from "react-native";
 import React, {
-  useCallback,
   useState,
   useMemo,
   useRef,
-  useEffect,
 } from "react";
 import { COLORS } from "../constants/COLORS";
 import { FontAwesome } from "@expo/vector-icons";
@@ -24,12 +19,10 @@ import { MaterialIcons } from "@expo/vector-icons";
 
 const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   const [height, setHeight] = useState(50);
-  const [permissionState, setPermissionState] = useState(false);
   const snapPoints = useMemo(() => ["40%"], []);
   const maxHeight = 140;
   const [scrollEnabled, setScrollEnabled] = useState(false);
 
-  const [error, setError] = useState("");
   const [isLoading, setLoading] = useState(false);
 
   const handleContentSizeChange = (event) => {
@@ -44,7 +37,6 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   };
 
   const PickAsset = () => {
-    console.log("Picking File or Image");
     assetBottomSheet.current?.snapToIndex(0);
   };
   const assetBottomSheet = useRef(null);

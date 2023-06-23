@@ -20,7 +20,7 @@ const rewarded = RewardedAd.createForAdRequest("ca-app-pub-7133387510338737/3916
   requestNonPersonalizedAdsOnly: true,
 });
 
-const Subscription = ({ navigation }) => {
+const Subscription = () => {
   const [status, setStatus] = useState(2);
   const [loaded, setLoaded] = useState(false);
 
@@ -43,7 +43,6 @@ const Subscription = ({ navigation }) => {
         setLoaded(false)
         ToastAndroid.show("5 wishes Awarded",
         ToastAndroid.SHORT);
-        //navigation.goBack();
       }
     );
 

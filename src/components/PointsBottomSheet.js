@@ -2,7 +2,6 @@ import { StyleSheet, Text, View } from "react-native";
 import React,{useMemo} from "react";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { Button } from "react-native-paper";
-import { NavigationContext } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -23,7 +22,6 @@ const PointsBottomSheet = ({assetBottomSheet}) => {
       ref={assetBottomSheet}
       style={{ marginHorizontal: 3 }}
       backgroundStyle={{ backgroundColor: "#171717" }}
-      //backgroundColor = {COLORS.black}
       handleStyle={{ backgroundColor: "#171717", borderRadius: 10 }}
       handleIndicatorStyle={{ backgroundColor: "rgb(200,200,200)" }}
     >

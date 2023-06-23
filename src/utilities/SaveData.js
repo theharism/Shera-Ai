@@ -13,7 +13,6 @@ export async function handleSaveChatButtonPress(chats, size, points) {
     }
     if(points)
     {
-      console.log("Chat saved!");
       await AsyncStorage.setItem("points", points.toString());
     }
 

@@ -15,12 +15,8 @@ const ImageGenerator = ({ navigation }) => {
               width: "100%",
               height: "100%",
               borderRadius:10,
-              // borderColor: COLORS.white,
-              // borderWidth: 1,
             }}
           />
-
-          {/* <Text style={styles.itemsubTitleStyle}>Generator Ai Images</Text> */}
         </TouchableOpacity>
       </View>
     </View>
@@ -36,7 +32,6 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: COLORS.white,
-    //fontWeight:'bold',
     fontSize: 20,
     marginBottom: 15,
     fontFamily: "GalanoGrotesqueBold",

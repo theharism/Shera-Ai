@@ -1,24 +1,12 @@
 import {
-  StyleSheet,
-  Text,
   View,
-  Image,
-  Animated,
   Dimensions,
-  Easing,
 } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import {
-  NavigationContainer,
-  useFocusEffect,
-  useIsFocused,
-} from "@react-navigation/native";
-
-import { createStackNavigator } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 
 import ChatHome from "../screens/chat/ChatHome";
@@ -27,11 +15,7 @@ import RecentsHome from "../screens/recents/RecentsHome";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import {
-  styles,
-  FadeInView,
-  config,
-  customHeaderLeft,
-  customHeaderRight,
+  styles
 } from "../constants/HeaderStyles";
 
 const Tab = createBottomTabNavigator();
@@ -60,7 +44,6 @@ export default Home = () => {
           tabBarActiveTintColor: "#40e6b5",
           headerShown: false,
           tabBarHideOnKeyboard: true,
-          //tabBarButton: (props) => <SlideInView>{props.children}</SlideInView>,
         }}
       >
         <Tab.Screen

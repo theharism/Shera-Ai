@@ -1,12 +1,11 @@
 import {
   View,
   Text,
-  StyleSheet,
   Dimensions,
   Linking,
   Share,
 } from "react-native";
-import React, { useCallback, useMemo } from "react";
+import React from "react";
 import BottomSheetComponent from "./BottomSheetComponent";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import { ToastAndroid } from "react-native";
@@ -17,7 +16,7 @@ import { clearData } from "../slices/chatsSlice";
 const windowHeight = Dimensions.get("window").height;
 
 const BottomSheetContent = () => {
-  const youtube = "https://www.youtube.com/Sheratokens";
+  const youtube = "UCGOjt0xAmHCVhntgljKaeSA";
   const telegram = "https://t.me/sheratokens";
   const twitter = "https://twitter.com/sheratokens";
 
@@ -123,7 +122,13 @@ const BottomSheetContent = () => {
         iconname={require("../../assets/icons/youtube.png")}
         bottom="false"
         top="false"
-        onPress={() => handleOpenLink(youtube)}
+        onPress={() => Linking.canOpenURL('vnd.youtube://channel/' + youtube).then(supported => {
+          if (supported) {
+             return Linking.openURL('vnd.youtube://channel/' + youtube);
+          } else {
+             return Linking.openURL('https://www.youtube.com/channel/' + youtube);
+          }
+       })}
       />
 
       <View

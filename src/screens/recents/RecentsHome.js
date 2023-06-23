@@ -1,16 +1,15 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useState } from "react";
+import { StyleSheet, Text, View, FlatList, Image } from "react-native";
+import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../constants/COLORS";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { StatusBar } from "react-native";
-import Rive,{ Alignment, Fit } from "rive-react-native";
+import { useAssets } from "expo-asset";
 
 const RecentsHome = ({ navigation }) => {
   const chats = useSelector((state) => state.chatSlice.chats);
-  //console.log(chats)
-  //const chatList = chats.map((chat) => ({ id: chat.id, title: chat.title,date:chat.date }));
+  const [assets, error] = useAssets([require("../../../assets/icon.png")]);
 
   const renderItem = ({ item }) => {
     const truncatedTitle =
@@ -38,19 +37,10 @@ const RecentsHome = ({ navigation }) => {
           keyExtractor={(item) => item.id.toString()}
         />
       ) : (
-        // <Rive
-        //   //url="https://public.rive.app/community/runtime-files/2195-4346-avatar-pack-use-case.riv"
-        //   //resourceName={""}
-        //   resourceName="../../../assets/animations/main/no_internet.riv"
-        //   style={{ width: 400, height: 400 }}
-        // />
-        <Rive
-        autoplay={true}
-        //url="https://public.rive.app/community/runtime-files/2195-4346-avatar-pack-use-case.riv"
-        resourceName="../../../assets/animations/main/2195-4346-avatar-pack-use-case (1)"
-        style={{ width: 400, height: 400 }}
-        onError={(err)=>console.error(err)}
-      />
+        <Image
+          source={require("../../../assets/animations/empty_history.gif")}
+          style={{ width: 400, height: 400 }}
+        />
       )}
     </SafeAreaView>
   );
@@ -70,15 +60,12 @@ const styles = StyleSheet.create({
     height: 60,
     backgroundColor: "#171717",
     justifyContent: "flex-end",
-    //alignItems: 'center',
     marginBottom: 10,
     borderRadius: 8,
     padding: 10,
   },
   chatTitle: {
     fontSize: 16,
-    //fontWeight: 'bold',
-    //textAlign: 'center',
     color: COLORS.white,
     fontFamily: "JosefinSans-Medium",
   },

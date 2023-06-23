@@ -1,29 +1,10 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Animated,
-  Dimensions,
-  StatusBar,
-  Easing,
-} from "react-native";
+import { Text, View, Image } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 
-import {
-  NavigationContainer,
-  useFocusEffect,
-  useIsFocused,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
@@ -32,7 +13,7 @@ import ImageScreen from "../components/ImageScreen";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
+import { Button } from "react-native-paper";
 
 import ChatScreen from "../components/ChatScreen";
 import BottomSheetContent from "../components/BottomSheetContent";
@@ -43,24 +24,17 @@ import { useFonts } from "expo-font";
 import { COLORS } from "../constants/COLORS";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
-import { saveChats, setChatsData } from "../slices/chatsSlice";
+import { setChatsData } from "../slices/chatsSlice";
 import { setPoints } from "../slices/pointsSlice";
 
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 
-import {
-  styles,
-  FadeInView,
-  config,
-  customHeaderLeft,
-  customHeaderRight,
-} from "../constants/HeaderStyles";
+import { styles } from "../constants/HeaderStyles";
 
 SplashScreen.preventAutoHideAsync();
 
 import OnBoarding from "./OnBoarding";
 import Home from "./Home";
-import PickAssets from "../components/PickAsset";
 import PointsBottomSheet from "../components/PointsBottomSheet";
 import Subscription from "../screens/subscription/Subscription";
 import { deleteImage } from "../slices/imagesSlice";
@@ -78,10 +52,7 @@ export default Screens = () => {
 
   useEffect(() => {
     {
-      points == 0
-        ? (handleSaveChatButtonPress(chats, size, points),
-          console.log("New Points saved"))
-        : null;
+      points == 0 ? handleSaveChatButtonPress(chats, size, points) : null;
     }
   }, [points]);
 
@@ -107,7 +78,6 @@ export default Screens = () => {
         const jsonValue = await AsyncStorage.getItem("chats");
         let size = await AsyncStorage.getItem("size");
         let points = await AsyncStorage.getItem("points");
-        console.log("LLLLLLLLLLLLLL", points);
         const chats = jsonValue != null ? JSON.parse(jsonValue) : null;
         size = parseInt(size);
         points = parseInt(points);
@@ -181,8 +151,6 @@ export default Screens = () => {
   }
 
   const imageHeaderLeft = ({ navigation }) => {
-    //const imageName = useSelector((state) => state.imagesSlice.imageName);
-
     return (
       <View
         style={{
@@ -304,7 +272,7 @@ export default Screens = () => {
                       component={Home}
                       options={{
                         headerTitle: () => <CustomHeaderTitle />,
-                        //headerLeft: customHeaderLeft,
+
                         headerRight: () =>
                           customHeaderRight({ showModal, points }),
                       }}
@@ -313,7 +281,6 @@ export default Screens = () => {
                       name="ChatScreen"
                       component={ChatScreen}
                       options={({ navigation }) => ({
-                        //headerTitleStyle: styles.chatHeader,
                         headerTitleAlign: "center",
                         presentation: "modal",
                         headerTitle: () => <HeaderTitle />,
@@ -325,7 +292,6 @@ export default Screens = () => {
                       name="ImageScreen"
                       component={ImageScreen}
                       options={({ navigation }) => ({
-                        //headerTitleStyle: styles.chatHeader,
                         headerTitleAlign: "center",
                         headerTitle: () => <HeaderTitle />,
                         headerLeft: () => imageHeaderLeft({ navigation }),
@@ -370,11 +336,6 @@ export default Screens = () => {
                       headerLeft: null,
                       cardStyleInterpolator:
                         CardStyleInterpolators.forVerticalIOS,
-                      // headerRight: () => (
-                      //   <TouchableOpacity onPress={() => navigation.goBack()}>
-                      //     <Text style={styles.skipStyle}>Skip</Text>
-                      //   </TouchableOpacity>
-                      // ),
                     })}
                   />
                 )}

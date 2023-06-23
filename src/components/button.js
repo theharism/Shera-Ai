@@ -1,7 +1,5 @@
 import * as React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { Button } from "react-native-paper";
-import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 
 const onboardingButton = () => (

@@ -4,25 +4,16 @@ import {
   View,
   StatusBar,
   Image,
-  Dimensions,
-  ImageBackground,
   TouchableHighlight,
   SafeAreaView,
 } from "react-native";
-import React, { Component } from "react";
-import { Platform } from "react-native";
+import React from "react";
 import MyComponent from "../../components/button";
-import { useNavigation } from "@react-navigation/native";
 import { COLORS } from "../../constants/COLORS";
 
 export default YourAiAssistant = ({setFlag}) =>{
-  //const navigation = useNavigation();
 
   const nextscreen = () => {
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: "Chat" }],
-    // });
    setFlag(true)
   };
   return (
@@ -53,7 +44,6 @@ const styles = StyleSheet.create({
   },
   text: {
     alignSelf: "flex-start",
-    //paddingLeft: "5%",
     paddingTop: 10,
     color: "white",
     fontSize: 16,

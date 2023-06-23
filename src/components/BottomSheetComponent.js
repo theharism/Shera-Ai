@@ -1,14 +1,11 @@
 import {
   View,
   Text,
-  TouchableNativeFeedback,
   Image,
   Pressable,
   Dimensions,
-  Linking,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useFonts } from "expo-font";
+import React from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -29,7 +26,7 @@ const BottomSheetComponent = ({
 
   return (
     <Pressable
-      onPress={AssetType}
+      onPress={onPress}
       style={{
         backgroundColor: bgcolor,
         height: Screen_Height / 11,
@@ -44,7 +41,6 @@ const BottomSheetComponent = ({
       }}
       android_disableSound="true"
       android_ripple={{ color: "rgb(100,100,100)", foreground: "true" }}
-      onPressIn={onPress}
     >
       <View
         style={{

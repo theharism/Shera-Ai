@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { Image, Text, View, StyleSheet } from 'react-native'
 import NetInfo from "@react-native-community/netinfo";
 import { TouchableOpacity } from 'react-native';
+import { COLORS } from '../constants/COLORS';
 
 const CheckInternet = ({ isConnected, setIsConnected }) => {
 
@@ -26,9 +27,9 @@ const CheckInternet = ({ isConnected, setIsConnected }) => {
         <>
             {isConnected ? null :
                 (
-                    <View style={[styles.container, { backgroundColor: isConnected == true ? null : '#fff' }]}>
+                    <View style={styles.container}>
                         <Image
-                            source={require('../../assets/no-wifi.jpg')}
+                            source={require('../../assets/animations/no_internet.gif')}
                             style={{ height: '30%', width: '30%', aspectRatio: 1, alignSelf: 'center', marginTop: 200 }}
                         />
                         <Text style={styles.nonet}>No Internet Connection</Text>
@@ -48,7 +49,8 @@ const CheckInternet = ({ isConnected, setIsConnected }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor: 'black',
     },
     nonet: {
         fontSize: 20,
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     reload: {
-        backgroundColor: 'black',
+        backgroundColor: 'white',
         height: 50,
         width: 200,
         alignSelf: 'center',

@@ -10,7 +10,6 @@ import { COLORS } from "../constants/COLORS";
 import CustomTextInput from "./CustomTextInput";
 import { FlatList } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
-import { chatWithGPT3 } from "../Api/chatgpt";
 import { addMessage, addChat } from "../slices/chatsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { generateRandomString } from "../utilities/StringGenerator";
@@ -32,8 +31,6 @@ const ChatScreen = () => {
   const [submitted, setSubmitted] = useState(false);
   const [sendPressed, setSendPressed] = useState(false);
   const [chatID, setChatID] = useState("");
-  const [typing, setTyping] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const flatListRef = useRef(null);
   const dispatch = useDispatch();
@@ -44,7 +41,6 @@ const ChatScreen = () => {
   useEffect(() => {
     const handleBackPress = () => {
       // Perform your custom logic here
-      console.log("Hardware back button pressed!");
 
       handleSaveChatButtonPress(chats,size,points)
 

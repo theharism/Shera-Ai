@@ -14,33 +14,24 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-// import {
-//   BannerAd,
-//   BannerAdSize,
-//   TestIds,
-//   InterstitialAd,
-//   AdEventType
-// } from 'react-native-google-mobile-ads';
-import { useDispatch, useSelector } from "react-redux";
+
+import { useDispatch } from "react-redux";
 import { generateImage } from "../Api/HuggingFace";
 import { Entypo } from "@expo/vector-icons";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 import * as Notifications from "expo-notifications";
-import { deleteFromFirebae, uploadToFirebase } from "../utilities/UploadImage";
+import {  uploadToFirebase } from "../utilities/UploadImage";
 import { COLORS } from "../constants/COLORS";
 import { subtractPoints } from "../slices/pointsSlice";
 import { setName } from "../slices/imagesSlice";
-//import CheckInternet from '../Utilities/CheckInternet';
 
-const ImageScreen = ({ route }) => {
+const ImageScreen = () => {
   const [imageURL, setImageURL] = useState("");
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [imageName, setImageName] = useState("");
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-  const [isDownloading, setIsDownloading] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -75,8 +66,6 @@ const ImageScreen = ({ route }) => {
       const imageUrl = await uploadToFirebase(blob, imageName);
       setImageURL(imageUrl);
       dispatch(setName(imageName))
-      //const imageData = { prompt: prompt, url: imageUrl }
-      //const id = await addNewImage(walletAddress, imageData)
       setIsLoading(false)
     } catch (error) {
       console.error("Image Error1" + error);
@@ -116,12 +105,6 @@ const ImageScreen = ({ route }) => {
       console.log("Permission to save to media library not granted.");
     }
   };
-
-  // useEffect(() => {
-  //   if (imageURL !== '') {
-  //     setIsLoading(false)
-  //   }
-  // }, [imageURL])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -175,14 +158,10 @@ const ImageScreen = ({ route }) => {
                 )}
               </>
               )}
-              {/* {
-            isDownloading ? <ActivityIndicator size='large' color="#ffffff" style={[styles.loadingIndicator, { opacity: 1 }]} /> : null
-          } */}
             </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
-      {/* <CheckInternet isConnected={isConnected} setIsConnected={setIsConnected} /> */}
     </SafeAreaView>
   );
 };

@@ -4,31 +4,20 @@ import {
   View,
   StatusBar,
   Image,
-  Dimensions,
-  ImageBackground,
   TouchableHighlight,
   SafeAreaView,
 } from "react-native";
 import React, { Component } from "react";
-import { Platform } from "react-native";
 import MyComponent from "../../components/button";
-import { useNavigation } from "@react-navigation/native";
-import Color from "color";
 import { COLORS } from "../../constants/COLORS";
 
 const YourAiAssistant = ({ navigation }) => {
-  // const navigation = useNavigation();
-
   const nextscreen = () => {
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: "Help Us Grow" }],
-    // });
     navigation.navigate("HelpUsGrow");
   };
   return (
     <SafeAreaView style={styles.main}>
-       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
+      <StatusBar translucent={true} backgroundColor={COLORS.black} />
       <View style={styles.textcontainer}>
         <Text style={styles.text}>
           Enhance Productivity with Idea Generation, task automation, and fast
@@ -38,7 +27,7 @@ const YourAiAssistant = ({ navigation }) => {
       <View style={styles.iconimage}>
         <Image
           source={require("../../../assets/icon.png")}
-          style={{ height: "100%", width: "100%" ,aspectRatio:1}}
+          style={{ height: "100%", width: "100%", aspectRatio: 1 }}
         />
       </View>
       <View style={styles.buttonstyle}>
@@ -58,7 +47,7 @@ const styles = StyleSheet.create({
   },
   text: {
     alignSelf: "flex-start",
-    //paddingLeft: "5%",
+
     paddingTop: 10,
     color: "white",
     fontSize: 16,
