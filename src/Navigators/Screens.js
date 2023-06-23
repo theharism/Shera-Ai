@@ -52,7 +52,7 @@ export default Screens = () => {
 
   useEffect(() => {
     {
-      points == 0 ? handleSaveChatButtonPress(chats, size, points) : null;
+      points == 0 ? handleSaveChatButtonPress(chats, size, points) : handleSaveChatButtonPress(null, null, points);
     }
   }, [points]);
 

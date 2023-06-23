@@ -32,6 +32,8 @@ const ImageScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [imageName, setImageName] = useState("");
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -60,12 +62,14 @@ const ImageScreen = () => {
   const handleGenerateImage = async () => {
     try {
       Keyboard.dismiss();
-      dispatch(subtractPoints({ value: 2 }))
+      dispatch(subtractPoints({ value: 1 }))
       setIsLoading(true);
       const blob = await generateImage(prompt);
       const imageUrl = await uploadToFirebase(blob, imageName);
       setImageURL(imageUrl);
       dispatch(setName(imageName))
+      //const imageData = { prompt: prompt, url: imageUrl }
+      //const id = await addNewImage(walletAddress, imageData)
       setIsLoading(false)
     } catch (error) {
       console.error("Image Error1" + error);
@@ -158,10 +162,14 @@ const ImageScreen = () => {
                 )}
               </>
               )}
+              {/* {
+            isDownloading ? <ActivityIndicator size='large' color="#ffffff" style={[styles.loadingIndicator, { opacity: 1 }]} /> : null
+          } */}
             </View>
           </View>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
+      {/* <CheckInternet isConnected={isConnected} setIsConnected={setIsConnected} /> */}
     </SafeAreaView>
   );
 };
