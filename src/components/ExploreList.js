@@ -43,10 +43,8 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: COLORS.white,
-    //fontWeight:"100",
     fontSize: 18,
     marginBottom: 15,
-    //fontFamily: "JosefinSans-Medium",
     fontFamily:"GalanoGrotesqueBold"
   },
   itemStyle: {

@@ -10,14 +10,22 @@ import {
   RewardedAdEventType,
 } from "react-native-google-mobile-ads";
 import { ActivityIndicator } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { addPoints } from "../../slices/pointsSlice";
+import { ToastAndroid } from "react-native";
+import { StatusBar } from "react-native";
+import { handleSaveChatButtonPress } from "../../utilities/SaveData";
 
-const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
+const rewarded = RewardedAd.createForAdRequest("ca-app-pub-7133387510338737/3916203163", {
   requestNonPersonalizedAdsOnly: true,
 });
 
-const Subscription = ({ navigation }) => {
+const Subscription = () => {
   const [status, setStatus] = useState(2);
   const [loaded, setLoaded] = useState(false);
+
+  const dispatch = useDispatch();
+  const points = useSelector((state)=>state.pointsSlice.points)
 
   useEffect(() => {
     const unsubscribeLoaded = rewarded.addAdEventListener(
@@ -30,7 +38,11 @@ const Subscription = ({ navigation }) => {
       RewardedAdEventType.EARNED_REWARD,
       (reward) => {
         console.log("User earned reward of ", reward);
-        navigation.goBack();
+        dispatch(addPoints({ value: 5 }))
+        handleSaveChatButtonPress(null,null,points + 5)
+        setLoaded(false)
+        ToastAndroid.show("5 wishes Awarded",
+        ToastAndroid.SHORT);
       }
     );
 
@@ -71,6 +83,7 @@ const Subscription = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <Text style={styles.title}>GET ACCESS TO:</Text>
       <View style={styles.fishing}>
         <SubTitle text={"Unlimited Questions & Answers"} />
@@ -99,13 +112,13 @@ const Subscription = ({ navigation }) => {
           rippleColor={COLORS.primary}
           contentStyle={{ alignSelf: "flex-start" }}
           onPress={() => {
-            loaded && rewarded.show();
+            loaded ? rewarded.show() : null
           }}
         >
           {"Watch an Ad    (+5 wishes)"}
         </Button>
         <CustomButton text={"$2250.0/week"} num={1} />
-        <CustomButton text={"3 days for free, then s12800.0/year"} num={2} />
+        <CustomButton text={"3 days for free, then $12800.0/year"} num={2} />
       </View>
       <TouchableOpacity>
         <Text>Continue</Text>

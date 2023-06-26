@@ -4,28 +4,20 @@ import {
   View,
   StatusBar,
   Image,
-  Dimensions,
-  ImageBackground,
   TouchableHighlight,
   SafeAreaView,
 } from "react-native";
-import React, { Component } from "react";
-import { Platform } from "react-native";
+import React from "react";
 import MyComponent from "../../components/button";
-import { useNavigation } from "@react-navigation/native";
+import { COLORS } from "../../constants/COLORS";
 
-export default YourAiAssistant = ({navigation}) => {
-  //const navigation = useNavigation();
-
+export default YourAiAssistant = ({ navigation }) => {
   const nextscreen = () => {
-    // navigation.reset({
-    //   index: 0,
-    //   routes: [{ name: "Enable Notifications" }],
-    // });
-    navigation.navigate('EnableNotifications')
+    navigation.navigate("EnableNotifications");
   };
   return (
     <SafeAreaView style={styles.main}>
+      <StatusBar translucent={true} backgroundColor={COLORS.black} />
       <View style={styles.textcontainer}>
         <Text style={styles.text}>
           Show Your Love by Giving us a Review on Playstore.
@@ -41,17 +33,17 @@ export default YourAiAssistant = ({navigation}) => {
       </View>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   textcontainer: {
     alignItems: "center",
     flex: 3,
-    marginHorizontal:17
+    marginHorizontal: 17,
   },
   text: {
     alignSelf: "flex-start",
-    //paddingLeft: "5%",
+
     paddingTop: 10,
     color: "white",
     fontSize: 16,

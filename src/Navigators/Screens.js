@@ -1,29 +1,10 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Animated,
-  Dimensions,
-  StatusBar,
-  Easing,
-} from "react-native";
+import { Text, View, Image } from "react-native";
 
 import { Ionicons } from "@expo/vector-icons";
 
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 
-import {
-  NavigationContainer,
-  useFocusEffect,
-  useIsFocused,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
@@ -32,7 +13,7 @@ import ImageScreen from "../components/ImageScreen";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { Button, Modal, Portal, PaperProvider } from "react-native-paper";
+import { Button } from "react-native-paper";
 
 import ChatScreen from "../components/ChatScreen";
 import BottomSheetContent from "../components/BottomSheetContent";
@@ -43,37 +24,37 @@ import { useFonts } from "expo-font";
 import { COLORS } from "../constants/COLORS";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
-import { saveChats, setChatsData } from "../slices/chatsSlice";
+import { setChatsData } from "../slices/chatsSlice";
 import { setPoints } from "../slices/pointsSlice";
 
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 
-import {
-  styles,
-  FadeInView,
-  config,
-  customHeaderLeft,
-  customHeaderRight,
-} from "../constants/HeaderStyles";
+import { styles } from "../constants/HeaderStyles";
 
 SplashScreen.preventAutoHideAsync();
 
 import OnBoarding from "./OnBoarding";
 import Home from "./Home";
-import PickAssets from "../components/PickAsset";
 import PointsBottomSheet from "../components/PointsBottomSheet";
 import Subscription from "../screens/subscription/Subscription";
 import { deleteImage } from "../slices/imagesSlice";
 import { handleSaveChatButtonPress } from "../utilities/SaveData";
+import CheckInternet from "../utilities/CheckInternet";
 
 const Stack = createStackNavigator();
 
 export default Screens = () => {
-  const [visible, setVisible] = React.useState(false);
-  const points = useSelector((state) => state.pointsSlice.points);
   const showModal = PickAsset;
-  const hideModal = () => setVisible(false);
-  const containerStyle = { backgroundColor: "white", padding: 20 };
+
+  const { chats, size } = useSelector((state) => state.chatSlice);
+  const points = useSelector((state) => state.pointsSlice.points);
+  const [isConnected, setIsConnected] = useState(false);
+
+  useEffect(() => {
+    {
+      points == 0 ? handleSaveChatButtonPress(chats, size, points) : handleSaveChatButtonPress(null, null, points);
+    }
+  }, [points]);
 
   const [flag, setFlag] = useState(false);
   const dispatch = useDispatch();
@@ -170,8 +151,6 @@ export default Screens = () => {
   }
 
   const imageHeaderLeft = ({ navigation }) => {
-    //const imageName = useSelector((state) => state.imagesSlice.imageName);
-
     return (
       <View
         style={{
@@ -189,15 +168,11 @@ export default Screens = () => {
         >
           <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
         </TouchableOpacity>
-
       </View>
     );
   };
 
   const ChatHeaderLeft = ({ navigation }) => {
-    const { chats, size } = useSelector((state) => state.chatSlice);
-    const points = useSelector((state) => state.pointsSlice.points);
-
     return (
       <View
         style={{
@@ -214,7 +189,6 @@ export default Screens = () => {
         >
           <Ionicons name="chevron-back-sharp" size={35} color={COLORS.white} />
         </TouchableOpacity>
-
       </View>
     );
   };
@@ -229,7 +203,7 @@ export default Screens = () => {
       >
         <Image
           source={require("../../assets/logo.png")}
-          style={{ width: 40, height: 40,bottom: 2 }}
+          style={{ width: 40, height: 40, bottom: 2 }}
         />
         <Text style={styles.headerTitleStyle}>Shera Ai</Text>
       </View>
@@ -274,118 +248,129 @@ export default Screens = () => {
 
   return (
     <NavigationContainer>
-      {flag ? (
+      {isConnected ? (
         <>
-          <Stack.Navigator
-            initialRouteName="Home"
-            screenOptions={{
-              headerTintColor: "#FFFFFF",
-              headerStyle: styles.headerStyle,
-              gestureEnabled: true,
-              gestureDirection: "horizontal",
-              headerMode: "screen",
-              animationEnabled: true,
-              cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-            }}
-          >
-            {points > 0 ? (
-              <>
-                <Stack.Screen
-                  name="Home"
-                  component={Home}
-                  options={{
-                    headerTitle: () => <CustomHeaderTitle />,
-                    //headerLeft: customHeaderLeft,
-                    headerRight: () => customHeaderRight({ showModal, points }),
-                  }}
-                />
-                <Stack.Screen
-                  name="ChatScreen"
-                  component={ChatScreen}
-                  options={({ navigation }) => ({
-                    //headerTitleStyle: styles.chatHeader,
-                    headerTitleAlign: "center",
-                    presentation: "modal",
-                    headerTitle: () => <HeaderTitle />,
-                    headerLeft: () => ChatHeaderLeft({ navigation }),
-                    gestureDirection: "horizontal",
-                  })}
-                />
-                <Stack.Screen
-                  name="ImageScreen"
-                  component={ImageScreen}
-                  options={({ navigation }) => ({
-                    //headerTitleStyle: styles.chatHeader,
-                    headerTitleAlign: "center",
-                    headerTitle: () => <HeaderTitle />,
-                    headerLeft: () => imageHeaderLeft({ navigation }),
-                    presentation: "modal",
-                    gestureDirection: "horizontal",
-                  })}
-                />
-
-                <Stack.Screen
-                  name="Subscription"
-                  component={Subscription}
-                  options={({ navigation }) => ({
-                    headerTitle: "Try Pro for Free",
-                    headerTintColor: "#FFFFFF",
-                    headerStyle: styles.headerStyle,
-                    headerTitleStyle: styles.onboardingHeader,
-                    headerLeft: null,
-                    cardStyleInterpolator:
-                      CardStyleInterpolators.forVerticalIOS,
-                    headerRight: () => (
-                      <TouchableOpacity onPress={() => navigation.goBack()}>
-                        <Text style={styles.skipStyle}>Skip</Text>
-                      </TouchableOpacity>
-                    ),
-                  })}
-                />
-              </>
-            ) : (
-              <Stack.Screen
-                name="NewSubscription"
-                component={Subscription}
-                options={({ navigation }) => ({
-                  headerTitle: "Try Pro for Free",
+          {flag ? (
+            <>
+              <Stack.Navigator
+                initialRouteName="Home"
+                screenOptions={{
                   headerTintColor: "#FFFFFF",
                   headerStyle: styles.headerStyle,
-                  headerTitleStyle: styles.onboardingHeader,
-                  headerLeft: null,
-                  cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
-                  headerRight: () => (
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
-                      <Text style={styles.skipStyle}>Skip</Text>
-                    </TouchableOpacity>
-                  ),
-                })}
-              />
-            )}
-          </Stack.Navigator>
+                  gestureEnabled: true,
+                  gestureDirection: "horizontal",
+                  headerMode: "screen",
+                  animationEnabled: true,
+                  cardStyleInterpolator:
+                    CardStyleInterpolators.forHorizontalIOS,
+                }}
+              >
+                {points > 0 ? (
+                  <>
+                    <Stack.Screen
+                      name="Home"
+                      component={Home}
+                      options={{
+                        headerTitle: () => <CustomHeaderTitle />,
 
-          <PointsBottomSheet assetBottomSheet={assetBottomSheet} />
+                        headerRight: () =>
+                          customHeaderRight({ showModal, points }),
+                      }}
+                    />
+                    <Stack.Screen
+                      name="ChatScreen"
+                      component={ChatScreen}
+                      options={({ navigation }) => ({
+                        headerTitleAlign: "center",
+                        presentation: "modal",
+                        headerTitle: () => <HeaderTitle />,
+                        headerLeft: () => ChatHeaderLeft({ navigation }),
+                        gestureDirection: "horizontal",
+                      })}
+                    />
+                    <Stack.Screen
+                      name="ImageScreen"
+                      component={ImageScreen}
+                      options={({ navigation }) => ({
+                        headerTitleAlign: "center",
+                        headerTitle: () => <HeaderTitle />,
+                        headerLeft: () => imageHeaderLeft({ navigation }),
+                        presentation: "modal",
+                        gestureDirection: "horizontal",
+                      })}
+                    />
 
-          <BottomSheet
-            snapPoints={bssnapPoints}
-            ref={bottomSheetModalRef}
-            index={-1}
-            enablePanDownToClose={true}
-            topInset={StatusBar.currentHeight}
-            handleStyle={{
-              backgroundColor: "#171717",
-              borderColor: "#171717",
-            }}
-            handleIndicatorStyle={{ backgroundColor: "rgba(100,100,100,0.6)" }}
-          >
-            <BottomSheetContent />
-          </BottomSheet>
+                    <Stack.Screen
+                      name="Subscription"
+                      component={Subscription}
+                      options={({ navigation }) => ({
+                        headerTitle: "Try Pro for Free",
+                        headerTintColor: "#FFFFFF",
+                        headerStyle: styles.headerStyle,
+                        headerTitleStyle: styles.onboardingHeader,
+                        headerLeft: null,
+                        cardStyleInterpolator:
+                          CardStyleInterpolators.forVerticalIOS,
+                        headerRight: () => (
+                          <TouchableOpacity
+                            onPress={() => {
+                              navigation.goBack();
+                              handleSaveChatButtonPress(chats, size, points);
+                            }}
+                          >
+                            <Text style={styles.skipStyle}>Skip</Text>
+                          </TouchableOpacity>
+                        ),
+                      })}
+                    />
+                  </>
+                ) : (
+                  <Stack.Screen
+                    name="NewSubscription"
+                    component={Subscription}
+                    options={({ navigation }) => ({
+                      headerTitle: "Try Pro for Free",
+                      headerTintColor: "#FFFFFF",
+                      headerStyle: styles.headerStyle,
+                      headerTitleStyle: styles.onboardingHeader,
+                      headerLeft: null,
+                      cardStyleInterpolator:
+                        CardStyleInterpolators.forVerticalIOS,
+                    })}
+                  />
+                )}
+              </Stack.Navigator>
+
+              <PointsBottomSheet assetBottomSheet={assetBottomSheet} />
+
+              <BottomSheet
+                snapPoints={bssnapPoints}
+                ref={bottomSheetModalRef}
+                index={-1}
+                enablePanDownToClose={true}
+                handleStyle={{
+                  backgroundColor: "#171717",
+                  borderColor: "#171717",
+                }}
+                handleIndicatorStyle={{
+                  backgroundColor: "rgba(100,100,100,0.6)",
+                }}
+              >
+                <BottomSheetContent />
+              </BottomSheet>
+            </>
+          ) : (
+            <>
+              <OnBoarding setFlag={setFlag} />
+            </>
+          )}
         </>
-      ) : (
-        <>
-          <OnBoarding setFlag={setFlag} />
-        </>
-      )}
+      ) : null}
+
+      <CheckInternet
+        isConnected={isConnected}
+        setIsConnected={setIsConnected}
+      />
     </NavigationContainer>
   );
 };

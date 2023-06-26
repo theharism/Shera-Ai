@@ -138,21 +138,3 @@ export const styles = StyleSheet.create({
     </View>
     )
   };
-  
-  const FadeHomeScreen = (props, { navigation }) => (
-    <FadeInView>
-      <ChatHome {...props} />
-    </FadeInView>
-  );
-  
-  const FadeHomeScree = (props, { navigation }) => (
-    <FadeInView>
-      <ExploreHome {...props} />
-    </FadeInView>
-  );
-  
-  const FadeHomeScre = (props, { navigation }) => (
-    <FadeInView>
-      <RecentsHome {...props} />
-    </FadeInView>
-  );

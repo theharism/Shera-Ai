@@ -40,8 +40,12 @@ const chatSlice = createSlice({
         state.size = size;
       }
     },
+    clearData:(state, action) => {
+      state.chats = [];
+      state.size = 0;
+    }
   },
 });
 
-export const { addChat, addMessage, setChatsData } = chatSlice.actions;
+export const { addChat, addMessage, setChatsData,clearData } = chatSlice.actions;
 export default chatSlice.reducer;

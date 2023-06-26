@@ -1,13 +1,11 @@
 import {
   View,
   Text,
-  TouchableNativeFeedback,
   Image,
   Pressable,
   Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { useFonts } from "expo-font";
+import React from "react";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -18,6 +16,7 @@ const BottomSheetComponent = ({
   bottom,
   top,
   icon,
+  onPress,
 }) => {
   const AssetType = () => {
     console.log(`Picking ${title}`);
@@ -27,7 +26,7 @@ const BottomSheetComponent = ({
 
   return (
     <Pressable
-      onPress={AssetType}
+      onPress={onPress}
       style={{
         backgroundColor: bgcolor,
         height: Screen_Height / 11,
@@ -95,6 +94,8 @@ const BottomSheetComponent = ({
               padding: 16,
               borderRadius: 8,
               backgroundColor: "black",
+              height: "100%",
+              width: "100%",
             }}
           />
         )}

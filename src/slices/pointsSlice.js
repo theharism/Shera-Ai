@@ -13,7 +13,7 @@ const pointsSlice = createSlice({
     setPoints: (state, action) => {
       const { points } = action.payload;
 
-      if (points) {
+      if (points >= 0) {
         state.points = points;
       }
     }

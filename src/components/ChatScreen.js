@@ -10,7 +10,6 @@ import { COLORS } from "../constants/COLORS";
 import CustomTextInput from "./CustomTextInput";
 import { FlatList } from "react-native-gesture-handler";
 import { useRoute } from "@react-navigation/native";
-import { chatWithGPT3 } from "../Api/chatgpt";
 import { addMessage, addChat } from "../slices/chatsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { generateRandomString } from "../utilities/StringGenerator";
@@ -19,6 +18,7 @@ import renderItem from "./renderItem";
 import EventSource from "react-native-sse";
 import "react-native-url-polyfill/auto";
 import { handleSaveChatButtonPress } from "../utilities/SaveData";
+import { StatusBar } from "react-native";
 
 const ChatScreen = () => {
   const route = useRoute();
@@ -31,8 +31,6 @@ const ChatScreen = () => {
   const [submitted, setSubmitted] = useState(false);
   const [sendPressed, setSendPressed] = useState(false);
   const [chatID, setChatID] = useState("");
-  const [typing, setTyping] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
 
   const flatListRef = useRef(null);
   const dispatch = useDispatch();
@@ -43,7 +41,6 @@ const ChatScreen = () => {
   useEffect(() => {
     const handleBackPress = () => {
       // Perform your custom logic here
-      console.log("Hardware back button pressed!");
 
       handleSaveChatButtonPress(chats,size,points)
 
@@ -152,7 +149,6 @@ const ChatScreen = () => {
     }
 
     setMessage("");
-    setTyping(true);
     setSubmitted(true);
     setSendPressed(false);
   };
@@ -295,6 +291,7 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <KeyboardAvoidingView style={styles.innerContainer}>
         <View style={styles.chatContainer}>
           <View style={{ flex: 1 }}>

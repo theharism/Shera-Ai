@@ -14,26 +14,19 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from "react-native";
-// import {
-//   BannerAd,
-//   BannerAdSize,
-//   TestIds,
-//   InterstitialAd,
-//   AdEventType
-// } from 'react-native-google-mobile-ads';
-import { useDispatch, useSelector } from "react-redux";
+
+import { useDispatch } from "react-redux";
 import { generateImage } from "../Api/HuggingFace";
 import { Entypo } from "@expo/vector-icons";
 import * as MediaLibrary from "expo-media-library";
 import * as FileSystem from "expo-file-system";
 import * as Notifications from "expo-notifications";
-import { deleteFromFirebae, uploadToFirebase } from "../utilities/UploadImage";
+import {  uploadToFirebase } from "../utilities/UploadImage";
 import { COLORS } from "../constants/COLORS";
 import { subtractPoints } from "../slices/pointsSlice";
 import { setName } from "../slices/imagesSlice";
-//import CheckInternet from '../Utilities/CheckInternet';
 
-const ImageScreen = ({ route }) => {
+const ImageScreen = () => {
   const [imageURL, setImageURL] = useState("");
   const [prompt, setPrompt] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -69,7 +62,7 @@ const ImageScreen = ({ route }) => {
   const handleGenerateImage = async () => {
     try {
       Keyboard.dismiss();
-      dispatch(subtractPoints({ value: 2 }))
+      dispatch(subtractPoints({ value: 1 }))
       setIsLoading(true);
       const blob = await generateImage(prompt);
       const imageUrl = await uploadToFirebase(blob, imageName);
@@ -117,14 +110,9 @@ const ImageScreen = ({ route }) => {
     }
   };
 
-  // useEffect(() => {
-  //   if (imageURL !== '') {
-  //     setIsLoading(false)
-  //   }
-  // }, [imageURL])
-
   return (
     <SafeAreaView style={styles.container}>
+       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
       <KeyboardAvoidingView style={{ flex: 1, flexDirection: "column" }}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={{ flexDirection: "column", flex: 1 }}>
