@@ -1,0 +1,130 @@
+{
+  "project_info": {
+    "project_number": "27302368942",
+    "firebase_url": "https://shera-ai-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "shera-ai",
+    "storage_bucket": "shera-ai.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27302368942:android:2431cf87d37fea295c3f3f",
+        "android_client_info": {
+          "package_name": "com.ai.chatgpt.sheraai.imagegenerator.aichat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27302368942-7j5uglhvu9kvric0u8apk35ir2ju2j2f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmxeCzKVOC_9oL5Wo-BcYDfK5USZBsWa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27302368942-7j5uglhvu9kvric0u8apk35ir2ju2j2f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27302368942:android:7ca82f67cfdda4ba5c3f3f",
+        "android_client_info": {
+          "package_name": "com.theharism.SheraAi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27302368942-e9satmh78t9s776qs660f88mqokqpnea.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theharism.SheraAi",
+            "certificate_hash": "02e4b83d3cc8d85f024bfa6f41e7926945033968"
+          }
+        },
+        {
+          "client_id": "27302368942-mnif91078lb77imf582vnbq457bv3h0i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theharism.SheraAi",
+            "certificate_hash": "3e266c2ed1482e7a9e9436bd880faf99f194388f"
+          }
+        },
+        {
+          "client_id": "27302368942-7j5uglhvu9kvric0u8apk35ir2ju2j2f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmxeCzKVOC_9oL5Wo-BcYDfK5USZBsWa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27302368942-7j5uglhvu9kvric0u8apk35ir2ju2j2f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:27302368942:android:c41cee5b002aba285c3f3f",
+        "android_client_info": {
+          "package_name": "com.theharism.SheraAiAssistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "27302368942-oof18j9gs05mehs93k9jlcoerd3qn422.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theharism.SheraAiAssistant",
+            "certificate_hash": "b5cb6a3cf890d1aba108f22ce7ba73757cedfba5"
+          }
+        },
+        {
+          "client_id": "27302368942-u7htaunmus3vas38l03vdamsjnmd400u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.theharism.SheraAiAssistant",
+            "certificate_hash": "a58c1d05410d20d8bce465323f07a1bae0b420f5"
+          }
+        },
+        {
+          "client_id": "27302368942-7j5uglhvu9kvric0u8apk35ir2ju2j2f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmxeCzKVOC_9oL5Wo-BcYDfK5USZBsWa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "27302368942-7j5uglhvu9kvric0u8apk35ir2ju2j2f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

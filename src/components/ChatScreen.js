@@ -42,7 +42,7 @@ const ChatScreen = () => {
     const handleBackPress = () => {
       // Perform your custom logic here
 
-      handleSaveChatButtonPress(chats,size,points)
+      handleSaveChatButtonPress(chats, size, points);
 
       // Return true to indicate that you've handled the event
       return false;
@@ -163,7 +163,7 @@ const ChatScreen = () => {
     //     { id: prevMessages.length + 1, message: reply, sender: "ChatGPT" },
     //   ]);
 
-    const OPENAI_KEY = "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";
+    const OPENAI_KEY = "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";
 
     let newContent = "";
 
@@ -291,7 +291,7 @@ const ChatScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-       <StatusBar translucent={true} backgroundColor={COLORS.black}/>
+      <StatusBar translucent={true} backgroundColor={COLORS.black} />
       <KeyboardAvoidingView style={styles.innerContainer}>
         <View style={styles.chatContainer}>
           <View style={{ flex: 1 }}>
