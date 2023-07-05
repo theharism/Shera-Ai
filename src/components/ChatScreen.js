@@ -101,8 +101,6 @@ const ChatScreen = () => {
       return;
     }
 
-    dispatch(subtractPoints({ value: 1 }));
-
     if (messages.length === 0) {
       const newID = generateRandomString(10);
       const now = new Date();
@@ -264,6 +262,8 @@ const ChatScreen = () => {
               })
             );
           }
+
+          dispatch(subtractPoints({ value: 1 }));
         }
       } else if (event.type === "error") {
         console.error("Connection error:", event.message);
