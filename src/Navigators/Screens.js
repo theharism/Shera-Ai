@@ -50,11 +50,15 @@ export default Screens = () => {
   const points = useSelector((state) => state.pointsSlice.points);
   const [isConnected, setIsConnected] = useState(false);
 
-  useEffect(() => {
-    {
-      points == 0 ? handleSaveChatButtonPress(chats, size, points) : handleSaveChatButtonPress(null, null, points);
-    }
-  }, [points]);
+  // useEffect(() => {
+  //   {
+  //     points == 0
+  //       ? handleSaveChatButtonPress(chats, size, points)
+  //       : handleSaveChatButtonPress(null, null, points);
+
+  //     //handleSaveChatButtonPress(chats, size, points);
+  //   }
+  // }, [points]);
 
   const [flag, setFlag] = useState(false);
   const dispatch = useDispatch();
@@ -81,6 +85,10 @@ export default Screens = () => {
         const chats = jsonValue != null ? JSON.parse(jsonValue) : null;
         size = parseInt(size);
         points = parseInt(points);
+        console.log("FFUUUCCKKKEDD");
+        console.log(chats);
+        console.log(points);
+        console.log(size);
         return { chats, size, points };
       } catch (e) {
         console.log("Error: ", e);
