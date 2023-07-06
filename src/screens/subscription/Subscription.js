@@ -94,7 +94,6 @@ const Subscription = () => {
   };
 
   async function onSuccess() {
-    await AsyncStorage.setItem("subscription", JSON.stringify(true));
     dispatch(setSubscription(true));
     setDone(true);
     dispatch(setPoints(100000));

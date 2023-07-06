@@ -84,23 +84,23 @@ export default Screens = () => {
         await InAppPurchases.connectAsync();
         const { results } = await InAppPurchases.getPurchaseHistoryAsync();
         if (results.length == 0) {
-          await AsyncStorage.setItem("subscription", JSON.stringify(false));
           dispatch(setSubscription(false));
           dispatch(setPoints(20));
           handleSaveChatButtonPress(null, null, 20);
+        } else {
+          dispatch(setSubscription(true));
         }
-        for (const result of results || []) {
-          if (result.acknowledged) {
-            await AsyncStorage.setItem("subscription", JSON.stringify(true));
-            dispatch(setSubscription(true));
-            dispatch(setPoints(100000));
-            handleSaveChatButtonPress(null, null, 100000);
-            await InAppPurchases.disconnectAsync();
-            return true;
-          }
-        }
+        // for (const result of results || []) {
+        //   if (result.acknowledged) {
+        //     await AsyncStorage.setItem("subscription", JSON.stringify(true));
+        //     dispatch(setSubscription(true));
+        //     dispatch(setPoints(100000));
+        //     handleSaveChatButtonPress(null, null, 100000);
+        //     await InAppPurchases.disconnectAsync();
+        //     return true;
+        //   }
+        // }
         await InAppPurchases.disconnectAsync();
-        return false;
       } catch (error) {
         InAppPurchases.disconnectAsync();
         console.log(error);
@@ -115,22 +115,19 @@ export default Screens = () => {
         const jsonValue = await AsyncStorage.getItem("chats");
         let size = await AsyncStorage.getItem("size");
         let points = await AsyncStorage.getItem("points");
-        let subStatus = await AsyncStorage.getItem("subscription");
         const chats = jsonValue != null ? JSON.parse(jsonValue) : null;
         size = parseInt(size);
         points = parseInt(points);
-        subStatus = JSON.parse(subStatus);
-        return { chats, size, points, subStatus };
+        return { chats, size, points };
       } catch (e) {
         console.log("Error: ", e);
         return { chats: null, size: null, points: null };
       }
     };
 
-    getData().then(({ chats, size, points, subStatus }) => {
+    getData().then(({ chats, size, points }) => {
       dispatch(setChatsData({ chats, size }));
       dispatch(setPoints(points));
-      dispatch(setSubscription(subStatus));
     });
   }, []);
 
