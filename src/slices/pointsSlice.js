@@ -11,12 +11,11 @@ const pointsSlice = createSlice({
       state.points -= action.payload.value;
     },
     setPoints: (state, action) => {
-      const { points } = action.payload;
-
+      const points = action.payload;
       if (points >= 0) {
         state.points = points;
       }
-    }
+    },
   },
 });
 

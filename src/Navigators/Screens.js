@@ -40,6 +40,8 @@ import Subscription from "../screens/subscription/Subscription";
 import { deleteImage } from "../slices/imagesSlice";
 import { handleSaveChatButtonPress } from "../utilities/SaveData";
 import CheckInternet from "../utilities/CheckInternet";
+import { setSubscription } from "../slices/subscriptionSlice";
+import * as InAppPurchases from "expo-in-app-purchases";
 
 const Stack = createStackNavigator();
 
@@ -77,28 +79,58 @@ export default Screens = () => {
   };
 
   useEffect(() => {
+    const restorePurchase = async () => {
+      try {
+        await InAppPurchases.connectAsync();
+        const { results } = await InAppPurchases.getPurchaseHistoryAsync();
+        if (results.length == 0) {
+          await AsyncStorage.setItem("subscription", JSON.stringify(false));
+          dispatch(setSubscription(false));
+          dispatch(setPoints(20));
+          handleSaveChatButtonPress(null, null, 20);
+        }
+        for (const result of results || []) {
+          if (result.acknowledged) {
+            await AsyncStorage.setItem("subscription", JSON.stringify(true));
+            dispatch(setSubscription(true));
+            dispatch(setPoints(100000));
+            handleSaveChatButtonPress(null, null, 100000);
+            await InAppPurchases.disconnectAsync();
+            return true;
+          }
+        }
+        await InAppPurchases.disconnectAsync();
+        return false;
+      } catch (error) {
+        InAppPurchases.disconnectAsync();
+        console.log(error);
+      }
+    };
+    restorePurchase();
+  }, []);
+
+  useEffect(() => {
     const getData = async () => {
       try {
         const jsonValue = await AsyncStorage.getItem("chats");
         let size = await AsyncStorage.getItem("size");
         let points = await AsyncStorage.getItem("points");
+        let subStatus = await AsyncStorage.getItem("subscription");
         const chats = jsonValue != null ? JSON.parse(jsonValue) : null;
         size = parseInt(size);
         points = parseInt(points);
-        console.log("FFUUUCCKKKEDD");
-        console.log(chats);
-        console.log(points);
-        console.log(size);
-        return { chats, size, points };
+        subStatus = JSON.parse(subStatus);
+        return { chats, size, points, subStatus };
       } catch (e) {
         console.log("Error: ", e);
         return { chats: null, size: null, points: null };
       }
     };
 
-    getData().then(({ chats, size, points }) => {
+    getData().then(({ chats, size, points, subStatus }) => {
       dispatch(setChatsData({ chats, size }));
-      dispatch(setPoints({ points }));
+      dispatch(setPoints(points));
+      dispatch(setSubscription(subStatus));
     });
   }, []);
 

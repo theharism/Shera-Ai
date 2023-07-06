@@ -17,11 +17,13 @@ import {
 } from "react-native-google-mobile-ads";
 import { ActivityIndicator } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { addPoints } from "../../slices/pointsSlice";
+import { addPoints, setPoints } from "../../slices/pointsSlice";
 import { ToastAndroid } from "react-native";
 import { StatusBar } from "react-native";
 import { handleSaveChatButtonPress } from "../../utilities/SaveData";
 import * as InAppPurchases from "expo-in-app-purchases";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { setSubscription } from "../../slices/subscriptionSlice";
 
 const rewarded = RewardedAd.createForAdRequest(
   "ca-app-pub-7133387510338737/3916203163",
@@ -33,6 +35,7 @@ const rewarded = RewardedAd.createForAdRequest(
 const Subscription = () => {
   const [status, setStatus] = useState(2);
   const [loaded, setLoaded] = useState(false);
+  const [done, setDone] = useState(false);
 
   const dispatch = useDispatch();
   const points = useSelector((state) => state.pointsSlice.points);
@@ -90,37 +93,12 @@ const Subscription = () => {
     );
   };
 
-  async function purchaseItem(item) {
-    const { productId } = item;
-
-    try {
-      const { responseCode } = await InAppPurchases.purchaseItemAsync(
-        productId
-      );
-      console.log(responseCode);
-      if (responseCode === InAppPurchases.IAPResponseCode.OK) {
-        console.log("smd");
-        dispatch(addPoints({ value: 100000 }));
-        handleSaveChatButtonPress(null, null, points + 100000);
-      } else if (
-        responseCode === InAppPurchases.IAPResponseCode.USER_CANCELED
-      ) {
-        Alert.alert(
-          "Subscription Canceled",
-          "The subscription purchase was canceled by the user."
-        );
-      } else {
-        Alert.alert(
-          "Subscription Failed",
-          "Failed to initiate the subscription purchase."
-        );
-      }
-
-      // Assuming the rest of the function remains the same
-      // ...
-    } catch (err) {
-      console.log(err);
-    }
+  async function onSuccess() {
+    await AsyncStorage.setItem("subscription", JSON.stringify(true));
+    dispatch(setSubscription(true));
+    setDone(true);
+    dispatch(setPoints(100000));
+    handleSaveChatButtonPress(null, null, 100000);
   }
 
   async function subscribe() {
@@ -134,39 +112,31 @@ const Subscription = () => {
         .then(() => console.log("connected to store"))
         .catch((error) => console.log(error));
 
-      const { responseCode, results } = await InAppPurchases.getProductsAsync([
-        itemID,
-      ]).catch((error) => console.log(error));
+      await InAppPurchases.getProductsAsync([itemID]);
 
-      if (responseCode === InAppPurchases.IAPResponseCode.OK) {
-        results.forEach(async (purchase) => {
-          if (!purchase.acknowledged) {
-            console.log(`Successfully purchased ${purchase.productId}`);
-            // Process transaction here and unlock content...
+      InAppPurchases.purchaseItemAsync(itemID);
 
-            await purchaseItem(purchase);
-            console.log(purchase);
-            // Then when you're done
-            await InAppPurchases.finishTransactionAsync(purchase, false)
-              .then(console.log("Transaction Completed"))
-              .catch((err) => console.log(err));
+      return await new Promise((resolve, reject) => {
+        InAppPurchases.setPurchaseListener(async (result) => {
+          switch (result.responseCode) {
+            case InAppPurchases.IAPResponseCode.OK:
+            case InAppPurchases.IAPResponseCode.DEFERRED:
+              await onSuccess();
+              await InAppPurchases.finishTransactionAsync(
+                result.results[0],
+                false
+              );
+              await InAppPurchases.disconnectAsync();
+              return resolve(true);
+            case InAppPurchases.IAPResponseCode.USER_CANCELED:
+              await InAppPurchases.disconnectAsync();
+              return resolve(false);
+            case InAppPurchases.IAPResponseCode.ERROR:
+              await InAppPurchases.disconnectAsync();
+              return reject(new Error("IAP Error: " + result.errorCode));
           }
         });
-      } else if (
-        responseCode === InAppPurchases.IAPResponseCode.USER_CANCELED
-      ) {
-        console.log("User canceled the transaction");
-      } else if (responseCode === InAppPurchases.IAPResponseCode.DEFERRED) {
-        console.log(
-          "User does not have permissions to buy but requested parental approval (iOS only)"
-        );
-      } else {
-        console.warn(
-          `Something went wrong with the purchase. Received errorCode ${errorCode}`
-        );
-      }
-
-      await InAppPurchases.disconnectAsync();
+      });
     } catch (error) {
       console.log(error);
       await InAppPurchases.disconnectAsync();
@@ -218,6 +188,7 @@ const Subscription = () => {
             paddingVertical: 3,
           }}
           buttonColor="white"
+          disabled={done ? true : false}
           labelStyle={{ color: COLORS.black, fontSize: 16 }}
           rippleColor={COLORS.primary}
           contentStyle={{ alignSelf: "center" }}

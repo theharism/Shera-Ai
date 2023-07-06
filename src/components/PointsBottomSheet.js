@@ -1,19 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
-import React,{useMemo} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BottomSheet from "@gorhom/bottom-sheet";
 import { Button } from "react-native-paper";
-import { useNavigation } from '@react-navigation/native';
-
+import { useNavigation } from "@react-navigation/native";
 
 import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "../constants/COLORS";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
 
-const PointsBottomSheet = ({assetBottomSheet}) => {
+const PointsBottomSheet = ({ assetBottomSheet }) => {
+  const snapPoints = useMemo(() => ["30%"], []);
+  const navigation = useNavigation();
 
-    const snapPoints = useMemo(() => ["30%"], []);
-    const navigation = useNavigation();
-
-
+  const status = useSelector((state) => state.subscriptionSlice.subscription);
   return (
     <BottomSheet
       snapPoints={snapPoints}
@@ -34,12 +34,13 @@ const PointsBottomSheet = ({assetBottomSheet}) => {
             fontSize: 20,
             textAlign: "center",
             marginTop: 0,
-            paddingHorizontal:5
+            paddingHorizontal: 5,
           }}
         >
           Wishes function as the credit system for Shera Ai. One request to
           Shera deducts one wish from your balance.
         </Text>
+
         <Button
           mode="contained"
           style={{
@@ -51,9 +52,11 @@ const PointsBottomSheet = ({assetBottomSheet}) => {
           }}
           textColor={COLORS.black}
           labelStyle={{ fontSize: 17 }}
+          disabled={status ? true : false}
           onPress={() => {
             assetBottomSheet.current.close();
-            navigation.navigate('Subscription')}}
+            navigation.navigate("Subscription");
+          }}
         >
           Upgrade
         </Button>

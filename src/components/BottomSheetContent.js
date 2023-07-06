@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  Dimensions,
-  Linking,
-  Share,
-} from "react-native";
+import { View, Text, Dimensions, Linking, Share } from "react-native";
 import React from "react";
 import BottomSheetComponent from "./BottomSheetComponent";
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
@@ -12,6 +6,10 @@ import { ToastAndroid } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { clearData } from "../slices/chatsSlice";
+import * as InAppPurchases from "expo-in-app-purchases";
+import { handleSaveChatButtonPress } from "../utilities/SaveData";
+import { setPoints } from "../slices/pointsSlice";
+import { setSubscription } from "../slices/subscriptionSlice";
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -28,6 +26,34 @@ const BottomSheetContent = () => {
 
   const dispatch = useDispatch();
 
+  const restorePurchase = async () => {
+    try {
+      await InAppPurchases.connectAsync();
+      const { results } = await InAppPurchases.getPurchaseHistoryAsync();
+
+      if (results.length == 0) {
+        await AsyncStorage.setItem("subscription", JSON.stringify(false));
+        dispatch(setSubscription(false));
+        dispatch(setPoints(20));
+      }
+      for (const result of results || []) {
+        if (result.acknowledged) {
+          await AsyncStorage.setItem("subscription", JSON.stringify(true));
+          dispatch(setSubscription(true));
+          dispatch(setPoints(100000));
+          handleSaveChatButtonPress(null, null, 100000);
+          await InAppPurchases.disconnectAsync();
+          return true;
+        }
+      }
+      await InAppPurchases.disconnectAsync();
+      return false;
+    } catch (error) {
+      InAppPurchases.disconnectAsync();
+      console.log(error);
+    }
+  };
+
   const handleOpenLink = async (url) => {
     // Check if the link is supported on the device
     const supported = await Linking.canOpenURL(url);
@@ -35,7 +61,7 @@ const BottomSheetContent = () => {
       // Open the link
       await Linking.openURL(url);
     } else {
-      console.log("Cannot open the link.");
+      ToastAndroid.show("Cannot open the link.", ToastAndroid.SHORT);
     }
   };
 
@@ -122,13 +148,19 @@ const BottomSheetContent = () => {
         iconname={require("../../assets/icons/youtube.png")}
         bottom="false"
         top="false"
-        onPress={() => Linking.canOpenURL('vnd.youtube://channel/' + youtube).then(supported => {
-          if (supported) {
-             return Linking.openURL('vnd.youtube://channel/' + youtube);
-          } else {
-             return Linking.openURL('https://www.youtube.com/channel/' + youtube);
-          }
-       })}
+        onPress={() =>
+          Linking.canOpenURL("vnd.youtube://channel/" + youtube).then(
+            (supported) => {
+              if (supported) {
+                return Linking.openURL("vnd.youtube://channel/" + youtube);
+              } else {
+                return Linking.openURL(
+                  "https://www.youtube.com/channel/" + youtube
+                );
+              }
+            }
+          )
+        }
       />
 
       <View
@@ -214,14 +246,15 @@ const BottomSheetContent = () => {
         icon="true"
         onPress={() => handleOpenLink(help)}
       />
-      {/* <BottomSheetComponent
+      <BottomSheetComponent
         bgcolor="black"
         title="Restore Purchases"
         iconname="reload"
         bottom="false"
         top="false"
         icon="true"
-      /> */}
+        onPress={restorePurchase}
+      />
       <BottomSheetComponent
         bgcolor="black"
         title="Request A Feature"

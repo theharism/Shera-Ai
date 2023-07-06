@@ -1,47 +1,29 @@
 import "react-native-gesture-handler";
 import "react-native-reanimated";
 import { configureStore } from "@reduxjs/toolkit";
-import { Provider } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import chatSlice from "./src/slices/chatsSlice";
 import pointsSlice from "./src/slices/pointsSlice";
 import imagesSlice from "./src/slices/imagesSlice";
+import subscriptionSlice from "./src/slices/subscriptionSlice";
 import { PaperProvider } from "react-native-paper";
-import { PermissionsAndroid } from "react-native";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import Screens from "./src/Navigators/Screens";
-
-import React, {
-  useCallback,
-  useRef,
-  useMemo,
-  useEffect,
-  useState,
-} from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Dimensions,
-  Animated,
-  TouchableOpacity,
-  StatusBar,
-  Platform,
-} from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import React, { useRef, useEffect, useState } from "react";
+import { Platform } from "react-native";
 
 const store = configureStore({
   reducer: {
     chatSlice,
     pointsSlice,
-    imagesSlice
+    imagesSlice,
+    subscriptionSlice,
   },
 });
 
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-
 export default function App() {
-
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -69,7 +51,7 @@ export default function App() {
     } else {
       alert("Must use physical device for Push Notifications");
     }
-  
+
     if (Platform.OS === "android") {
       Notifications.setNotificationChannelAsync("default", {
         name: "default",
@@ -78,7 +60,7 @@ export default function App() {
         lightColor: "#FF231F7C",
       });
     }
-  
+
     return token;
   }
 
