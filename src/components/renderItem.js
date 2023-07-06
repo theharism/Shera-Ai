@@ -1,22 +1,22 @@
 import {
-    StyleSheet,
-    Text,
-    Image,
-    View,
-    TouchableOpacity,
-    ToastAndroid,
-  } from "react-native";
+  StyleSheet,
+  Text,
+  Image,
+  View,
+  TouchableOpacity,
+  ToastAndroid,
+} from "react-native";
 import * as Clipboard from "expo-clipboard";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { COLORS } from "../constants/COLORS";
+import BlinkingHyphen from "../utilities/blinkingHyphen";
 
 const copyToClipboard = async (text) => {
   await Clipboard.setStringAsync(text);
   ToastAndroid.show("Copied to Clipboard", ToastAndroid.SHORT);
 };
 
-export default renderItem = ({ item }) =>
-
+export default renderItem = ({ item }, loading) =>
   item.sender === "user" ? (
     item.id === 1 ? (
       <>
@@ -74,18 +74,21 @@ export default renderItem = ({ item }) =>
             style={styles.chatAvatar}
           />
           <Text style={styles.chatText}>{item.message}</Text>
+          {loading ? <BlinkingHyphen /> : null}
         </View>
-        <TouchableOpacity
-          style={styles.copyButtonContainer}
-          onPress={() => copyToClipboard(item.message)}
-        >
-          <MaterialCommunityIcons
-            name="content-copy"
-            size={20}
-            color={COLORS.white}
-          />
-          <Text style={styles.copyButtonText}>Copy</Text>
-        </TouchableOpacity>
+        {!loading ? (
+          <TouchableOpacity
+            style={styles.copyButtonContainer}
+            onPress={() => copyToClipboard(item.message)}
+          >
+            <MaterialCommunityIcons
+              name="content-copy"
+              size={20}
+              color={COLORS.white}
+            />
+            <Text style={styles.copyButtonText}>Copy</Text>
+          </TouchableOpacity>
+        ) : null}
       </View>
     </>
   ) : null;
@@ -115,7 +118,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
     alignSelf: "flex-start",
   },
-  chatAvatar:{
+  chatAvatar: {
     width: 35,
     height: 35,
     aspectRatio: 1,

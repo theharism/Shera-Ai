@@ -31,6 +31,7 @@ const ChatScreen = () => {
   const [submitted, setSubmitted] = useState(false);
   const [sendPressed, setSendPressed] = useState(false);
   const [chatID, setChatID] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const flatListRef = useRef(null);
   const dispatch = useDispatch();
@@ -149,18 +150,10 @@ const ChatScreen = () => {
     setMessage("");
     setSubmitted(true);
     setSendPressed(false);
+    setLoading(true);
   };
 
   const handleResponseMessage = async () => {
-    //const reply = await
-    //chatWithGPT3(messages, content,setMessages);
-
-    // if (reply) {
-    //   setMessages((prevMessages) => [
-    //     ...prevMessages,
-    //     { id: prevMessages.length + 1, message: reply, sender: "ChatGPT" },
-    //   ]);
-
     const OPENAI_KEY = "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";
 
     let newContent = "";
@@ -251,7 +244,7 @@ const ChatScreen = () => {
           }
         } else {
           es.close();
-
+          setLoading(false);
           if (chatID) {
             dispatch(
               addMessage({
@@ -298,7 +291,7 @@ const ChatScreen = () => {
             <FlatList
               ref={flatListRef}
               data={messages}
-              renderItem={(item) => renderItem(item)}
+              renderItem={(item) => renderItem(item, loading)}
               keyExtractor={(item) => item.id.toString()}
               contentContainerStyle={{
                 flexGrow: 1,
