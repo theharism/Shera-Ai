@@ -1,12 +1,49 @@
 import { View, Text, TouchableNativeFeedback, Image } from "react-native";
 import React from "react";
+import DocumentPicker from "react-native-document-picker";
+import { useState } from "react";
+import { uploadToFirebase } from "../utilities/UploadImage";
+import { useNavigation } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native";
 
-const PickAssets = ({ bgcolor, title }) => {
-  const AssetType = () => {
-    console.log(`Picking ${title}`);
+const PickAssets = ({
+  bgcolor,
+  title,
+  assetBottomSheet,
+  setLoadFile,
+  loadFile,
+}) => {
+  const navigation = useNavigation();
+
+  const AssetType = async () => {
+    try {
+      const doc = await DocumentPicker.pickSingle({
+        type:
+          title === "Files"
+            ? DocumentPicker.types.allFiles
+            : DocumentPicker.types.images,
+      });
+      setLoadFile(true);
+      const response = await fetch(doc.uri);
+      const blob = await response.blob();
+      const url = await uploadToFirebase(blob, doc.name);
+      navigation.navigate("ChatScreen", {
+        specialCase: true,
+        content: `Answer all questions with respect to this link ${url}`,
+      });
+      assetBottomSheet.current.close();
+      setLoadFile(false);
+      console.log(url);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
   return (
-    <TouchableNativeFeedback onPress={AssetType}>
+    <TouchableNativeFeedback
+      onPress={AssetType}
+      disabled={loadFile ? true : false}
+    >
       <View
         style={{
           backgroundColor: bgcolor,

@@ -3,12 +3,10 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
+  Animated,
 } from "react-native";
-import React, {
-  useState,
-  useMemo,
-  useRef,
-} from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { COLORS } from "../constants/COLORS";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,7 +20,7 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   const snapPoints = useMemo(() => ["40%"], []);
   const maxHeight = 140;
   const [scrollEnabled, setScrollEnabled] = useState(false);
-
+  const [loadFile, setLoadFile] = useState(false);
   const [isLoading, setLoading] = useState(false);
 
   const handleContentSizeChange = (event) => {
@@ -44,7 +42,7 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
   return (
     <>
       <View
-        style={[{ paddingHorizontal: addShow ? 20 : 5 }, styles.messageInput]}
+        style={[{ paddingHorizontal: 5, marginTop: 5 }, styles.messageInput]}
       >
         {addShow ? (
           <Ionicons
@@ -54,14 +52,14 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
             onPress={PickAsset}
           />
         ) : null}
-        {isLoading ? (
+        {/* {isLoading ? (
           <TouchableOpacity
             style={{ marginLeft: 10 }}
             onPress={() => setLoading(false)}
           >
             <FontAwesome5 name="trash" size={24} color="#c0c0c0" />
           </TouchableOpacity>
-        ) : null}
+        ) : null} */}
         <TextInput
           style={[
             styles.textInput,
@@ -80,7 +78,7 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
           scrollEnabled={scrollEnabled}
         />
 
-        {isLoading ? (
+        {/* {isLoading ? (
           <TouchableOpacity onPress={stopRecording}>
             <MaterialIcons
               name="pause-circle-outline"
@@ -89,7 +87,7 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
               style={{ margin: 5 }}
             />
           </TouchableOpacity>
-        ) : null}
+        ) : null} */}
 
         {/* {message.length > 0 || isLoading ? (
           <TouchableOpacity
@@ -109,7 +107,7 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
 
         <TouchableOpacity
           style={[styles.sendButton, isLoading ? null : { marginLeft: 10 }]}
-          onPress={ message.length > 0 ? onPress : null }
+          onPress={message.length > 0 ? onPress : null}
         >
           <FontAwesome name="send" size={24} color="#c0c0c0" />
         </TouchableOpacity>
@@ -120,14 +118,52 @@ const CustomTextInput = ({ message, setMessage, onPress, addShow }) => {
         enablePanDownToClose={true}
         index={-1}
         ref={assetBottomSheet}
-        backgroundColor="white"
+        backgroundStyle={{ backgroundColor: "#171717" }}
         handleStyle={{ backgroundColor: "#171717" }}
         handleIndicatorStyle={{ backgroundColor: "rgb(200,200,200)" }}
       >
         <View style={{ justifyContent: "center", flex: 1 }}>
-          <PickAssets bgcolor="#171717" title="Camera" />
-          <PickAssets bgcolor="#171717" title="Photos" />
-          <PickAssets bgcolor="#171717" title="Files" />
+          {loadFile && (
+            <>
+              <ActivityIndicator
+                size={"large"}
+                color={"#fff"}
+                style={{
+                  alignSelf: "center",
+                  position: "absolute",
+                  zIndex: 10,
+                }}
+              />
+              <View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  { backgroundColor: "#aaa", opacity: 0.4, zIndex: 9 },
+                ]}
+              />
+            </>
+          )}
+
+          <PickAssets
+            bgcolor="#171717"
+            title="Camera"
+            assetBottomSheet={assetBottomSheet}
+            setLoadFile={setLoadFile}
+            loadFile={loadFile}
+          />
+          <PickAssets
+            bgcolor="#171717"
+            title="Photos"
+            assetBottomSheet={assetBottomSheet}
+            setLoadFile={setLoadFile}
+            loadFile={loadFile}
+          />
+          <PickAssets
+            bgcolor="#171717"
+            title="Files"
+            assetBottomSheet={assetBottomSheet}
+            setLoadFile={setLoadFile}
+            loadFile={loadFile}
+          />
         </View>
       </BottomSheet>
     </>

@@ -111,7 +111,7 @@ const ChatHome = ({ navigation }) => {
             navigation.navigate("ChatScreen", { message });
             setMessage("");
           }}
-          addShow={false}
+          addShow={true}
         />
       </View>
     </SafeAreaView>

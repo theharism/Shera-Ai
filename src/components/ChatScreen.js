@@ -9,7 +9,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../constants/COLORS";
 import CustomTextInput from "./CustomTextInput";
 import { FlatList } from "react-native-gesture-handler";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { addMessage, addChat } from "../slices/chatsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { generateRandomString } from "../utilities/StringGenerator";
@@ -25,6 +25,7 @@ const ChatScreen = () => {
   const messageReceived = route.params?.message;
   const id = route.params?.id;
   const content = route.params?.content;
+  const specialCase = route.params?.specialCase;
 
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
@@ -153,14 +154,18 @@ const ChatScreen = () => {
     setLoading(true);
   };
 
-  const handleResponseMessage = async () => {
-    const OPENAI_KEY = "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";
-
-    let newContent = "";
-
+  useEffect(() => {
     if (content) {
       messages.unshift({ id: 0, message: content, sender: "system" });
     }
+  }, []);
+
+  const handleResponseMessage = async () => {
+    const OPENAI_KEY = specialCase
+      ? "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"
+      : "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";
+
+    let newContent = "";
 
     let apiMessages = messages.map((messageObject) => {
       var role = "";
@@ -175,10 +180,9 @@ const ChatScreen = () => {
     });
 
     let url = "https://api.openai.com/v1/chat/completions";
-
     // Parameters to pass to the API
     let data = {
-      model: "gpt-3.5-turbo",
+      model: specialCase ? "gpt-4" : "gpt-3.5-turbo",
       messages: apiMessages,
       temperature: 0.75,
       top_p: 0.95,
